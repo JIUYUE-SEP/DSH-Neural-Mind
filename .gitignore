@@ -2,7 +2,7 @@ node_modules/
 *.log
 .DS_Store
 .scratch/
-# 原始 npm pack 产物;规范候选包是 dsh-plugin-memory-0.6.6-candidate.tgz
+# 原始 npm pack 产物;规范候选包是 neural-mind-0.6.6-candidate.tgz
 # 发布门禁原始日志作为发布证据入库(已脱敏),不受 *.log 忽略
 !bench-results/verify-release-*.log
 bench-results/artifacts/dsh-plugin-memory-0.5.0.tgz
@@ -12,3 +12,7 @@ bench-results/artifacts/dsh-plugin-memory-0.6.2.tgz
 bench-results/artifacts/dsh-plugin-memory-0.6.3.tgz
 bench-results/artifacts/dsh-plugin-memory-0.6.4.tgz
 bench-results/artifacts/dsh-plugin-memory-0.6.5.tgz
+
+# 本地 agent 附加指引(个人覆盖层,不提交;AGENTS.md / CLAUDE.md 本体要提交)
+AGENTS.local.md
+CLAUDE.local.md
