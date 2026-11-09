@@ -1,0 +1,2249 @@
+{
+  "dataset": "frozen-v2",
+  "generatedAt": "2026-11-09T00:40:13.723Z",
+  "node": "v26.13.0",
+  "platform": "win32",
+  "vector": {
+    "model": "frozen-v2",
+    "dim": 1024
+  },
+  "pool": {
+    "memories": 215,
+    "hot": 20
+  },
+  "lane": "both",
+  "metrics": {
+    "positiveQueries": 37,
+    "recallAt1": 1,
+    "recallAt5": 1,
+    "mrr": 1,
+    "negativeQueries": 13,
+    "negativeInjected": 2,
+    "negativeItems": 10,
+    "hardNegativeQueries": 4,
+    "hardNegativeInjected": 2,
+    "chitChatNegativeInjected": 0,
+    "positiveItems": 185,
+    "avgItemsPositive": 5,
+    "avgItemsNegative": 0.77,
+    "relationCandidateRecall": 0.375
+  },
+  "queries": [
+    {
+      "id": "q-alpha-pkg",
+      "query": "alpha 项目用的什么包管理器",
+      "ids": [
+        "m_alpha_pkg",
+        "m_beta_pkg",
+        "m_delta_pkg",
+        "m_epsilon_pkg",
+        "m_gamma_pkg"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-alpha-ci",
+      "query": "alpha 项目的 CI 流水线用什么",
+      "ids": [
+        "m_alpha_ci",
+        "m_eta_ci",
+        "m_zeta_ci",
+        "m_beta_ci",
+        "m_epsilon_ci"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-alpha-port",
+      "query": "alpha 项目的开发端口是多少",
+      "ids": [
+        "m_alpha_port",
+        "m_beta_port",
+        "m_zeta_port",
+        "m_gamma_port",
+        "m_eta_port"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-beta-deploy",
+      "query": "beta 项目的发布方式是什么",
+      "ids": [
+        "m_beta_deploy",
+        "m_iota_deploy",
+        "m_theta_deploy",
+        "m_epsilon_deploy",
+        "m_zeta_deploy"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-beta-budget",
+      "query": "beta 项目的预算多少",
+      "ids": [
+        "m_beta_budget",
+        "m_alpha_budget",
+        "m_gamma_budget",
+        "m_delta_budget",
+        "m_epsilon_budget"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-beta-docs",
+      "query": "beta 项目的设计文档放在哪",
+      "ids": [
+        "m_beta_docs",
+        "m_alpha_docs",
+        "m_gamma_docs",
+        "m_delta_docs",
+        "m_epsilon_docs"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-gamma-db",
+      "query": "gamma 项目现在用什么数据库",
+      "ids": [
+        "m_gamma_db",
+        "m_epsilon_db",
+        "m_theta_db",
+        "m_beta_db",
+        "m_iota_db"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-gamma-deadline",
+      "query": "gamma 项目的交付截止时间",
+      "ids": [
+        "m_gamma_deadline",
+        "m_alpha_deadline",
+        "m_beta_deadline",
+        "m_delta_deadline",
+        "m_epsilon_deadline"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-gamma-feature",
+      "query": "gamma 项目当前要做什么功能",
+      "ids": [
+        "m_gamma_feature",
+        "m_epsilon_feature",
+        "m_alpha_feature",
+        "m_theta_feature",
+        "m_beta_feature"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-delta-runtime",
+      "query": "delta 项目的运行时版本是什么",
+      "ids": [
+        "m_delta_runtime",
+        "m_beta_runtime",
+        "m_gamma_runtime",
+        "m_epsilon_runtime",
+        "m_eta_runtime"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-delta-incident",
+      "query": "delta 项目上次故障复盘学到什么",
+      "ids": [
+        "m_delta_incident",
+        "m_alpha_incident",
+        "m_beta_incident",
+        "m_gamma_incident",
+        "m_epsilon_incident"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-delta-perf",
+      "query": "delta 项目的性能基线是多少",
+      "ids": [
+        "m_delta_perf",
+        "m_alpha_perf",
+        "m_beta_perf",
+        "m_epsilon_perf",
+        "m_zeta_perf"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-epsilon-test",
+      "query": "epsilon 项目的测试框架是什么",
+      "ids": [
+        "m_epsilon_test",
+        "m_beta_test",
+        "m_zeta_test",
+        "m_gamma_test",
+        "m_delta_test"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-epsilon-release",
+      "query": "epsilon 项目的发布流程是什么",
+      "ids": [
+        "m_epsilon_release",
+        "m_alpha_release",
+        "m_beta_release",
+        "m_gamma_release",
+        "m_delta_release"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-epsilon-deppolicy",
+      "query": "epsilon 项目加依赖有什么要求",
+      "ids": [
+        "m_epsilon_deppolicy",
+        "m_alpha_deppolicy",
+        "m_beta_deppolicy",
+        "m_gamma_deppolicy",
+        "m_delta_deppolicy"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-zeta-ci",
+      "query": "zeta 项目的 CI 流水线用什么",
+      "ids": [
+        "m_zeta_ci",
+        "m_eta_ci",
+        "m_beta_ci",
+        "m_epsilon_ci",
+        "m_theta_ci"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-zeta-meeting",
+      "query": "zeta 项目的会议节奏",
+      "ids": [
+        "m_zeta_meeting",
+        "m_beta_meeting",
+        "m_epsilon_meeting",
+        "m_delta_meeting",
+        "m_iota_meeting"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-zeta-oncall",
+      "query": "zeta 项目的值班安排",
+      "ids": [
+        "m_zeta_oncall",
+        "m_delta_oncall",
+        "m_iota_oncall",
+        "m_alpha_oncall",
+        "m_beta_oncall"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-eta-budget",
+      "query": "eta 项目的预算多少",
+      "ids": [
+        "m_eta_budget",
+        "m_alpha_budget",
+        "m_beta_budget",
+        "m_gamma_budget",
+        "m_delta_budget"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-eta-port",
+      "query": "eta 项目的开发端口是多少",
+      "ids": [
+        "m_eta_port",
+        "m_alpha_port",
+        "m_beta_port",
+        "m_zeta_port",
+        "m_gamma_port"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-eta-review",
+      "query": "eta 项目的代码评审要求",
+      "ids": [
+        "m_eta_review",
+        "m_delta_review",
+        "m_alpha_review",
+        "m_iota_review",
+        "m_theta_review"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-theta-deadline",
+      "query": "theta 项目的交付截止时间",
+      "ids": [
+        "m_theta_deadline",
+        "m_alpha_deadline",
+        "m_beta_deadline",
+        "m_gamma_deadline",
+        "m_delta_deadline"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-theta-docs",
+      "query": "theta 项目的设计文档放在哪",
+      "ids": [
+        "m_theta_docs",
+        "m_alpha_docs",
+        "m_beta_docs",
+        "m_gamma_docs",
+        "m_delta_docs"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-theta-pkg",
+      "query": "theta 项目用的什么包管理器",
+      "ids": [
+        "m_theta_pkg",
+        "m_alpha_pkg",
+        "m_beta_pkg",
+        "m_delta_pkg",
+        "m_gamma_pkg"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-iota-incident",
+      "query": "iota 项目上次故障复盘学到什么",
+      "ids": [
+        "m_iota_incident",
+        "m_alpha_incident",
+        "m_beta_incident",
+        "m_gamma_incident",
+        "m_delta_incident"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-iota-feature",
+      "query": "iota 项目当前要做什么功能",
+      "ids": [
+        "m_iota_feature",
+        "m_epsilon_feature",
+        "m_alpha_feature",
+        "m_theta_feature",
+        "m_beta_feature"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-iota-deploy",
+      "query": "iota 项目的发布方式是什么",
+      "ids": [
+        "m_iota_deploy",
+        "m_beta_deploy",
+        "m_theta_deploy",
+        "m_epsilon_deploy",
+        "m_zeta_deploy"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-kappa-release",
+      "query": "kappa 项目的发布流程是什么",
+      "ids": [
+        "m_kappa_release",
+        "m_alpha_release",
+        "m_beta_release",
+        "m_gamma_release",
+        "m_delta_release"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-kappa-perf",
+      "query": "kappa 项目的性能基线是多少",
+      "ids": [
+        "m_kappa_perf",
+        "m_alpha_perf",
+        "m_beta_perf",
+        "m_epsilon_perf",
+        "m_zeta_perf"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-kappa-db",
+      "query": "kappa 项目现在用什么数据库",
+      "ids": [
+        "m_kappa_db",
+        "m_epsilon_db",
+        "m_theta_db",
+        "m_beta_db",
+        "m_iota_db"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-user-terse",
+      "query": "用户的回复偏好是什么",
+      "ids": [
+        "m_user_terse",
+        "hb_3",
+        "hb_8",
+        "hb_13",
+        "hb_18"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-user-emoji",
+      "query": "用户对 emoji 是什么态度",
+      "ids": [
+        "m_user_emoji",
+        "hb_3",
+        "hb_8",
+        "hb_13",
+        "hb_18"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-user-commit",
+      "query": "用户的提交代码习惯是什么",
+      "ids": [
+        "m_user_commit",
+        "m_user_test",
+        "m_user_time",
+        "hb_3",
+        "hb_8"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-en-pkg",
+      "query": "alpha 项目 pnpm 包管理器约定",
+      "ids": [
+        "m_alpha_pkg",
+        "m_beta_pkg",
+        "m_delta_pkg",
+        "m_epsilon_pkg",
+        "m_zeta_pkg"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-supersede",
+      "query": "beta 项目新的包管理器是什么",
+      "ids": [
+        "m_beta_pkg",
+        "m_alpha_pkg",
+        "m_delta_pkg",
+        "m_epsilon_pkg",
+        "m_zeta_pkg"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-staged",
+      "query": "gamma 项目待确认的发布约定",
+      "ids": [
+        "m_gamma_staged",
+        "m_alpha_staged",
+        "m_beta_staged",
+        "m_delta_staged",
+        "m_epsilon_staged"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-dispute",
+      "query": "alpha 项目数据库选型有争议吗",
+      "ids": [
+        "m_alpha_db",
+        "m_epsilon_db",
+        "m_alpha_db_alt",
+        "m_theta_db",
+        "m_iota_db"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-neg-weather",
+      "query": "今天上海天气怎么样",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-movie",
+      "query": "推荐几部 2025 年的电影",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-cooking",
+      "query": "红烧肉怎么做才好吃",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-stock",
+      "query": "今天股市行情怎么样",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-birthday",
+      "query": "同事的生日是哪天",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-hospital",
+      "query": "明天去医院挂哪个科",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-travel",
+      "query": "周末去哪玩比较好",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-k8s",
+      "query": "Kubernetes 集群用哪个版本",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true,
+      "hard": true
+    },
+    {
+      "id": "q-neg-omega",
+      "query": "omega 项目的预算是多少",
+      "ids": [
+        "m_alpha_budget",
+        "m_beta_budget",
+        "m_gamma_budget",
+        "m_delta_budget",
+        "m_epsilon_budget"
+      ],
+      "targetIndex": -1,
+      "negative": true,
+      "hard": true
+    },
+    {
+      "id": "q-neg-private",
+      "query": "私有项目的数据库连接串放在哪",
+      "ids": [
+        "m_alpha_db",
+        "m_epsilon_db",
+        "m_theta_db",
+        "m_iota_db",
+        "m_kappa_db"
+      ],
+      "targetIndex": -1,
+      "negative": true,
+      "hard": true
+    },
+    {
+      "id": "q-neg-rust",
+      "query": "用 Rust 重写核心服务值不值得",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true,
+      "hard": true
+    },
+    {
+      "id": "q-neg-sensitive",
+      "query": "最近压力大怎么办",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-hidden",
+      "query": "不应出现的隐藏内容",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    }
+  ],
+  "relations": [
+    {
+      "factId": "m_alpha_pkg",
+      "targetId": "m_alpha_pkg_old",
+      "label": "update",
+      "note": "alpha 包管理器迁移(新→旧)",
+      "candidateIds": [
+        "m_alpha_pkg",
+        "m_beta_pkg",
+        "m_delta_pkg",
+        "m_epsilon_pkg",
+        "m_zeta_pkg",
+        "m_eta_pkg",
+        "m_theta_pkg",
+        "m_iota_pkg"
+      ],
+      "targetInCandidates": false
+    },
+    {
+      "factId": "m_beta_pkg",
+      "targetId": "m_beta_pkg_old",
+      "label": "update",
+      "note": "beta 包管理器迁移",
+      "candidateIds": [
+        "m_beta_pkg",
+        "m_alpha_pkg",
+        "m_delta_pkg",
+        "m_epsilon_pkg",
+        "m_zeta_pkg",
+        "m_eta_pkg",
+        "m_theta_pkg",
+        "m_iota_pkg"
+      ],
+      "targetInCandidates": false
+    },
+    {
+      "factId": "m_alpha_db",
+      "targetId": "m_alpha_db_alt",
+      "label": "conflict",
+      "note": "数据库选型存在争议",
+      "candidateIds": [
+        "m_alpha_db",
+        "m_alpha_docs",
+        "m_alpha_test",
+        "m_eta_db",
+        "m_beta_db",
+        "m_epsilon_db",
+        "m_theta_db",
+        "m_iota_db"
+      ],
+      "targetInCandidates": false
+    },
+    {
+      "factId": "m_alpha_deploy",
+      "targetId": "m_alpha_release",
+      "label": "same",
+      "note": "同项目发布相关(口径不同)",
+      "candidateIds": [
+        "m_alpha_deploy",
+        "m_alpha_release",
+        "m_theta_deploy",
+        "m_iota_deploy",
+        "m_beta_deploy",
+        "m_epsilon_deploy",
+        "m_zeta_deploy",
+        "m_kappa_deploy"
+      ],
+      "targetInCandidates": true
+    },
+    {
+      "factId": "m_beta_release",
+      "targetId": "m_alpha_release",
+      "label": "same",
+      "note": "发布流程同构(不同项目)",
+      "candidateIds": [
+        "m_beta_release",
+        "m_beta_deploy",
+        "m_alpha_release",
+        "m_gamma_release",
+        "m_delta_release",
+        "m_epsilon_release",
+        "m_zeta_release",
+        "m_eta_release"
+      ],
+      "targetInCandidates": true
+    },
+    {
+      "factId": "m_eta_budget",
+      "targetId": "m_epsilon_budget",
+      "label": "same",
+      "note": "预算表述同构(不同项目)",
+      "candidateIds": [
+        "m_eta_docs",
+        "m_eta_db",
+        "m_eta_deploy",
+        "m_eta_budget",
+        "m_eta_oncall",
+        "m_eta_meeting",
+        "m_eta_review",
+        "m_alpha_budget"
+      ],
+      "targetInCandidates": false
+    },
+    {
+      "factId": "m_gamma_test",
+      "targetId": "m_gamma_ci",
+      "label": "unrelated",
+      "note": "同项目不同主题",
+      "candidateIds": [
+        "m_gamma_test",
+        "m_delta_test",
+        "m_eta_test",
+        "m_kappa_test",
+        "m_alpha_test",
+        "m_beta_test",
+        "m_zeta_test",
+        "m_epsilon_test"
+      ],
+      "targetInCandidates": false
+    },
+    {
+      "factId": "m_user_terse",
+      "targetId": "m_user_emoji",
+      "label": "unrelated",
+      "note": "不同偏好",
+      "candidateIds": [
+        "m_user_terse",
+        "m_user_zh",
+        "m_user_emoji",
+        "m_user_time",
+        "m_user_test",
+        "m_user_commit"
+      ],
+      "targetInCandidates": true
+    }
+  ],
+  "lanes": {
+    "hybrid": {
+      "lane": "hybrid",
+      "metrics": {
+        "positiveQueries": 37,
+        "recallAt1": 1,
+        "recallAt5": 1,
+        "mrr": 1,
+        "negativeQueries": 13,
+        "negativeInjected": 2,
+        "negativeItems": 10,
+        "hardNegativeQueries": 4,
+        "hardNegativeInjected": 2,
+        "chitChatNegativeInjected": 0,
+        "positiveItems": 185,
+        "avgItemsPositive": 5,
+        "avgItemsNegative": 0.77,
+        "relationCandidateRecall": 0.375
+      },
+      "queries": [
+        {
+          "id": "q-alpha-pkg",
+          "query": "alpha 项目用的什么包管理器",
+          "ids": [
+            "m_alpha_pkg",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_gamma_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-alpha-ci",
+          "query": "alpha 项目的 CI 流水线用什么",
+          "ids": [
+            "m_alpha_ci",
+            "m_eta_ci",
+            "m_zeta_ci",
+            "m_beta_ci",
+            "m_epsilon_ci"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-alpha-port",
+          "query": "alpha 项目的开发端口是多少",
+          "ids": [
+            "m_alpha_port",
+            "m_beta_port",
+            "m_zeta_port",
+            "m_gamma_port",
+            "m_eta_port"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-beta-deploy",
+          "query": "beta 项目的发布方式是什么",
+          "ids": [
+            "m_beta_deploy",
+            "m_iota_deploy",
+            "m_theta_deploy",
+            "m_epsilon_deploy",
+            "m_zeta_deploy"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-beta-budget",
+          "query": "beta 项目的预算多少",
+          "ids": [
+            "m_beta_budget",
+            "m_alpha_budget",
+            "m_gamma_budget",
+            "m_delta_budget",
+            "m_epsilon_budget"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-beta-docs",
+          "query": "beta 项目的设计文档放在哪",
+          "ids": [
+            "m_beta_docs",
+            "m_alpha_docs",
+            "m_gamma_docs",
+            "m_delta_docs",
+            "m_epsilon_docs"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-gamma-db",
+          "query": "gamma 项目现在用什么数据库",
+          "ids": [
+            "m_gamma_db",
+            "m_epsilon_db",
+            "m_theta_db",
+            "m_beta_db",
+            "m_iota_db"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-gamma-deadline",
+          "query": "gamma 项目的交付截止时间",
+          "ids": [
+            "m_gamma_deadline",
+            "m_alpha_deadline",
+            "m_beta_deadline",
+            "m_delta_deadline",
+            "m_epsilon_deadline"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-gamma-feature",
+          "query": "gamma 项目当前要做什么功能",
+          "ids": [
+            "m_gamma_feature",
+            "m_epsilon_feature",
+            "m_alpha_feature",
+            "m_theta_feature",
+            "m_beta_feature"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-delta-runtime",
+          "query": "delta 项目的运行时版本是什么",
+          "ids": [
+            "m_delta_runtime",
+            "m_beta_runtime",
+            "m_gamma_runtime",
+            "m_epsilon_runtime",
+            "m_eta_runtime"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-delta-incident",
+          "query": "delta 项目上次故障复盘学到什么",
+          "ids": [
+            "m_delta_incident",
+            "m_alpha_incident",
+            "m_beta_incident",
+            "m_gamma_incident",
+            "m_epsilon_incident"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-delta-perf",
+          "query": "delta 项目的性能基线是多少",
+          "ids": [
+            "m_delta_perf",
+            "m_alpha_perf",
+            "m_beta_perf",
+            "m_epsilon_perf",
+            "m_zeta_perf"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-epsilon-test",
+          "query": "epsilon 项目的测试框架是什么",
+          "ids": [
+            "m_epsilon_test",
+            "m_beta_test",
+            "m_zeta_test",
+            "m_gamma_test",
+            "m_delta_test"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-epsilon-release",
+          "query": "epsilon 项目的发布流程是什么",
+          "ids": [
+            "m_epsilon_release",
+            "m_alpha_release",
+            "m_beta_release",
+            "m_gamma_release",
+            "m_delta_release"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-epsilon-deppolicy",
+          "query": "epsilon 项目加依赖有什么要求",
+          "ids": [
+            "m_epsilon_deppolicy",
+            "m_alpha_deppolicy",
+            "m_beta_deppolicy",
+            "m_gamma_deppolicy",
+            "m_delta_deppolicy"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-zeta-ci",
+          "query": "zeta 项目的 CI 流水线用什么",
+          "ids": [
+            "m_zeta_ci",
+            "m_eta_ci",
+            "m_beta_ci",
+            "m_epsilon_ci",
+            "m_theta_ci"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-zeta-meeting",
+          "query": "zeta 项目的会议节奏",
+          "ids": [
+            "m_zeta_meeting",
+            "m_beta_meeting",
+            "m_epsilon_meeting",
+            "m_delta_meeting",
+            "m_iota_meeting"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-zeta-oncall",
+          "query": "zeta 项目的值班安排",
+          "ids": [
+            "m_zeta_oncall",
+            "m_delta_oncall",
+            "m_iota_oncall",
+            "m_alpha_oncall",
+            "m_beta_oncall"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-eta-budget",
+          "query": "eta 项目的预算多少",
+          "ids": [
+            "m_eta_budget",
+            "m_alpha_budget",
+            "m_beta_budget",
+            "m_gamma_budget",
+            "m_delta_budget"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-eta-port",
+          "query": "eta 项目的开发端口是多少",
+          "ids": [
+            "m_eta_port",
+            "m_alpha_port",
+            "m_beta_port",
+            "m_zeta_port",
+            "m_gamma_port"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-eta-review",
+          "query": "eta 项目的代码评审要求",
+          "ids": [
+            "m_eta_review",
+            "m_delta_review",
+            "m_alpha_review",
+            "m_iota_review",
+            "m_theta_review"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-theta-deadline",
+          "query": "theta 项目的交付截止时间",
+          "ids": [
+            "m_theta_deadline",
+            "m_alpha_deadline",
+            "m_beta_deadline",
+            "m_gamma_deadline",
+            "m_delta_deadline"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-theta-docs",
+          "query": "theta 项目的设计文档放在哪",
+          "ids": [
+            "m_theta_docs",
+            "m_alpha_docs",
+            "m_beta_docs",
+            "m_gamma_docs",
+            "m_delta_docs"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-theta-pkg",
+          "query": "theta 项目用的什么包管理器",
+          "ids": [
+            "m_theta_pkg",
+            "m_alpha_pkg",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_gamma_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-iota-incident",
+          "query": "iota 项目上次故障复盘学到什么",
+          "ids": [
+            "m_iota_incident",
+            "m_alpha_incident",
+            "m_beta_incident",
+            "m_gamma_incident",
+            "m_delta_incident"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-iota-feature",
+          "query": "iota 项目当前要做什么功能",
+          "ids": [
+            "m_iota_feature",
+            "m_epsilon_feature",
+            "m_alpha_feature",
+            "m_theta_feature",
+            "m_beta_feature"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-iota-deploy",
+          "query": "iota 项目的发布方式是什么",
+          "ids": [
+            "m_iota_deploy",
+            "m_beta_deploy",
+            "m_theta_deploy",
+            "m_epsilon_deploy",
+            "m_zeta_deploy"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-kappa-release",
+          "query": "kappa 项目的发布流程是什么",
+          "ids": [
+            "m_kappa_release",
+            "m_alpha_release",
+            "m_beta_release",
+            "m_gamma_release",
+            "m_delta_release"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-kappa-perf",
+          "query": "kappa 项目的性能基线是多少",
+          "ids": [
+            "m_kappa_perf",
+            "m_alpha_perf",
+            "m_beta_perf",
+            "m_epsilon_perf",
+            "m_zeta_perf"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-kappa-db",
+          "query": "kappa 项目现在用什么数据库",
+          "ids": [
+            "m_kappa_db",
+            "m_epsilon_db",
+            "m_theta_db",
+            "m_beta_db",
+            "m_iota_db"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-user-terse",
+          "query": "用户的回复偏好是什么",
+          "ids": [
+            "m_user_terse",
+            "hb_3",
+            "hb_8",
+            "hb_13",
+            "hb_18"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-user-emoji",
+          "query": "用户对 emoji 是什么态度",
+          "ids": [
+            "m_user_emoji",
+            "hb_3",
+            "hb_8",
+            "hb_13",
+            "hb_18"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-user-commit",
+          "query": "用户的提交代码习惯是什么",
+          "ids": [
+            "m_user_commit",
+            "m_user_test",
+            "m_user_time",
+            "hb_3",
+            "hb_8"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-en-pkg",
+          "query": "alpha 项目 pnpm 包管理器约定",
+          "ids": [
+            "m_alpha_pkg",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-supersede",
+          "query": "beta 项目新的包管理器是什么",
+          "ids": [
+            "m_beta_pkg",
+            "m_alpha_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-staged",
+          "query": "gamma 项目待确认的发布约定",
+          "ids": [
+            "m_gamma_staged",
+            "m_alpha_staged",
+            "m_beta_staged",
+            "m_delta_staged",
+            "m_epsilon_staged"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-dispute",
+          "query": "alpha 项目数据库选型有争议吗",
+          "ids": [
+            "m_alpha_db",
+            "m_epsilon_db",
+            "m_alpha_db_alt",
+            "m_theta_db",
+            "m_iota_db"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-neg-weather",
+          "query": "今天上海天气怎么样",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-movie",
+          "query": "推荐几部 2025 年的电影",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-cooking",
+          "query": "红烧肉怎么做才好吃",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-stock",
+          "query": "今天股市行情怎么样",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-birthday",
+          "query": "同事的生日是哪天",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-hospital",
+          "query": "明天去医院挂哪个科",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-travel",
+          "query": "周末去哪玩比较好",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-k8s",
+          "query": "Kubernetes 集群用哪个版本",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-omega",
+          "query": "omega 项目的预算是多少",
+          "ids": [
+            "m_alpha_budget",
+            "m_beta_budget",
+            "m_gamma_budget",
+            "m_delta_budget",
+            "m_epsilon_budget"
+          ],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-private",
+          "query": "私有项目的数据库连接串放在哪",
+          "ids": [
+            "m_alpha_db",
+            "m_epsilon_db",
+            "m_theta_db",
+            "m_iota_db",
+            "m_kappa_db"
+          ],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-rust",
+          "query": "用 Rust 重写核心服务值不值得",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-sensitive",
+          "query": "最近压力大怎么办",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-hidden",
+          "query": "不应出现的隐藏内容",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        }
+      ],
+      "relations": [
+        {
+          "factId": "m_alpha_pkg",
+          "targetId": "m_alpha_pkg_old",
+          "label": "update",
+          "note": "alpha 包管理器迁移(新→旧)",
+          "candidateIds": [
+            "m_alpha_pkg",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg",
+            "m_eta_pkg",
+            "m_theta_pkg",
+            "m_iota_pkg"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_beta_pkg",
+          "targetId": "m_beta_pkg_old",
+          "label": "update",
+          "note": "beta 包管理器迁移",
+          "candidateIds": [
+            "m_beta_pkg",
+            "m_alpha_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg",
+            "m_eta_pkg",
+            "m_theta_pkg",
+            "m_iota_pkg"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_alpha_db",
+          "targetId": "m_alpha_db_alt",
+          "label": "conflict",
+          "note": "数据库选型存在争议",
+          "candidateIds": [
+            "m_alpha_db",
+            "m_alpha_docs",
+            "m_alpha_test",
+            "m_eta_db",
+            "m_beta_db",
+            "m_epsilon_db",
+            "m_theta_db",
+            "m_iota_db"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_alpha_deploy",
+          "targetId": "m_alpha_release",
+          "label": "same",
+          "note": "同项目发布相关(口径不同)",
+          "candidateIds": [
+            "m_alpha_deploy",
+            "m_alpha_release",
+            "m_theta_deploy",
+            "m_iota_deploy",
+            "m_beta_deploy",
+            "m_epsilon_deploy",
+            "m_zeta_deploy",
+            "m_kappa_deploy"
+          ],
+          "targetInCandidates": true
+        },
+        {
+          "factId": "m_beta_release",
+          "targetId": "m_alpha_release",
+          "label": "same",
+          "note": "发布流程同构(不同项目)",
+          "candidateIds": [
+            "m_beta_release",
+            "m_beta_deploy",
+            "m_alpha_release",
+            "m_gamma_release",
+            "m_delta_release",
+            "m_epsilon_release",
+            "m_zeta_release",
+            "m_eta_release"
+          ],
+          "targetInCandidates": true
+        },
+        {
+          "factId": "m_eta_budget",
+          "targetId": "m_epsilon_budget",
+          "label": "same",
+          "note": "预算表述同构(不同项目)",
+          "candidateIds": [
+            "m_eta_docs",
+            "m_eta_db",
+            "m_eta_deploy",
+            "m_eta_budget",
+            "m_eta_oncall",
+            "m_eta_meeting",
+            "m_eta_review",
+            "m_alpha_budget"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_gamma_test",
+          "targetId": "m_gamma_ci",
+          "label": "unrelated",
+          "note": "同项目不同主题",
+          "candidateIds": [
+            "m_gamma_test",
+            "m_delta_test",
+            "m_eta_test",
+            "m_kappa_test",
+            "m_alpha_test",
+            "m_beta_test",
+            "m_zeta_test",
+            "m_epsilon_test"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_user_terse",
+          "targetId": "m_user_emoji",
+          "label": "unrelated",
+          "note": "不同偏好",
+          "candidateIds": [
+            "m_user_terse",
+            "m_user_zh",
+            "m_user_emoji",
+            "m_user_time",
+            "m_user_test",
+            "m_user_commit"
+          ],
+          "targetInCandidates": true
+        }
+      ]
+    },
+    "bm25": {
+      "lane": "bm25",
+      "metrics": {
+        "positiveQueries": 37,
+        "recallAt1": 1,
+        "recallAt5": 1,
+        "mrr": 1,
+        "negativeQueries": 13,
+        "negativeInjected": 2,
+        "negativeItems": 10,
+        "hardNegativeQueries": 4,
+        "hardNegativeInjected": 2,
+        "chitChatNegativeInjected": 0,
+        "positiveItems": 185,
+        "avgItemsPositive": 5,
+        "avgItemsNegative": 0.77,
+        "relationCandidateRecall": 0.375
+      },
+      "queries": [
+        {
+          "id": "q-alpha-pkg",
+          "query": "alpha 项目用的什么包管理器",
+          "ids": [
+            "m_alpha_pkg",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-alpha-ci",
+          "query": "alpha 项目的 CI 流水线用什么",
+          "ids": [
+            "m_alpha_ci",
+            "m_eta_ci",
+            "m_zeta_ci",
+            "m_beta_ci",
+            "m_epsilon_ci"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-alpha-port",
+          "query": "alpha 项目的开发端口是多少",
+          "ids": [
+            "m_alpha_port",
+            "m_beta_port",
+            "m_gamma_port",
+            "m_delta_port",
+            "m_epsilon_port"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-beta-deploy",
+          "query": "beta 项目的发布方式是什么",
+          "ids": [
+            "m_beta_deploy",
+            "m_iota_deploy",
+            "m_theta_deploy",
+            "m_epsilon_deploy",
+            "m_zeta_deploy"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-beta-budget",
+          "query": "beta 项目的预算多少",
+          "ids": [
+            "m_beta_budget",
+            "m_alpha_budget",
+            "m_gamma_budget",
+            "m_delta_budget",
+            "m_epsilon_budget"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-beta-docs",
+          "query": "beta 项目的设计文档放在哪",
+          "ids": [
+            "m_beta_docs",
+            "m_alpha_docs",
+            "m_gamma_docs",
+            "m_delta_docs",
+            "m_epsilon_docs"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-gamma-db",
+          "query": "gamma 项目现在用什么数据库",
+          "ids": [
+            "m_gamma_db",
+            "m_epsilon_db",
+            "m_theta_db",
+            "m_iota_db",
+            "m_kappa_db"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-gamma-deadline",
+          "query": "gamma 项目的交付截止时间",
+          "ids": [
+            "m_gamma_deadline",
+            "m_alpha_deadline",
+            "m_beta_deadline",
+            "m_delta_deadline",
+            "m_epsilon_deadline"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-gamma-feature",
+          "query": "gamma 项目当前要做什么功能",
+          "ids": [
+            "m_gamma_feature",
+            "m_epsilon_feature",
+            "m_alpha_feature",
+            "m_beta_feature",
+            "m_delta_feature"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-delta-runtime",
+          "query": "delta 项目的运行时版本是什么",
+          "ids": [
+            "m_delta_runtime",
+            "m_beta_runtime",
+            "m_gamma_runtime",
+            "m_epsilon_runtime",
+            "m_eta_runtime"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-delta-incident",
+          "query": "delta 项目上次故障复盘学到什么",
+          "ids": [
+            "m_delta_incident",
+            "m_alpha_incident",
+            "m_beta_incident",
+            "m_gamma_incident",
+            "m_epsilon_incident"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-delta-perf",
+          "query": "delta 项目的性能基线是多少",
+          "ids": [
+            "m_delta_perf",
+            "m_alpha_perf",
+            "m_beta_perf",
+            "m_gamma_perf",
+            "m_epsilon_perf"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-epsilon-test",
+          "query": "epsilon 项目的测试框架是什么",
+          "ids": [
+            "m_epsilon_test",
+            "m_alpha_test",
+            "m_beta_test",
+            "m_zeta_test",
+            "m_gamma_test"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-epsilon-release",
+          "query": "epsilon 项目的发布流程是什么",
+          "ids": [
+            "m_epsilon_release",
+            "m_alpha_release",
+            "m_beta_release",
+            "m_gamma_release",
+            "m_delta_release"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-epsilon-deppolicy",
+          "query": "epsilon 项目加依赖有什么要求",
+          "ids": [
+            "m_epsilon_deppolicy",
+            "m_alpha_deppolicy",
+            "m_beta_deppolicy",
+            "m_gamma_deppolicy",
+            "m_delta_deppolicy"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-zeta-ci",
+          "query": "zeta 项目的 CI 流水线用什么",
+          "ids": [
+            "m_zeta_ci",
+            "m_eta_ci",
+            "m_beta_ci",
+            "m_epsilon_ci",
+            "m_theta_ci"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-zeta-meeting",
+          "query": "zeta 项目的会议节奏",
+          "ids": [
+            "m_zeta_meeting",
+            "m_delta_meeting",
+            "m_beta_meeting",
+            "m_epsilon_meeting",
+            "m_iota_meeting"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-zeta-oncall",
+          "query": "zeta 项目的值班安排",
+          "ids": [
+            "m_zeta_oncall",
+            "m_delta_oncall",
+            "m_iota_oncall",
+            "m_alpha_oncall",
+            "m_beta_oncall"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-eta-budget",
+          "query": "eta 项目的预算多少",
+          "ids": [
+            "m_eta_budget",
+            "m_alpha_budget",
+            "m_beta_budget",
+            "m_gamma_budget",
+            "m_delta_budget"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-eta-port",
+          "query": "eta 项目的开发端口是多少",
+          "ids": [
+            "m_eta_port",
+            "m_alpha_port",
+            "m_beta_port",
+            "m_gamma_port",
+            "m_delta_port"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-eta-review",
+          "query": "eta 项目的代码评审要求",
+          "ids": [
+            "m_eta_review",
+            "m_alpha_review",
+            "m_delta_review",
+            "m_iota_review",
+            "m_theta_review"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-theta-deadline",
+          "query": "theta 项目的交付截止时间",
+          "ids": [
+            "m_theta_deadline",
+            "m_alpha_deadline",
+            "m_beta_deadline",
+            "m_gamma_deadline",
+            "m_delta_deadline"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-theta-docs",
+          "query": "theta 项目的设计文档放在哪",
+          "ids": [
+            "m_theta_docs",
+            "m_alpha_docs",
+            "m_beta_docs",
+            "m_gamma_docs",
+            "m_delta_docs"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-theta-pkg",
+          "query": "theta 项目用的什么包管理器",
+          "ids": [
+            "m_theta_pkg",
+            "m_alpha_pkg",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-iota-incident",
+          "query": "iota 项目上次故障复盘学到什么",
+          "ids": [
+            "m_iota_incident",
+            "m_alpha_incident",
+            "m_beta_incident",
+            "m_gamma_incident",
+            "m_delta_incident"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-iota-feature",
+          "query": "iota 项目当前要做什么功能",
+          "ids": [
+            "m_iota_feature",
+            "m_epsilon_feature",
+            "m_alpha_feature",
+            "m_beta_feature",
+            "m_gamma_feature"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-iota-deploy",
+          "query": "iota 项目的发布方式是什么",
+          "ids": [
+            "m_iota_deploy",
+            "m_beta_deploy",
+            "m_theta_deploy",
+            "m_epsilon_deploy",
+            "m_zeta_deploy"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-kappa-release",
+          "query": "kappa 项目的发布流程是什么",
+          "ids": [
+            "m_kappa_release",
+            "m_alpha_release",
+            "m_beta_release",
+            "m_gamma_release",
+            "m_delta_release"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-kappa-perf",
+          "query": "kappa 项目的性能基线是多少",
+          "ids": [
+            "m_kappa_perf",
+            "m_alpha_perf",
+            "m_beta_perf",
+            "m_gamma_perf",
+            "m_epsilon_perf"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-kappa-db",
+          "query": "kappa 项目现在用什么数据库",
+          "ids": [
+            "m_kappa_db",
+            "m_epsilon_db",
+            "m_theta_db",
+            "m_iota_db",
+            "m_alpha_db"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-user-terse",
+          "query": "用户的回复偏好是什么",
+          "ids": [
+            "m_user_terse",
+            "m_user_zh",
+            "m_user_time",
+            "hb_3",
+            "hb_8"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-user-emoji",
+          "query": "用户对 emoji 是什么态度",
+          "ids": [
+            "m_user_emoji",
+            "hb_3",
+            "hb_8",
+            "hb_13",
+            "hb_18"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-user-commit",
+          "query": "用户的提交代码习惯是什么",
+          "ids": [
+            "m_user_commit",
+            "m_user_test",
+            "m_user_time",
+            "hb_3",
+            "hb_8"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-en-pkg",
+          "query": "alpha 项目 pnpm 包管理器约定",
+          "ids": [
+            "m_alpha_pkg",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-supersede",
+          "query": "beta 项目新的包管理器是什么",
+          "ids": [
+            "m_beta_pkg",
+            "m_alpha_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-staged",
+          "query": "gamma 项目待确认的发布约定",
+          "ids": [
+            "m_gamma_staged",
+            "m_alpha_staged",
+            "m_beta_staged",
+            "m_delta_staged",
+            "m_epsilon_staged"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-dispute",
+          "query": "alpha 项目数据库选型有争议吗",
+          "ids": [
+            "m_alpha_db",
+            "m_epsilon_db",
+            "m_alpha_db_alt",
+            "m_theta_db",
+            "m_iota_db"
+          ],
+          "targetIndex": 0,
+          "negative": false
+        },
+        {
+          "id": "q-neg-weather",
+          "query": "今天上海天气怎么样",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-movie",
+          "query": "推荐几部 2025 年的电影",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-cooking",
+          "query": "红烧肉怎么做才好吃",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-stock",
+          "query": "今天股市行情怎么样",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-birthday",
+          "query": "同事的生日是哪天",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-hospital",
+          "query": "明天去医院挂哪个科",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-travel",
+          "query": "周末去哪玩比较好",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-k8s",
+          "query": "Kubernetes 集群用哪个版本",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-omega",
+          "query": "omega 项目的预算是多少",
+          "ids": [
+            "m_alpha_budget",
+            "m_beta_budget",
+            "m_gamma_budget",
+            "m_delta_budget",
+            "m_epsilon_budget"
+          ],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-private",
+          "query": "私有项目的数据库连接串放在哪",
+          "ids": [
+            "m_alpha_db",
+            "m_epsilon_db",
+            "m_theta_db",
+            "m_iota_db",
+            "m_kappa_db"
+          ],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-rust",
+          "query": "用 Rust 重写核心服务值不值得",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true,
+          "hard": true
+        },
+        {
+          "id": "q-neg-sensitive",
+          "query": "最近压力大怎么办",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        },
+        {
+          "id": "q-neg-hidden",
+          "query": "不应出现的隐藏内容",
+          "ids": [],
+          "targetIndex": -1,
+          "negative": true
+        }
+      ],
+      "relations": [
+        {
+          "factId": "m_alpha_pkg",
+          "targetId": "m_alpha_pkg_old",
+          "label": "update",
+          "note": "alpha 包管理器迁移(新→旧)",
+          "candidateIds": [
+            "m_alpha_pkg",
+            "m_alpha_deppolicy",
+            "m_beta_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg",
+            "m_eta_pkg",
+            "m_theta_pkg"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_beta_pkg",
+          "targetId": "m_beta_pkg_old",
+          "label": "update",
+          "note": "beta 包管理器迁移",
+          "candidateIds": [
+            "m_beta_pkg",
+            "m_beta_deppolicy",
+            "m_alpha_pkg",
+            "m_delta_pkg",
+            "m_epsilon_pkg",
+            "m_zeta_pkg",
+            "m_eta_pkg",
+            "m_theta_pkg"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_alpha_db",
+          "targetId": "m_alpha_db_alt",
+          "label": "conflict",
+          "note": "数据库选型存在争议",
+          "candidateIds": [
+            "m_alpha_db",
+            "m_alpha_docs",
+            "m_alpha_deploy",
+            "m_alpha_test",
+            "m_eta_db",
+            "m_beta_db",
+            "m_epsilon_db",
+            "m_theta_db"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_alpha_deploy",
+          "targetId": "m_alpha_release",
+          "label": "same",
+          "note": "同项目发布相关(口径不同)",
+          "candidateIds": [
+            "m_alpha_deploy",
+            "m_alpha_release",
+            "m_theta_deploy",
+            "m_iota_deploy",
+            "m_beta_deploy",
+            "m_epsilon_deploy",
+            "m_zeta_deploy",
+            "m_kappa_deploy"
+          ],
+          "targetInCandidates": true
+        },
+        {
+          "factId": "m_beta_release",
+          "targetId": "m_alpha_release",
+          "label": "same",
+          "note": "发布流程同构(不同项目)",
+          "candidateIds": [
+            "m_beta_release",
+            "m_beta_deploy",
+            "m_alpha_release",
+            "m_gamma_release",
+            "m_delta_release",
+            "m_epsilon_release",
+            "m_zeta_release",
+            "m_eta_release"
+          ],
+          "targetInCandidates": true
+        },
+        {
+          "factId": "m_eta_budget",
+          "targetId": "m_epsilon_budget",
+          "label": "same",
+          "note": "预算表述同构(不同项目)",
+          "candidateIds": [
+            "m_eta_docs",
+            "m_eta_db",
+            "m_eta_deploy",
+            "m_eta_meeting",
+            "m_eta_review",
+            "m_eta_budget",
+            "m_eta_oncall",
+            "m_alpha_budget"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_gamma_test",
+          "targetId": "m_gamma_ci",
+          "label": "unrelated",
+          "note": "同项目不同主题",
+          "candidateIds": [
+            "m_gamma_test",
+            "m_gamma_pkg",
+            "m_gamma_release",
+            "m_delta_test",
+            "m_eta_test",
+            "m_kappa_test",
+            "m_alpha_test",
+            "m_beta_test"
+          ],
+          "targetInCandidates": false
+        },
+        {
+          "factId": "m_user_terse",
+          "targetId": "m_user_emoji",
+          "label": "unrelated",
+          "note": "不同偏好",
+          "candidateIds": [
+            "m_user_terse",
+            "m_user_zh",
+            "m_user_emoji",
+            "m_user_time",
+            "m_user_test",
+            "m_user_commit"
+          ],
+          "targetInCandidates": true
+        }
+      ]
+    }
+  }
+}

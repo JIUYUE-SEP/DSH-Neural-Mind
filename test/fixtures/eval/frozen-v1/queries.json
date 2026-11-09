@@ -1,0 +1,19 @@
+{
+  "dataset": "frozen-v1",
+  "current": { "workspaceId": "/frozen/ws-a", "sessionId": "s-eval-query" },
+  "queries": [
+    { "id": "q-deploy-manager", "query": "部署用的是什么包管理器", "targets": ["m_deploy", "m_deploy_alt", "hb_frozen"] },
+    { "id": "q-release-flow", "query": "发布流程怎么构建", "targets": ["m_deploy_alt", "m_deploy", "hb_frozen"] },
+    { "id": "q-python", "query": "项目 A 后端 Python 版本", "targets": ["m_python"] },
+    { "id": "q-budget-a", "query": "项目 A 预算多少", "targets": ["m_budget_a"] },
+    { "id": "q-budget-b", "query": "项目 B 预算多少", "targets": ["m_budget_b"] },
+    { "id": "q-review", "query": "周五下午复盘", "targets": ["m_lesson"] },
+    { "id": "q-english", "query": "how to deploy the project", "targets": ["m_english"] },
+    { "id": "q-staged", "query": "先跑测试再构建", "targets": ["m_staged"] },
+    { "id": "q-neg-weather", "query": "今天上海天气怎么样", "targets": [] },
+    { "id": "q-neg-movie", "query": "推荐几部电影", "targets": [] },
+    { "id": "q-neg-private", "query": "私有项目数据库连接串", "targets": [] },
+    { "id": "q-neg-sensitive", "query": "最近压力大怎么办", "targets": [] },
+    { "id": "q-neg-hidden", "query": "不应出现的隐藏内容", "targets": [] }
+  ]
+}

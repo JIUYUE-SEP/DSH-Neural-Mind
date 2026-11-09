@@ -1,0 +1,474 @@
+{
+  "dataset": "frozen-v2",
+  "current": {
+    "workspaceId": "/frozen/ws-a",
+    "sessionId": "s-eval-query"
+  },
+  "queries": [
+    {
+      "id": "q-alpha-pkg",
+      "query": "alpha 项目用的什么包管理器",
+      "targets": [
+        "m_alpha_pkg"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-a",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-alpha-ci",
+      "query": "alpha 项目的 CI 流水线用什么",
+      "targets": [
+        "m_alpha_ci"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-a",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-alpha-port",
+      "query": "alpha 项目的开发端口是多少",
+      "targets": [
+        "m_alpha_port"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-a",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-beta-deploy",
+      "query": "beta 项目的发布方式是什么",
+      "targets": [
+        "m_beta_deploy"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-b",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-beta-budget",
+      "query": "beta 项目的预算多少",
+      "targets": [
+        "m_beta_budget"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-b",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-beta-docs",
+      "query": "beta 项目的设计文档放在哪",
+      "targets": [
+        "m_beta_docs"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-b",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-gamma-db",
+      "query": "gamma 项目现在用什么数据库",
+      "targets": [
+        "m_gamma_db"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-c",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-gamma-deadline",
+      "query": "gamma 项目的交付截止时间",
+      "targets": [
+        "m_gamma_deadline"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-c",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-gamma-feature",
+      "query": "gamma 项目当前要做什么功能",
+      "targets": [
+        "m_gamma_feature"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-c",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-delta-runtime",
+      "query": "delta 项目的运行时版本是什么",
+      "targets": [
+        "m_delta_runtime"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-d",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-delta-incident",
+      "query": "delta 项目上次故障复盘学到什么",
+      "targets": [
+        "m_delta_incident"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-d",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-delta-perf",
+      "query": "delta 项目的性能基线是多少",
+      "targets": [
+        "m_delta_perf"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-d",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-epsilon-test",
+      "query": "epsilon 项目的测试框架是什么",
+      "targets": [
+        "m_epsilon_test"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-e",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-epsilon-release",
+      "query": "epsilon 项目的发布流程是什么",
+      "targets": [
+        "m_epsilon_release"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-e",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-epsilon-deppolicy",
+      "query": "epsilon 项目加依赖有什么要求",
+      "targets": [
+        "m_epsilon_deppolicy"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-e",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-zeta-ci",
+      "query": "zeta 项目的 CI 流水线用什么",
+      "targets": [
+        "m_zeta_ci"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-f",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-zeta-meeting",
+      "query": "zeta 项目的会议节奏",
+      "targets": [
+        "m_zeta_meeting"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-f",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-zeta-oncall",
+      "query": "zeta 项目的值班安排",
+      "targets": [
+        "m_zeta_oncall"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-f",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-eta-budget",
+      "query": "eta 项目的预算多少",
+      "targets": [
+        "m_eta_budget"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-g",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-eta-port",
+      "query": "eta 项目的开发端口是多少",
+      "targets": [
+        "m_eta_port"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-g",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-eta-review",
+      "query": "eta 项目的代码评审要求",
+      "targets": [
+        "m_eta_review"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-g",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-theta-deadline",
+      "query": "theta 项目的交付截止时间",
+      "targets": [
+        "m_theta_deadline"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-h",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-theta-docs",
+      "query": "theta 项目的设计文档放在哪",
+      "targets": [
+        "m_theta_docs"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-h",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-theta-pkg",
+      "query": "theta 项目用的什么包管理器",
+      "targets": [
+        "m_theta_pkg"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-h",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-iota-incident",
+      "query": "iota 项目上次故障复盘学到什么",
+      "targets": [
+        "m_iota_incident"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-i",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-iota-feature",
+      "query": "iota 项目当前要做什么功能",
+      "targets": [
+        "m_iota_feature"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-i",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-iota-deploy",
+      "query": "iota 项目的发布方式是什么",
+      "targets": [
+        "m_iota_deploy"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-i",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-kappa-release",
+      "query": "kappa 项目的发布流程是什么",
+      "targets": [
+        "m_kappa_release"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-j",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-kappa-perf",
+      "query": "kappa 项目的性能基线是多少",
+      "targets": [
+        "m_kappa_perf"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-j",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-kappa-db",
+      "query": "kappa 项目现在用什么数据库",
+      "targets": [
+        "m_kappa_db"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-j",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-user-terse",
+      "query": "用户的回复偏好是什么",
+      "targets": [
+        "m_user_terse"
+      ]
+    },
+    {
+      "id": "q-user-emoji",
+      "query": "用户对 emoji 是什么态度",
+      "targets": [
+        "m_user_emoji"
+      ]
+    },
+    {
+      "id": "q-user-commit",
+      "query": "用户的提交代码习惯是什么",
+      "targets": [
+        "m_user_commit"
+      ]
+    },
+    {
+      "id": "q-en-pkg",
+      "query": "alpha 项目 pnpm 包管理器约定",
+      "targets": [
+        "m_alpha_pkg"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-a",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-supersede",
+      "query": "beta 项目新的包管理器是什么",
+      "targets": [
+        "m_beta_pkg"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-b",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-staged",
+      "query": "gamma 项目待确认的发布约定",
+      "targets": [
+        "m_gamma_staged"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-c",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-dispute",
+      "query": "alpha 项目数据库选型有争议吗",
+      "targets": [
+        "m_alpha_db_alt",
+        "m_alpha_db"
+      ],
+      "current": {
+        "workspaceId": "/frozen/ws-a",
+        "sessionId": "s-eval-query"
+      }
+    },
+    {
+      "id": "q-neg-weather",
+      "query": "今天上海天气怎么样",
+      "targets": []
+    },
+    {
+      "id": "q-neg-movie",
+      "query": "推荐几部 2025 年的电影",
+      "targets": []
+    },
+    {
+      "id": "q-neg-cooking",
+      "query": "红烧肉怎么做才好吃",
+      "targets": []
+    },
+    {
+      "id": "q-neg-stock",
+      "query": "今天股市行情怎么样",
+      "targets": []
+    },
+    {
+      "id": "q-neg-birthday",
+      "query": "同事的生日是哪天",
+      "targets": []
+    },
+    {
+      "id": "q-neg-hospital",
+      "query": "明天去医院挂哪个科",
+      "targets": []
+    },
+    {
+      "id": "q-neg-travel",
+      "query": "周末去哪玩比较好",
+      "targets": []
+    },
+    {
+      "id": "q-neg-k8s",
+      "query": "Kubernetes 集群用哪个版本",
+      "targets": [],
+      "hard": true
+    },
+    {
+      "id": "q-neg-omega",
+      "query": "omega 项目的预算是多少",
+      "targets": [],
+      "hard": true
+    },
+    {
+      "id": "q-neg-private",
+      "query": "私有项目的数据库连接串放在哪",
+      "targets": [],
+      "hard": true
+    },
+    {
+      "id": "q-neg-rust",
+      "query": "用 Rust 重写核心服务值不值得",
+      "targets": [],
+      "hard": true
+    },
+    {
+      "id": "q-neg-sensitive",
+      "query": "最近压力大怎么办",
+      "targets": []
+    },
+    {
+      "id": "q-neg-hidden",
+      "query": "不应出现的隐藏内容",
+      "targets": []
+    }
+  ]
+}

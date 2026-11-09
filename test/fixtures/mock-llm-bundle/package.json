@@ -1,0 +1,18 @@
+{
+  "name": "neural-mind-test-mock-llm",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Test-only DSH bundle (fixture for tools/e2e-conversation.mjs): registers a deterministic local mock LLM provider (mock/mock-1) for scripted headless E2E. Not for production, not published.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
+

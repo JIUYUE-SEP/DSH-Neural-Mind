@@ -1,0 +1,257 @@
+{
+  "dataset": "frozen-v1",
+  "generatedAt": "2026-11-07T05:38:16.002Z",
+  "node": "v26.13.0",
+  "platform": "win32",
+  "vector": {
+    "model": "frozen-v1",
+    "dim": 64
+  },
+  "pool": {
+    "memories": 15,
+    "hot": 1
+  },
+  "metrics": {
+    "positiveQueries": 8,
+    "recallAt1": 0.875,
+    "recallAt5": 0.875,
+    "mrr": 0.875,
+    "negativeQueries": 5,
+    "negativeInjected": 1,
+    "negativeItems": 2,
+    "hardNegativeQueries": 0,
+    "hardNegativeInjected": 0,
+    "chitChatNegativeInjected": 1,
+    "positiveItems": 11,
+    "avgItemsPositive": 1.38,
+    "avgItemsNegative": 0.4,
+    "relationCandidateRecall": 0.857
+  },
+  "queries": [
+    {
+      "id": "q-deploy-manager",
+      "query": "部署用的是什么包管理器",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": false
+    },
+    {
+      "id": "q-release-flow",
+      "query": "发布流程怎么构建",
+      "ids": [
+        "m_deploy_alt",
+        "hb_frozen"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-python",
+      "query": "项目 A 后端 Python 版本",
+      "ids": [
+        "m_python",
+        "m_python_old"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-budget-a",
+      "query": "项目 A 预算多少",
+      "ids": [
+        "m_budget_a"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-budget-b",
+      "query": "项目 B 预算多少",
+      "ids": [
+        "m_budget_b",
+        "m_budget_a"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-review",
+      "query": "周五下午复盘",
+      "ids": [
+        "m_lesson"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-english",
+      "query": "how to deploy the project",
+      "ids": [
+        "m_english"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-staged",
+      "query": "先跑测试再构建",
+      "ids": [
+        "m_staged",
+        "hb_frozen"
+      ],
+      "targetIndex": 0,
+      "negative": false
+    },
+    {
+      "id": "q-neg-weather",
+      "query": "今天上海天气怎么样",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-movie",
+      "query": "推荐几部电影",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-private",
+      "query": "私有项目数据库连接串",
+      "ids": [
+        "m_db_pg",
+        "m_db_mysql"
+      ],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-sensitive",
+      "query": "最近压力大怎么办",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    },
+    {
+      "id": "q-neg-hidden",
+      "query": "不应出现的隐藏内容",
+      "ids": [],
+      "targetIndex": -1,
+      "negative": true
+    }
+  ],
+  "relations": [
+    {
+      "factId": "m_deploy_alt",
+      "targetId": "m_deploy",
+      "label": "same",
+      "note": "同一部署约定,措辞不同",
+      "candidateIds": [
+        "m_deploy_alt",
+        "m_deploy",
+        "m_english",
+        "m_lesson",
+        "m_staged"
+      ],
+      "targetInCandidates": true
+    },
+    {
+      "factId": "m_python",
+      "targetId": "m_python_old",
+      "label": "update",
+      "note": "Python 版本更新",
+      "candidateIds": [
+        "m_deploy",
+        "m_db_pg",
+        "m_db_mysql",
+        "m_python",
+        "m_budget_a",
+        "m_budget_b",
+        "m_python_old"
+      ],
+      "targetInCandidates": true
+    },
+    {
+      "factId": "m_budget_a",
+      "targetId": "m_budget_b",
+      "label": "unrelated",
+      "note": "不同项目,相似表述",
+      "candidateIds": [
+        "m_db_pg",
+        "m_deploy",
+        "m_db_mysql",
+        "m_budget_a",
+        "m_budget_b",
+        "m_english",
+        "m_python",
+        "m_python_old"
+      ],
+      "targetInCandidates": true
+    },
+    {
+      "factId": "m_db_pg",
+      "targetId": "m_db_mysql",
+      "label": "conflict",
+      "note": "同项目数据库选型冲突,两派都保留",
+      "candidateIds": [
+        "m_db_pg",
+        "m_db_mysql",
+        "m_lesson",
+        "m_python",
+        "m_budget_a",
+        "m_deploy",
+        "m_staged",
+        "m_budget_b"
+      ],
+      "targetInCandidates": true
+    },
+    {
+      "factId": "m_python",
+      "targetId": "m_budget_a",
+      "label": "unrelated",
+      "note": "不同主题",
+      "candidateIds": [
+        "m_deploy",
+        "m_db_pg",
+        "m_db_mysql",
+        "m_python",
+        "m_budget_a",
+        "m_budget_b",
+        "m_python_old"
+      ],
+      "targetInCandidates": true
+    },
+    {
+      "factId": "m_deploy_alt",
+      "targetId": "m_budget_b",
+      "label": "unrelated",
+      "note": "不同主题",
+      "candidateIds": [
+        "m_deploy_alt",
+        "m_deploy",
+        "m_english",
+        "m_lesson",
+        "m_staged"
+      ],
+      "targetInCandidates": false
+    },
+    {
+      "factId": "m_deploy",
+      "targetId": "m_deploy_alt",
+      "label": "same",
+      "note": "反向同一事实",
+      "candidateIds": [
+        "m_deploy",
+        "m_deploy_alt",
+        "m_english",
+        "m_staged",
+        "m_python",
+        "m_budget_a",
+        "m_budget_b",
+        "m_db_pg"
+      ],
+      "targetInCandidates": true
+    }
+  ]
+}

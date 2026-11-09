@@ -1,0 +1,4 @@
+# 仓库统一 LF:提交时把 CRLF 折成 LF,checkout 也给 LF。
+# 本仓库全是 Node/JS/MJS/MD/JSON/YML/HTML,Windows 侧没有任何挑换行符的格式。
+# 没有这一行,Windows 工作区(CRLF)与仓库(LF)会让 git 把整仓文件误报成"已修改"。
+* text=auto eol=lf

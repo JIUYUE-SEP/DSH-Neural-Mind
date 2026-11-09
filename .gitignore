@@ -1,0 +1,14 @@
+node_modules/
+*.log
+.DS_Store
+.scratch/
+# 原始 npm pack 产物;规范候选包是 dsh-plugin-memory-0.6.6-candidate.tgz
+# 发布门禁原始日志作为发布证据入库(已脱敏),不受 *.log 忽略
+!bench-results/verify-release-*.log
+bench-results/artifacts/dsh-plugin-memory-0.5.0.tgz
+bench-results/artifacts/dsh-plugin-memory-0.6.0.tgz
+bench-results/artifacts/dsh-plugin-memory-0.6.1.tgz
+bench-results/artifacts/dsh-plugin-memory-0.6.2.tgz
+bench-results/artifacts/dsh-plugin-memory-0.6.3.tgz
+bench-results/artifacts/dsh-plugin-memory-0.6.4.tgz
+bench-results/artifacts/dsh-plugin-memory-0.6.5.tgz

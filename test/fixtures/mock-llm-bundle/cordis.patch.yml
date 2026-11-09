@@ -1,0 +1,7 @@
+# Test-only bundle layer: inserts the mock LLM adapter plugin into the profile.
+# `dsh plugin --profile <p> add <this dir>` appends this bundle to
+# dsh.profile.bundles; the row name is the package specifier.
+- insert:
+    - id: mock-llm
+      name: neural-mind-test-mock-llm
+

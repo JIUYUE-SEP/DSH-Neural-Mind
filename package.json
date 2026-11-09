@@ -1,0 +1,59 @@
+{
+  "name": "neural-mind",
+  "version": "0.6.6",
+  "description": "DSH 心智插件(原名 dsh-plugin-memory):长期记忆池 + SOUL 人格自我设定 + L1 用户画像;热缓冲 + 双速写入 + 证据驱动生命周期(DESIGN.md v1.11;DSH 0.2.1-rc.3 / 0.2.2-rc.1 / Session 格式 V4 接缝)",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.19 || >=24"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-renderer"
+      ]
+    }
+  },
+  "files": [
+    "lib/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "build:client": "node tools/build-client.mjs",
+    "prepack": "node tools/build-client.mjs",
+    "pretest": "node tools/build-client.mjs --check",
+    "test": "node tools/check-config-ledger.mjs && node tools/check-seams.mjs && node tools/check-design.mjs && node --test test/*.test.mjs",
+    "check:ledger": "node tools/check-config-ledger.mjs",
+    "check:seams": "node tools/check-seams.mjs",
+    "check:design": "node tools/check-design.mjs",
+    "check:host": "node tools/check-host-compat.mjs",
+    "check:shapes": "node tools/check-session-shapes.mjs",
+    "test:e2e": "node tools/e2e-conversation.mjs",
+    "test:e2e:default": "node tools/e2e-conversation.mjs --default-smoke",
+    "test:default-extract": "node tools/default-extract-smoke.mjs",
+    "test:upgrade": "node tools/upgrade-smoke.mjs",
+    "test:release-matrix": "node tools/release-matrix.mjs",
+    "check:conform": "node tools/check-code-vs-docs.mjs",
+    "verify:release": "npm test && node tools/check-host-compat.mjs && node tools/check-session-shapes.mjs && node tools/check-code-vs-docs.mjs && node tools/check-design.mjs --history --strict && node tools/e2e-conversation.mjs && node tools/release-matrix.mjs"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "yaml": "^2.9.1"
+  }
+}

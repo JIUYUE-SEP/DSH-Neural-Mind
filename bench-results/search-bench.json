@@ -1,0 +1,185 @@
+{
+  "generatedAt": "2026-10-26T19:25:28.665Z",
+  "node": "v24.22.1",
+  "platform": "win32",
+  "cpus": 16,
+  "rounds": 3,
+  "queries": 20,
+  "sizes": [
+    1000,
+    5000,
+    20000
+  ],
+  "inlineBudgetMs": 300,
+  "results": [
+    {
+      "size": 1000,
+      "metric": "search",
+      "lane": "bm25",
+      "p50": 0.705,
+      "p95": 1.855,
+      "max": 2.43,
+      "n": 60
+    },
+    {
+      "size": 1000,
+      "metric": "inject",
+      "lane": "bm25",
+      "p50": 0.641,
+      "p95": 1.997,
+      "max": 2.694,
+      "n": 60
+    },
+    {
+      "size": 1000,
+      "metric": "search",
+      "lane": "hybrid",
+      "p50": 1.828,
+      "p95": 3.443,
+      "max": 4.613,
+      "n": 60
+    },
+    {
+      "size": 1000,
+      "metric": "inject",
+      "lane": "hybrid",
+      "p50": 1.602,
+      "p95": 2.601,
+      "max": 2.843,
+      "n": 60
+    },
+    {
+      "size": 1000,
+      "metric": "write",
+      "lane": "corpus",
+      "p50": 19.076,
+      "p95": 19.302,
+      "max": 19.302,
+      "n": 3,
+      "msPerRecord": 0.0191
+    },
+    {
+      "size": 1000,
+      "metric": "openingDigest",
+      "lane": "sync",
+      "p50": 5.937,
+      "p95": 9.466,
+      "max": 9.466,
+      "n": 3
+    },
+    {
+      "size": 5000,
+      "metric": "search",
+      "lane": "bm25",
+      "p50": 2.092,
+      "p95": 4.452,
+      "max": 5.156,
+      "n": 60
+    },
+    {
+      "size": 5000,
+      "metric": "inject",
+      "lane": "bm25",
+      "p50": 1.806,
+      "p95": 3.102,
+      "max": 3.15,
+      "n": 60
+    },
+    {
+      "size": 5000,
+      "metric": "search",
+      "lane": "hybrid",
+      "p50": 5.407,
+      "p95": 7.485,
+      "max": 11.982,
+      "n": 60
+    },
+    {
+      "size": 5000,
+      "metric": "inject",
+      "lane": "hybrid",
+      "p50": 5.533,
+      "p95": 7.568,
+      "max": 8.233,
+      "n": 60
+    },
+    {
+      "size": 5000,
+      "metric": "write",
+      "lane": "corpus",
+      "p50": 69.864,
+      "p95": 90.906,
+      "max": 90.906,
+      "n": 3,
+      "msPerRecord": 0.014
+    },
+    {
+      "size": 5000,
+      "metric": "openingDigest",
+      "lane": "sync",
+      "p50": 20.951,
+      "p95": 21.494,
+      "max": 21.494,
+      "n": 3
+    },
+    {
+      "size": 20000,
+      "metric": "search",
+      "lane": "bm25",
+      "p50": 8.566,
+      "p95": 17.678,
+      "max": 32.466,
+      "n": 60
+    },
+    {
+      "size": 20000,
+      "metric": "inject",
+      "lane": "bm25",
+      "p50": 7.168,
+      "p95": 14.768,
+      "max": 16.001,
+      "n": 60
+    },
+    {
+      "size": 20000,
+      "metric": "search",
+      "lane": "hybrid",
+      "p50": 25.297,
+      "p95": 35.043,
+      "max": 38.519,
+      "n": 60
+    },
+    {
+      "size": 20000,
+      "metric": "inject",
+      "lane": "hybrid",
+      "p50": 23.695,
+      "p95": 32.718,
+      "max": 33.427,
+      "n": 60
+    },
+    {
+      "size": 20000,
+      "metric": "write",
+      "lane": "corpus",
+      "p50": 317.736,
+      "p95": 382.684,
+      "max": 382.684,
+      "n": 3,
+      "msPerRecord": 0.0159
+    },
+    {
+      "size": 20000,
+      "metric": "openingDigest",
+      "lane": "sync",
+      "p50": 80.255,
+      "p95": 93.623,
+      "max": 93.623,
+      "n": 3
+    }
+  ],
+  "resource": {
+    "cpuMs": 9906,
+    "rssMb": 458.2
+  }
+}

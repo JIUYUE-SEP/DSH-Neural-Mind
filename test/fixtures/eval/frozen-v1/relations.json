@@ -1,0 +1,13 @@
+{
+  "dataset": "frozen-v1",
+  "note": "候选关系标注:same/update/conflict/unrelated;供 B1 候选召回与 D2 关系裁决使用。",
+  "relations": [
+    { "factId": "m_deploy_alt", "targetId": "m_deploy", "label": "same", "note": "同一部署约定,措辞不同" },
+    { "factId": "m_python", "targetId": "m_python_old", "label": "update", "note": "Python 版本更新" },
+    { "factId": "m_budget_a", "targetId": "m_budget_b", "label": "unrelated", "note": "不同项目,相似表述" },
+    { "factId": "m_db_pg", "targetId": "m_db_mysql", "label": "conflict", "note": "同项目数据库选型冲突,两派都保留" },
+    { "factId": "m_python", "targetId": "m_budget_a", "label": "unrelated", "note": "不同主题" },
+    { "factId": "m_deploy_alt", "targetId": "m_budget_b", "label": "unrelated", "note": "不同主题" },
+    { "factId": "m_deploy", "targetId": "m_deploy_alt", "label": "same", "note": "反向同一事实" }
+  ]
+}

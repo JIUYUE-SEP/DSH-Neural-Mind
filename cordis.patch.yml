@@ -1,0 +1,15 @@
+# Profile layer shipped with this package.
+#
+# `dsh plugin --profile <name> add <this package>` 读取 package.json 的
+# `dsh.bundle.patch`,把下面这层自动对账进 profile 的 `dsh.profile.bundles`。
+# 配置默认值全部在 Config schema 里;要改配置,在 profile 的 cordis.patch.yml 里
+# 以同一 id 再写一行(patch 对该行的 config 是整体替换,不是深合并):
+#
+#   - id: neural-mind
+#     name: neural-mind
+#     config:
+#       scope: global
+#       ...
+- insert:
+    - id: neural-mind
+      name: neural-mind

@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOUL 卡原型 · dsh-plugin-memory</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   DSH 主题变量:原样取自 packages/client/ui-theme/src/styles/design-platform.css
+   (只搬了本原型用到的那些,数值未改)
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  --dsw-static-neutral-bluish-00:rgb(255,255,255); --dsw-static-neutral-bluish-50:rgb(249,250,251);
+  --dsw-static-neutral-bluish-60:rgb(245,246,247); --dsw-static-neutral-bluish-75:rgb(241,243,245);
+  --dsw-static-neutral-bluish-100:rgb(235,238,242); --dsw-static-neutral-bluish-150:rgb(233,236,242);
+  --dsw-static-neutral-bluish-200:rgb(225,229,238); --dsw-static-neutral-bluish-400:rgb(173,178,184);
+  --dsw-static-neutral-bluish-500:rgb(151,157,166); --dsw-static-neutral-bluish-600:rgb(129,133,140);
+  --dsw-static-neutral-bluish-700:rgb(97,102,107); --dsw-static-neutral-bluish-800:rgb(53,54,56);
+  --dsw-static-neutral-bluish-850:rgb(44,44,46); --dsw-static-neutral-bluish-875:rgb(35,35,36);
+  --dsw-static-neutral-bluish-950:rgb(21,21,23); --dsw-static-neutral-bluish-1000:rgb(15,17,21);
+  --dsw-static-deepseek-500:rgb(65,118,230); --dsw-static-deepseek-100:rgb(228,237,253);
+  --dsw-static-red-600:rgb(236,19,19); --dsw-static-red-50:rgb(254,242,242);
+  --dsw-static-green-500:rgb(34,197,94); --dsw-static-green-100:rgb(230,250,237);
+  --dsw-static-amber-600:rgb(221,134,41); --dsw-static-amber-100:rgb(254,245,231);
+  --dsw-static-neutral-200:rgb(229,229,229);
+}
+body{
+  --dsw-alias-bg-base:var(--dsw-static-neutral-bluish-00);
+  --dsw-alias-bg-layer-1:var(--dsw-static-neutral-bluish-00);
+  --dsw-alias-bg-layer-2:var(--dsw-static-neutral-bluish-00);
+  --dsw-alias-bg-overlay:var(--dsw-static-neutral-bluish-150);
+  --dsw-alias-bg-mask-1:rgba(0,0,0,.24);
+  --dsw-alias-border-l1:rgba(0,0,0,.04);
+  --dsw-alias-border-l2:rgba(0,0,0,.1);
+  --dsw-alias-border-l3:rgba(0,0,0,.12);
+  --dsw-alias-brand-primary:var(--dsw-static-neutral-bluish-1000);
+  --dsw-alias-button-primary-fill:var(--dsw-alias-brand-primary);
+  --dsw-alias-label-primary:var(--dsw-static-neutral-bluish-1000);
+  --dsw-alias-label-primary-foreground:var(--dsw-static-neutral-bluish-00);
+  --dsw-alias-label-secondary:var(--dsw-static-neutral-bluish-700);
+  --dsw-alias-label-tertiary:var(--dsw-static-neutral-bluish-600);
+  --dsw-alias-label-caption:var(--dsw-static-neutral-bluish-400);
+  --dsw-alias-state-error-primary:var(--dsw-static-red-600);
+  --dsw-alias-state-success-primary:var(--dsw-static-green-500);
+  --dsw-alias-state-success-tertiary:var(--dsw-static-green-100);
+  --dsw-alias-state-warn-primary:var(--dsw-static-amber-600);
+  --dsw-alias-link:var(--dsw-static-deepseek-500);
+  --dsw-alias-interactive-bg-hover:rgba(38,49,72,.06);
+  --dsw-alias-scrollbar-bg-l2:var(--dsw-static-neutral-200);
+  --dsw-elevation-prominent:0 24px 64px rgba(0,0,0,.18);
+}
+body[data-ds-dark-theme]{
+  --dsw-alias-bg-base:var(--dsw-static-neutral-bluish-950);
+  --dsw-alias-bg-layer-1:var(--dsw-static-neutral-bluish-875);
+  --dsw-alias-bg-layer-2:var(--dsw-static-neutral-bluish-850);
+  --dsw-alias-bg-overlay:var(--dsw-static-neutral-bluish-700);
+  --dsw-alias-bg-mask-1:rgba(0,0,0,.5);
+  --dsw-alias-border-l1:rgba(255,255,255,.06);
+  --dsw-alias-border-l2:rgba(255,255,255,.12);
+  --dsw-alias-border-l3:rgba(255,255,255,.16);
+  --dsw-alias-brand-primary:var(--dsw-static-neutral-bluish-50);
+  --dsw-alias-label-primary:var(--dsw-static-neutral-bluish-50);
+  --dsw-alias-label-primary-foreground:var(--dsw-static-neutral-bluish-1000);
+  --dsw-alias-label-secondary:var(--dsw-static-neutral-bluish-300,#cfd3d6);
+  --dsw-alias-label-tertiary:var(--dsw-static-neutral-bluish-400);
+  --dsw-alias-label-caption:var(--dsw-static-neutral-bluish-500);
+  --dsw-alias-state-success-tertiary:rgba(34,197,94,.16);
+  --dsw-alias-interactive-bg-hover:rgba(255,255,255,.08);
+  --dsw-elevation-prominent:0 24px 64px rgba(0,0,0,.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   原型外壳(不属于 DSH:只用来切状态)
+   ══════════════════════════════════════════════════════════════════════ */
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.5 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary)}
+.proto-bar{position:sticky;top:0;z-index:9;display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  padding:8px 12px;border-bottom:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-base)}
+.proto-bar b{font-size:12px;color:var(--dsw-alias-label-secondary);margin-right:4px}
+.proto-bar button{font:inherit;font-size:12px;padding:3px 10px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-primary)}
+.proto-bar button[aria-pressed="true"]{background:var(--dsw-alias-brand-primary);color:var(--dsw-alias-label-primary-foreground);
+  border-color:var(--dsw-alias-brand-primary)}
+.proto-bar .spacer{flex:1}
+.proto-note{font-size:11px;color:var(--dsw-alias-label-caption);padding:6px 12px 0}
+.stage{display:flex;justify-content:center;align-items:flex-start;padding:22px 12px 40px;background:var(--dsw-alias-bg-overlay);min-height:calc(100vh - 90px)}
+
+/* ══════════════════════════════════════════════════════════════════════
+   设置面板外壳:尺寸取自 SettingsRoot.module.css(panel 800/半径 32;nav 188)
+   ══════════════════════════════════════════════════════════════════════ */
+.panel{position:relative;display:flex;width:800px;height:min(800px,calc(100vh - 150px));overflow:hidden;
+  border-radius:32px;background:var(--dsw-alias-bg-layer-2);box-shadow:var(--dsw-elevation-prominent);
+  border:1px solid var(--dsw-alias-border-l1)}
+.panel[data-narrow="true"]{width:560px}
+.nav{flex:none;width:188px;display:flex;flex-direction:column;gap:18px;padding:22px 0 22px 12px}
+.nav .brand{font-weight:600;font-size:14px;padding-left:10px}
+.nav .item{padding:6px 10px;border-radius:8px;font-size:13px;color:var(--dsw-alias-label-secondary);cursor:default}
+.nav .item[aria-current="true"]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+.col-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 8px}
+.col-head h1{margin:0;font-size:16px}
+.col-body{flex:1;overflow:auto;padding:8px 24px 24px}
+
+/* ══════════════════════════════════════════════════════════════════════
+   以下 .mem-* 全部照抄 lib/client.js 现有样式(保真:评审的就是真实观感)
+   ══════════════════════════════════════════════════════════════════════ */
+.mem-root{display:flex;flex-direction:column;gap:14px;min-height:100%;font-size:13px;color:var(--dsw-alias-label-primary)}
+.mem-card{border:1px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-layer-1);padding:12px;display:flex;flex-direction:column;gap:10px}
+.mem-card-title{font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mem-hint{color:var(--dsw-alias-label-secondary);font-size:12px;line-height:17px}
+.mem-group{border-top:1px dashed var(--dsw-alias-border-l1);padding-top:8px;display:flex;flex-direction:column;gap:8px}
+.mem-group-title{font-weight:600;font-size:12px;color:var(--dsw-alias-label-secondary);cursor:pointer;user-select:none}
+.mem-field{display:flex;align-items:flex-start;gap:10px}
+.mem-field-label{flex-shrink:0;width:180px;padding-top:5px;font-size:12px;display:flex;flex-direction:column;gap:2px}
+.mem-field-name{font-weight:500}
+.mem-field-desc{color:var(--dsw-alias-label-secondary);font-size:11px;line-height:15px}
+.mem-field-ctl{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
+.mem-input{flex:1;min-width:0;appearance:none;border:1px solid var(--dsw-alias-border-l1);background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary);border-radius:6px;padding:5px 8px;font-size:12px;line-height:18px;font-family:inherit}
+textarea.mem-input{min-height:64px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
+.mem-badge{border:1px solid var(--dsw-alias-border-l2);border-radius:999px;padding:0 6px;font-size:11px;color:var(--dsw-alias-label-secondary);flex-shrink:0}
+.mem-badge-over{color:var(--dsw-alias-state-warn-primary);border-color:var(--dsw-alias-state-warn-primary)}
+.mem-btn{appearance:none;border:1px solid var(--dsw-alias-border-l1);background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);border-radius:6px;padding:4px 10px;font-size:12px;line-height:18px;cursor:pointer;flex-shrink:0}
+.mem-btn-primary{background:var(--dsw-alias-button-primary-fill);border-color:var(--dsw-alias-button-primary-fill);color:var(--dsw-alias-label-primary-foreground)}
+.mem-stats{display:flex;flex-wrap:wrap;gap:8px}
+.mem-stat{border:1px solid var(--dsw-alias-border-l1);border-radius:8px;padding:6px 10px;display:flex;flex-direction:column;gap:2px;min-width:86px}
+.mem-stat-num{font-size:16px;font-weight:600}
+.mem-stat-label{font-size:11px;color:var(--dsw-alias-label-secondary)}
+.mem-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.mem-tab{border:1px solid var(--dsw-alias-border-l1);border-radius:999px;padding:2px 10px;font-size:12px;cursor:pointer;color:var(--dsw-alias-label-secondary)}
+.mem-tab-active{color:var(--dsw-alias-label-primary);border-color:var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-2)}
+.mem-list{display:flex;flex-direction:column;gap:6px}
+.mem-row{border:1px solid var(--dsw-alias-border-l1);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;background:var(--dsw-alias-bg-layer-1)}
+.mem-row-content{font-size:12px;line-height:18px;white-space:pre-wrap;word-break:break-word;cursor:pointer}
+.mem-row-clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mem-row-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mem-row-id{font-size:10px;color:var(--dsw-alias-label-secondary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mem-row-actions{display:flex;gap:6px}
+.mem-empty{padding:20px;text-align:center;color:var(--dsw-alias-label-secondary);font-size:12px}
+.mem-msg{border-radius:6px;padding:7px 10px;font-size:12px;background:var(--dsw-alias-bg-layer-2)}
+.mem-msg-error{color:var(--dsw-alias-state-error-primary)}
+.mem-audit{font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:17px}
+.mem-audit-row{display:flex;gap:8px;border-bottom:1px dashed var(--dsw-alias-border-l1);padding:4px 0}
+.mem-audit-ts{color:var(--dsw-alias-label-secondary);flex-shrink:0}
+.mem-audit-kind{color:var(--dsw-alias-state-warn-primary);flex-shrink:0;min-width:150px}
+
+/* ══════════════════════════════════════════════════════════════════════
+   新增:SOUL 卡(本原型要评审的部分)
+   ══════════════════════════════════════════════════════════════════════ */
+.mem-soul-toggles{display:flex;gap:6px;align-items:center}
+.mem-switch{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--dsw-alias-label-secondary);cursor:pointer}
+.mem-switch .dot{width:22px;height:13px;border-radius:999px;background:var(--dsw-alias-border-l3);position:relative;flex-shrink:0;transition:background .15s}
+.mem-switch .dot::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#fff;transition:left .15s}
+.mem-switch[data-on="true"] .dot{background:var(--dsw-alias-state-success-primary)}
+.mem-switch[data-on="true"] .dot::after{left:10px}
+.mem-soul-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:var(--dsw-alias-label-secondary)}
+.mem-soul-meta code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
+.mem-soul-preview{border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-2);padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.mem-soul-preview pre{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:17px;white-space:pre-wrap;word-break:break-word;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:var(--dsw-alias-label-primary)}
+.mem-soul-preview-foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mem-soul-hist-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--dsw-alias-label-secondary)}
+.mem-soul-hist{display:flex;flex-direction:column;gap:6px;max-height:210px;overflow:auto}
+.mem-soul-v{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;padding:6px 8px;font-size:12px}
+.mem-soul-v .when{color:var(--dsw-alias-label-secondary);flex-shrink:0;min-width:64px}
+.mem-soul-v .why{flex:1;min-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem-soul-v .delta{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--dsw-alias-label-secondary)}
+.mem-soul-v .acts{display:flex;gap:6px;margin-left:auto}
+.mem-badge-agent{color:var(--dsw-alias-link);border-color:var(--dsw-alias-link)}
+.mem-badge-user{color:var(--dsw-alias-state-success-primary);border-color:var(--dsw-alias-state-success-primary)}
+.mem-badge-ext{color:var(--dsw-alias-label-tertiary)}
+.mem-diff{border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-2);padding:6px 0;overflow:auto;max-height:260px}
+.mem-diff pre{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:18px}
+.mem-diff .ln{display:block;padding:0 10px;white-space:pre-wrap;word-break:break-word}
+.mem-diff .add{background:var(--dsw-alias-state-success-tertiary)}
+.mem-diff .del{background:var(--dsw-static-red-50);text-decoration:line-through;text-decoration-color:var(--dsw-static-red-600)}
+body[data-ds-dark-theme] .mem-diff .del{background:rgba(236,19,19,.14)}
+.mem-soul-confirm{display:flex;gap:6px;align-items:center;background:var(--dsw-static-amber-100);border:1px solid var(--dsw-alias-state-warn-primary);border-radius:6px;padding:5px 8px;font-size:12px}
+body[data-ds-dark-theme] .mem-soul-confirm{background:rgba(221,134,41,.14)}
+
+/* ── 全宽覆盖层(盖住左侧 188px 导航,拿到整块 800px) ───────────────── */
+.mem-overlay{position:absolute;inset:0;z-index:5;display:none;flex-direction:column;background:var(--dsw-alias-bg-layer-2)}
+.panel[data-state^="overlay"] .mem-overlay{display:flex}
+.mem-overlay-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 24px 10px;border-bottom:1px solid var(--dsw-alias-border-l1)}
+.mem-overlay-head h2{margin:0;font-size:15px}
+.mem-overlay-head .sub{font-size:11px;color:var(--dsw-alias-label-secondary);margin-top:2px}
+.mem-overlay-body{flex:1;min-height:0;display:flex;gap:14px;padding:14px 24px}
+.mem-overlay-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.mem-overlay-side{flex:none;width:240px;display:flex;flex-direction:column;gap:6px;min-height:0}
+.mem-overlay-side .mem-soul-hist{max-height:none;flex:1}
+.mem-overlay-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 24px 18px;border-top:1px solid var(--dsw-alias-border-l1)}
+.mem-editor{flex:1;min-height:45vh;width:100%;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12px;line-height:19px;padding:10px 12px;border-radius:8px;border:1px solid var(--dsw-alias-border-l2);
+  background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary)}
+.mem-charcount{font-size:11px;color:var(--dsw-alias-label-secondary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mem-charcount[data-over="true"]{color:var(--dsw-alias-state-error-primary);font-weight:600}
+.mem-msg-ok{color:var(--dsw-alias-state-success-primary)}
+
+/* 状态切换(只影响原型的显隐,不属于设计) */
+.panel[data-state="card"] .only-empty,
+.panel[data-state="empty"] .only-card,
+.panel[data-state="empty"] .only-hist,
+.panel[data-state="confirm"] .only-hist,
+.panel:not([data-state="confirm"]) .only-confirm,
+.panel[data-state^="overlay"] .only-card{display:none}
+.panel[data-state="overlay-diff"] .only-edit{display:none}
+.panel[data-state="overlay-edit"] .only-diff{display:none}
+</style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <b>状态:</b>
+  <button data-state="card" aria-pressed="true">① 卡片·有内容</button>
+  <button data-state="empty" aria-pressed="false">② 卡片·空态</button>
+  <button data-state="confirm" aria-pressed="false">③ 回滚二次确认</button>
+  <button data-state="overlay-edit" aria-pressed="false">④ 覆盖层·编辑</button>
+  <button data-state="overlay-diff" aria-pressed="false">⑤ 覆盖层·diff</button>
+  <span class="spacer"></span>
+  <button id="narrow" aria-pressed="false">窄屏 560px</button>
+  <button id="dark" aria-pressed="false">深色</button>
+</div>
+<div class="proto-note">尺寸与配色为真实值:面板 800×min(800,视口−150)、导航栏 188px、内容列 ≈570px;圆角 32/10/8;颜色全部走 DSH 主题变量。</div>
+
+<div class="stage">
+  <div class="panel" id="panel" data-state="card" data-narrow="false">
+
+    <!-- 设置面板:导航栏 + 内容列 -->
+    <div class="nav">
+      <div class="brand">设置</div>
+      <div class="item" aria-current="true">配置</div>
+      <div class="item">记忆浏览</div>
+      <div class="item">审计</div>
+    </div>
+    <div class="col">
+      <div class="col-head"><h1>记忆</h1><span class="mem-hint">改动即保存即生效</span></div>
+      <div class="col-body">
+        <div class="mem-root">
+
+          <!-- 上方:既有配置卡(截断示意,说明 SOUL 卡的位置) -->
+          <div class="mem-card">
+            <div class="mem-card-title">配置</div>
+            <div class="mem-group">
+              <div class="mem-group-title">▾ 隐私与作用域</div>
+              <div class="mem-field">
+                <div class="mem-field-label"><span class="mem-field-name">记忆池作用域</span><span class="mem-field-desc">global:全局共享</span></div>
+                <div class="mem-field-ctl"><input class="mem-input" value="global" readonly></div>
+              </div>
+            </div>
+            <div class="mem-group">
+              <div class="mem-group-title">▸ 向量检索 · 写入与提炼 · 注入 · L1 用户画像</div>
+            </div>
+          </div>
+
+          <!-- ══════════ 新卡:SOUL ══════════ -->
+          <div class="mem-card only-card">
+            <div class="mem-card-title">
+              <span>SOUL(自我设定)</span>
+              <span class="mem-soul-toggles">
+                <span class="mem-switch" data-on="true"><i class="dot"></i>注入</span>
+                <span class="mem-switch" data-on="true"><i class="dot"></i>允许自改</span>
+              </span>
+            </div>
+
+            <div class="mem-soul-meta">
+              <code>~/.dsh/SOUL.md</code><span>·</span><span>128 / 2000 字符</span><span>·</span>
+              <span>今日自改 1/5</span><span>·</span><span>最后一版 3 分钟前(agent)</span>
+            </div>
+
+            <div class="mem-soul-preview">
+              <pre>我是记忆插件 SOUL-E2E 的测试人格。
+已自改两次。
+测试规则:你在每条回复的结尾,必须原样附上标记 [SOUL-E2E-OK]。</pre>
+              <div class="mem-soul-preview-foot">
+                <span class="mem-hint">预览前 3 行</span>
+                <button class="mem-btn" onclick="setState('overlay-edit')">编辑 →</button>
+              </div>
+            </div>
+
+            <div class="mem-soul-hist-head only-hist">
+              <span>最近 3 版</span>
+              <button class="mem-btn" onclick="setState('overlay-edit')">全部历史 →</button>
+            </div>
+            <div class="mem-soul-hist only-hist">
+              <div class="mem-soul-v">
+                <span class="when">3 分钟前</span><span class="mem-badge mem-badge-agent">agent</span>
+                <span class="why">e2e 第二次自改</span><span class="delta">69 → 68</span>
+                <span class="acts"><button class="mem-btn" onclick="setState('overlay-diff')">diff</button><button class="mem-btn" onclick="setState('confirm')">回滚</button></span>
+              </div>
+              <div class="mem-soul-v">
+                <span class="when">1 小时前</span><span class="mem-badge mem-badge-user">用户</span>
+                <span class="why">设置页编辑</span><span class="delta">120 → 69</span>
+                <span class="acts"><button class="mem-btn" onclick="setState('overlay-diff')">diff</button><button class="mem-btn" onclick="setState('confirm')">回滚</button></span>
+              </div>
+              <div class="mem-soul-v">
+                <span class="when">昨天</span><span class="mem-badge mem-badge-ext">外部</span>
+                <span class="why">外部修改(poll)</span><span class="delta">0 → 120</span>
+                <span class="acts"><button class="mem-btn" onclick="setState('overlay-diff')">diff</button><button class="mem-btn" onclick="setState('confirm')">回滚</button></span>
+              </div>
+            </div>
+
+            <div class="only-confirm mem-soul-confirm">
+              回滚到「1 小时前(用户)」之前?当前内容会被写回旧版并产生**新版本**,历史不删。
+              <span style="margin-left:auto"></span>
+              <button class="mem-btn">取消</button><button class="mem-btn mem-btn-primary">确认回滚</button>
+            </div>
+
+            <div class="mem-hint">SOUL 是你自己的人格设定(性格、信条、口吻),跨会话一致;与系统人设、AGENTS.md、用户当场要求冲突时,一律以后者为准。</div>
+          </div>
+
+          <!-- 空态版本 -->
+          <div class="mem-card only-empty">
+            <div class="mem-card-title">
+              <span>SOUL(自我设定)</span>
+              <span class="mem-soul-toggles">
+                <span class="mem-switch" data-on="true"><i class="dot"></i>注入</span>
+                <span class="mem-switch" data-on="true"><i class="dot"></i>允许自改</span>
+              </span>
+            </div>
+            <div class="mem-soul-meta"><code>~/.dsh/SOUL.md</code><span>·</span><span>文件不存在</span><span>·</span><span>今日自改 0/5</span></div>
+            <div class="mem-empty">
+              还没有 SOUL。它是你自己的人格设定(性格、信条、口吻),跨会话、跨身份一致;
+              agent 可以用 <code>soul_update</code> 自改,版本与回滚都会留痕。<br>
+              你可以现在写第一版,也可以留给它自己写。
+              <div style="margin-top:10px"><button class="mem-btn mem-btn-primary" onclick="setState('overlay-edit')">写第一版</button></div>
+            </div>
+          </div>
+
+          <!-- 下方:既有卡片(截断示意) -->
+          <div class="mem-card">
+            <div class="mem-card-title">记忆浏览</div>
+            <div class="mem-stats">
+              <div class="mem-stat"><span class="mem-stat-num">34</span><span class="mem-stat-label">活跃</span></div>
+              <div class="mem-stat"><span class="mem-stat-num">4</span><span class="mem-stat-label">暂存</span></div>
+              <div class="mem-stat"><span class="mem-stat-num">17</span><span class="mem-stat-label">热缓冲</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 全宽覆盖层:盖住导航栏 -->
+    <div class="mem-overlay">
+      <div class="mem-overlay-head">
+        <div>
+          <h2>SOUL 编辑</h2>
+          <div class="sub"><code>~/.dsh/SOUL.md</code> · 保存后会成为一个新版本(历史不删)</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="mem-btn" onclick="setState('card')">取消</button>
+          <button class="mem-btn mem-btn-primary" onclick="setState('card')">保存</button>
+        </div>
+      </div>
+
+      <div class="mem-overlay-body">
+        <div class="mem-overlay-main only-edit">
+          <textarea class="mem-editor">我是记忆插件 SOUL-E2E 的测试人格。
+已自改两次。
+测试规则:你在每条回复的结尾,必须原样附上标记 [SOUL-E2E-OK]。</textarea>
+        </div>
+
+        <div class="mem-overlay-main only-diff">
+          <div class="mem-hint">与当前版本对比(3 分钟前 · agent · e2e 第二次自改)</div>
+          <div class="mem-diff"><pre><span class="ln del">- 我是记忆插件 SOUL-E2E 的测试人格(已自改过一次)。</span><span class="ln add">+ 我是记忆插件 SOUL-E2E 的测试人格。</span><span class="ln add">+ 已自改两次。</span><span class="ln">  测试规则:你在每条回复的结尾,必须原样附上标记 [SOUL-E2E-OK]。</span></pre></div>
+          <div class="mem-hint">回滚会写回这一版之前的旧内容,并**新增**一版;旧版本永远保留,可再回滚回来。</div>
+        </div>
+
+        <div class="mem-overlay-side">
+          <div class="mem-soul-hist-head"><span>历史版本(3)</span><button class="mem-btn">刷新</button></div>
+          <div class="mem-soul-hist">
+            <div class="mem-soul-v"><span class="mem-badge mem-badge-agent">agent</span><span class="why">e2e 第二次自改</span><span class="delta">69→68</span></div>
+            <div class="mem-soul-v"><span class="mem-badge mem-badge-user">用户</span><span class="why">设置页编辑</span><span class="delta">120→69</span></div>
+            <div class="mem-soul-v"><span class="mem-badge mem-badge-ext">外部</span><span class="why">外部修改(poll)</span><span class="delta">0→120</span></div>
+          </div>
+          <div class="mem-hint">点任一版看 diff 与回滚。</div>
+        </div>
+      </div>
+
+      <div class="mem-overlay-foot">
+        <span class="mem-charcount">128 / 2000 字符</span>
+        <span class="mem-hint only-edit">未保存 · 保存成功后这里会显示「已保存(新版本 soul_xxx)」</span>
+        <span class="mem-hint only-diff"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const panel = document.getElementById('panel')
+function setState(state) {
+  panel.dataset.state = state
+  for (const b of document.querySelectorAll('.proto-bar button[data-state]')) {
+    b.setAttribute('aria-pressed', String(b.dataset.state === state))
+  }
+}
+for (const b of document.querySelectorAll('.proto-bar button[data-state]')) {
+  b.addEventListener('click', () => setState(b.dataset.state))
+}
+document.getElementById('narrow').addEventListener('click', (e) => {
+  const on = panel.dataset.narrow !== 'true'
+  panel.dataset.narrow = String(on)
+  e.target.setAttribute('aria-pressed', String(on))
+})
+document.getElementById('dark').addEventListener('click', (e) => {
+  const on = document.body.hasAttribute('data-ds-dark-theme')
+  if (on) document.body.removeAttribute('data-ds-dark-theme')
+  else document.body.setAttribute('data-ds-dark-theme', '')
+  e.target.setAttribute('aria-pressed', String(!on))
+})
+</script>
+</body>
+</html>

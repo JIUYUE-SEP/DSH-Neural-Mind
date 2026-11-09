@@ -1,0 +1,53 @@
+{
+  "dataset": "frozen-v2",
+  "relations": [
+    {
+      "factId": "m_alpha_pkg",
+      "targetId": "m_alpha_pkg_old",
+      "label": "update",
+      "note": "alpha 包管理器迁移(新→旧)"
+    },
+    {
+      "factId": "m_beta_pkg",
+      "targetId": "m_beta_pkg_old",
+      "label": "update",
+      "note": "beta 包管理器迁移"
+    },
+    {
+      "factId": "m_alpha_db",
+      "targetId": "m_alpha_db_alt",
+      "label": "conflict",
+      "note": "数据库选型存在争议"
+    },
+    {
+      "factId": "m_alpha_deploy",
+      "targetId": "m_alpha_release",
+      "label": "same",
+      "note": "同项目发布相关(口径不同)"
+    },
+    {
+      "factId": "m_beta_release",
+      "targetId": "m_alpha_release",
+      "label": "same",
+      "note": "发布流程同构(不同项目)"
+    },
+    {
+      "factId": "m_eta_budget",
+      "targetId": "m_epsilon_budget",
+      "label": "same",
+      "note": "预算表述同构(不同项目)"
+    },
+    {
+      "factId": "m_gamma_test",
+      "targetId": "m_gamma_ci",
+      "label": "unrelated",
+      "note": "同项目不同主题"
+    },
+    {
+      "factId": "m_user_terse",
+      "targetId": "m_user_emoji",
+      "label": "unrelated",
+      "note": "不同偏好"
+    }
+  ]
+}
