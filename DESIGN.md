@@ -92,7 +92,7 @@
 ---
 
 ## 10. 配置项清单
-> 全量账本（68 项）见 **[10-config-ledger.md](docs/design/10-config-ledger.md)**；`check:ledger` 与 `lib/config.js` 的 Schemastery schema 机械对账。常用层 / 高级层划分以账本为准。
+> 全量账本（70 项）见 **[10-config-ledger.md](docs/design/10-config-ledger.md)**；`check:ledger` 与 `lib/config.js` 的 Schemastery schema 机械对账。常用层 / 高级层划分以账本为准。
 
 ## 11. 实施路线
 > 历史路线已归档：[implementation-roadmap.md](docs/legacy/implementation-roadmap.md)。当前执行与待设计池见 [NEXT_STEPS.md](NEXT_STEPS.md)。

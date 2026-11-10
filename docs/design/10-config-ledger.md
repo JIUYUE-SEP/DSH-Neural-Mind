@@ -93,7 +93,7 @@ superseded_by: null
     autoStartWaitMs: number            // 默认 20000;就绪审计窗口(超时记 unready,继续等到 3× 再 late-ready)
     autoStartWarmup: boolean           // 默认 false;就绪后预热一次,第一条检索不再冷启动降级(§5,§13-⑤)
   }
-  // providerId 未采用(实现以 baseUrl 直连,§13-①);上表与 lib/config.js 顶层 68 项机械对账一致
+  // providerId 未采用(实现以 baseUrl 直连,§13-①);上表与 lib/config.js 顶层 70 项机械对账一致
   chunkPlainMaxChars: number           // 默认 8192,向量分段阈值(≤此整条单向量)
   chunkSize: number                    // 默认 1000,向量分段长度(字符)
   chunkOverlap: number                 // 默认 100,段间重叠
@@ -174,6 +174,11 @@ superseded_by: null
   storageOpenTimeoutMs: number           // 高级:默认 5000;storageDomain.open 超时即按「降级纯内存态」处理
                                          // (后端异常时 open 可能既不 resolve 也不 reject → 启动静默卡死)
   soulPollSeconds: number                // 高级:默认 5,外部手改的探测最小间隔(内容逐字比对,不用 mtime)
+
+  // ── 使用观测(§14;0.6.7 S12)──
+  usageLog: boolean                      // 高级:默认 true,使用遥测落盘(注入/跳过/提炼/召回计数 + 注入质量元数据;
+                                         //   只含元数据不含正文);关掉 = 退回纯进程内(重启归零)
+  usageRetentionDays: number             // 高级:默认 30,使用遥测日汇总保留天数(0=不清理;明细固定 7 天/2000 条)
 }
 ```
 

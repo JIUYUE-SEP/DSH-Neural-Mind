@@ -9,6 +9,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { apply, Config } from '../lib/index.js'
 import { createInjectionLog } from '../lib/injectionlog.js'
+import { localDay } from '../lib/usage.js'
 import { createFakeCtx, fakeSession, memoryTable, waitFor } from './helpers.mjs'
 
 // ── 注入日志单元 ─────────────────────────────────────────────────────────────
@@ -356,6 +357,77 @@ test('/neural-mind/api workspaces:合并 DSH 工作区注册表(全新安装、�
     assert.equal(overview.workspaces.total, 3)
     assert.equal(overview.workspaces.disabled, 1)
     assert.equal(overview.stats.health.state, 'ready', '回合管道健康随 stats 下发')
+  } finally {
+    await booted.fake.dispose()
+  }
+})
+
+test('injectionlog:onRecord 旁路 sink 收到同一行;回调抛错不影响注入记录', () => {
+  const seen = []
+  const log = createInjectionLog({ max: 5, onRecord: (row) => seen.push(row) })
+  log.record({
+    mode: 'inject', sessionId: 's', records: 2, chars: 30,
+    items: [{ id: 'm1', r: 0.5, s: 0.2, c: 0.8, e: 1, src: 'user', k: 'fact' }],
+  })
+  assert.equal(seen.length, 1)
+  assert.equal(seen[0].items.length, 1, '质量元数据原样透传给 sink')
+  assert.equal(log.list(1)[0], seen[0])
+  // sink 抛错:注入记录照常完成,不向上抛(观测不得影响主流程)
+  const boom = createInjectionLog({ onRecord: () => { throw new Error('sink boom') } })
+  const row = boom.record({ mode: 'skip', reason: 'no-hits', sessionId: 's' })
+  assert.equal(row.mode, 'skip')
+  assert.equal(boom.list(1).length, 1)
+})
+
+test('/neural-mind/api usage/pool:跨重启遥测读取 + R9 只读统计 + stats/overview 带 usage 块', async () => {
+  const seededDay = localDay()
+  const nowIso = new Date().toISOString()
+  const booted = await bootConsole({
+    seed: (fake) => {
+      seedMemories([record({ id: 'mem_u1' })])(fake)
+      // 模拟"上一次运行已经落盘"的遥测:usage.start() 应读回内存镜像
+      fake.tables.days = memoryTable()
+      fake.tables.days.put(`u_${seededDay}`, {
+        id: `u_${seededDay}`,
+        date: seededDay,
+        counters: {
+          'inject.inject': 2, 'inject.records': 3, 'inject.chars': 400,
+          'inject.relevanceSum': 1.1, 'inject.relevanceCount': 3,
+          'inject.confSum': 2.1, 'inject.confCount': 3,
+          'inject.lowTrust': 1, 'inject.unverified': 0,
+        },
+        updatedAt: nowIso,
+      })
+      fake.tables.recent = memoryTable()
+      fake.tables.recent.put('r_1', {
+        id: 'r_1', ts: nowIso, mode: 'inject', records: 3, chars: 400, sessionId: 'sess',
+        items: [{ id: 'mem_u1', r: 0.55, s: 0.2, c: 0.7, e: 1, src: 'user', k: 'fact' }],
+      })
+    },
+  })
+  try {
+    const usageBody = await booted.call({ action: 'usage' })
+    assert.equal(usageBody.ok, true)
+    assert.equal(usageBody.available, true)
+    assert.equal(usageBody.days.length, 1, '启动时读回按天汇总(跨重启可读)')
+    assert.equal(usageBody.totals.counters['inject.inject'], 2)
+    assert.equal(usageBody.totals.quality.rAvg, 0.37, '1.1 / 3 保留两位')
+    assert.equal(usageBody.recent.length, 1)
+    assert.equal(usageBody.recent[0].quality.rAvg, 0.55, '明细缺 quality 时由 items 聚合补上')
+    assert.equal(usageBody.retention.recentDays, 7)
+
+    const poolBody = await booted.call({ action: 'pool' })
+    assert.equal(poolBody.ok, true)
+    assert.equal(poolBody.available, true)
+    assert.equal(poolBody.counts.active, 1)
+    assert.ok(poolBody.volume.totalBytes > 0)
+
+    const statsBody = await booted.call({ action: 'stats' })
+    assert.equal(statsBody.usage.available, true)
+    assert.equal(statsBody.usage.today['inject.inject'], 2)
+
+    const overviewBody = await booted.call({ action: 'overview' })
+    assert.equal(overviewBody.usage.available, true)
   } finally {
     await booted.fake.dispose()
   }
