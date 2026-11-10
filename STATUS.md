@@ -9,9 +9,9 @@
 
 | 项 | 值 |
 |---|---|
-| 仓库 | `JIUYUE-SEP/neural-mind`（public，MIT License） |
+| 仓库 | `JIUYUE-SEP/DSH-Neural-Mind`（public，MIT License；2026-11-10 由 `neural-mind` 改名，旧名自动重定向） |
 | 工作树版本 | **0.6.7**（S12 使用观测） |
-| 最新已发布 | **0.6.7**（2026-11-10，Release [v0.6.7](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.7)） |
+| 最新已发布 | **0.6.7**（2026-11-10，Release [v0.6.7](https://github.com/JIUYUE-SEP/DSH-Neural-Mind/releases/tag/v0.6.7)） |
 | 下一版 | **0.7.0**（记忆质量，S13–S16；S12 观测已随 0.6.7 交付） |
 | 0.6.7 状态 | **已发布**：tag `v0.6.7`（提交 `3fd6055`）+ GitHub Release 已按用户明确授权创建（**不发 npm**）；asset = `neural-mind-0.6.7-candidate.tgz`（60 文件，353,521 B），下载校验 SHA256 `DA3F45B8…D93120` 一致 |
 | 0.6.6 状态 | **已发布**：tag `v0.6.6` + GitHub Release 已按用户明确授权创建（**不发 npm**）；Release asset = 候选 tarball（59 文件，339,282 B，SHA256 见 `bench-results/artifacts/SHA256SUMS`） |

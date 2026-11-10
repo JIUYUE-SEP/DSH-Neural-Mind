@@ -5,7 +5,7 @@
 ## 0.6.7 — 2026-11-10
 
 > **主题**：S12 使用观测（R3 + R9 只读部分），**不改记忆行为**——只把"插件自己干了什么"落成可跨重启读的数据，供 0.7.0 攒数据与调参（NEXT_STEPS §1.1 的 start gate 靠它）。设计合同：[§14 使用观测与容量统计](docs/design/14-observability.md)。
-> 发布物：tag [`v0.6.7`](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.7) + GitHub Release（**不发 npm**）；Release asset = 候选包 `neural-mind-0.6.7-candidate.tgz`（60 文件，含 MIT LICENSE，353,521 B，SHA256 `DA3F45B8…D93120`；见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）。
+> 发布物：tag [`v0.6.7`](https://github.com/JIUYUE-SEP/DSH-Neural-Mind/releases/tag/v0.6.7) + GitHub Release（**不发 npm**）；Release asset = 候选包 `neural-mind-0.6.7-candidate.tgz`（60 文件，含 MIT LICENSE，353,521 B，SHA256 `DA3F45B8…D93120`；见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）。
 > **验证状态**：2026-11-10 从 0.6.7 最终 HEAD 重跑 `verify:release` **PASS**（EXIT=0）——npm test **380/377/0/3**、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（6 提交 / 0 漂移）、E2E 24/24（源码 + tarball 各一次）、升级 smoke 0.5.0→0.6.7 PASS、默认冒烟 26/26、N1 PASS、`release-matrix` PASS（60 文件 tarball）。原始日志：[bench-results/verify-release-0.6.7.log](bench-results/verify-release-0.6.7.log)（已脱敏）。
 
 - **R3 使用情况持久化（新增独立域 `neural_mind_usage` v1，不升主域版本）**：注入 / 跳过 / 提炼 / 召回计数按天汇总（默认保留 30 天，`usageRetentionDays`）+ 明细滚动记录（7 天 / 2000 条上限）；跳过原因分层——`workspace-disabled` / `auto-recall-off` / `subagent` 等环境类只进日汇总，`no-hits` 每日采样 20 条，`pressure` / `inline-timeout` / `search-unavailable` / `inject-error` 与成功注入写明细。落盘走 3 秒 debounce + read-merge-write，失败下轮重试、域打不开整体退化为进程内（等价 0.6.6 行为），清理写 `usage-pruned` 审计。**不存正文与查询原文**：只有计数、记忆 id 与分数/枚举。
@@ -18,7 +18,7 @@
 ## 0.6.6 — 2026-11-09
 
 > **仓库重建（2026-11-09，用户裁决）**：旧仓库（含全部历史提交与旧 tag/Release）已删除，重建为 `JIUYUE-SEP/neural-mind` 的 **public 单提交仓库**（内容 = 改名后的 0.6.6 工作树）。0.6.5 及更早的 tag / Release 不再存在；下方历史条目里的旧 Release 链接仅作历史记录。
-> 发布物：tag [`v0.6.6`](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.6) + GitHub Release（**不发 npm**）；Release asset 即候选包 `neural-mind-0.6.6-candidate.tgz`（59 文件，含 MIT LICENSE，339,282 B；SHA256 见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）。
+> 发布物：tag [`v0.6.6`](https://github.com/JIUYUE-SEP/DSH-Neural-Mind/releases/tag/v0.6.6) + GitHub Release（**不发 npm**）；Release asset 即候选包 `neural-mind-0.6.6-candidate.tgz`（59 文件，含 MIT LICENSE，339,282 B；SHA256 见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）。
 > **验证状态**：2026-11-09 改名 + 重打包后从最终 HEAD 重跑 `verify:release` **PASS**（EXIT=0）——npm test 367/364/0/3、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（`ROOT` 基线：0 提交 / 0 漂移）、E2E 24/24（源码 + tarball 各一次）、升级 smoke 0.5.0→0.6.6 PASS、默认冒烟 26/26、N1 PASS、`release-matrix` PASS（59 文件 tarball）。原始日志：[bench-results/verify-release-0.6.6.log](bench-results/verify-release-0.6.6.log)（已脱敏）；候选包 339,282 B，SHA256 见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)。
 
 **主题：正确性补丁 + 插件改名**（REVIEW §0.2 的 9 项中 R0 已随 0.6.5 发布，其余 8 项落在本版；R13 拆 a/b、R16 追加 b 属于实施拆分，不改变项数。另含一处发布工具修复；R26 为源码逐条抽查新增；改名为发布前用户裁决）
