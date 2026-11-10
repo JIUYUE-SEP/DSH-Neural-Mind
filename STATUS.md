@@ -1,7 +1,7 @@
 # neural-mind 当前状态
 
 > **本文是当前状态的唯一事实来源**（覆写式：每次发布 / 验证 / 里程碑后重写）。
-> 最后更新：2026-11-09（S12：0.7.0 规划；0.6.6 已发布并归档）
+> 最后更新：2026-11-10（S12：0.6.7 观测设计草稿定稿，未实现）
 > 现行文档：[README](README.md) · [DESIGN](DESIGN.md) · [NEXT_STEPS](NEXT_STEPS.md) · [CHANGELOG](CHANGELOG.md)
 > 历史过程见 [docs/legacy/](docs/legacy/README.md)；历史验证记录见 [docs/legacy/VERIFICATION-2026-11.md](docs/legacy/VERIFICATION-2026-11.md)。
 
@@ -12,7 +12,7 @@
 | 仓库 | `JIUYUE-SEP/neural-mind`（public，MIT License） |
 | 工作树版本 | **0.6.6** |
 | 最新已发布 | **0.6.6**（2026-11-09，Release [v0.6.6](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.6)） |
-| 下一版 | **0.7.0**（规划完成，未开工；S12–S16 见 [NEXT_STEPS](NEXT_STEPS.md) §1） |
+| 下一版 | **0.6.7**（观测落盘，S12；设计草稿，未实现）→ 0.7.0（记忆质量，S13–S16） |
 | 0.6.6 状态 | **已发布**：tag `v0.6.6` + GitHub Release 已按用户明确授权创建（**不发 npm**）；Release asset = 候选 tarball（59 文件，339,282 B，SHA256 见 `bench-results/artifacts/SHA256SUMS`） |
 
 0.6.6 内容：正确性补丁 R1a / R4 / R8a / R13a / R13b / R14 / R15a / R16 / R16b / R18 / R26（R0 是 0.6.5 的发版收尾，不计入本版），外加**插件改名 `dsh-plugin-memory` → `neural-mind`**（entry id / 设置命名空间 / 存储域名 / 注入来源 kind / 数据路由全量同步，旧数据自动迁移）。逐条见 [CHANGELOG](CHANGELOG.md)。
@@ -87,7 +87,7 @@ node tools/check-design.mjs --history # 只查"代码改了、对应设计文档
 
 ## 下一个里程碑
 
-0.7.0 记忆质量（规划完成，**未开工**）：先观测落盘（R3 / R9）→ 真实使用积累数据 → 按数据调关系判断与相关性门槛。步骤、start gate 与顺序裁决见 [NEXT_STEPS](NEXT_STEPS.md) §1；观测版本的归属（单独 0.6.7 或并入 0.7.0）待用户裁决。
+**0.6.7 观测落盘（S12，设计草稿已定稿，未实现）**：R3 使用情况持久化 + 注入质量元数据（只记录）+ R9 只读统计；行为不变，单独发版。之后 0.7.0 记忆质量（S13 数据积累 → S16 按数据调关系判断与相关性门槛）。步骤与 start gate 见 [NEXT_STEPS](NEXT_STEPS.md) §1。
 
 ## 更新触发
 
