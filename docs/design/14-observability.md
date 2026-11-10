@@ -4,7 +4,7 @@ title: "使用观测与容量统计（R3 / R9 只读部分）"
 status: 草稿
 since: 0.6.7
 verified: 2026-11-10
-code: [lib/api.js]
+code: [lib/usage.js, lib/api.js]
 supersedes: []
 superseded_by: null
 ---
@@ -175,3 +175,4 @@ UI（最小改动，全部只读）：
 
 - 2026-11-10：初稿（S12 设计；R3 全量 + R9 只读部分）。待用户确认后实现；R9 的清理动作留 S16。
 - 2026-11-10：v2——补**注入质量元数据**（逐条 `r/s/c/e/src/k/v` + `quality` 聚合，只记录不拦截）；版本归属定为 **0.6.7**（用户裁决，单独发布）；R32「实时拦截」登记为待定（NEXT_STEPS §3.1.2）。
+- 2026-11-10：**S12a 落地存储核心**——`lib/schema.js` 新增 `neural_mind_usage` 域 spec（`days`/`recent`，v1）、`lib/store.js` 按独立域打开（失败退化进程内）、`lib/usage.js` 计数 / 明细分层 / read-merge-write 落盘 / 保留裁剪 / 快照 / `poolStats`；新增测试 8 条。API 与页面接线见 S12b/S12c。

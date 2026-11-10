@@ -132,7 +132,7 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
 }
 ```
 
-> **表与字段的真相源**:上面只列 L2/L3 记忆本体;同域另有 `hotbuffer`(L0,§3.1)、`outbox`(§3.0/§3.2)、`audit`(§8)、`soul_history`(§4.4)四张表;另有**独立存储域 `neural_mind_extract`**(A10 起,`batches` 表存批次答卷,与主域 `neural_mind` 分开、不改主域版本),逐字段定义以 `lib/schema.js` 为准(新增字段同样走本节的版本纪律);域 spec 与改名前的旧域 spec 分别见 `domainSpec()` / `legacyDomainSpec()`(旧域只读迁移用,新写入一律用新域名)。
+> **表与字段的真相源**:上面只列 L2/L3 记忆本体;同域另有 `hotbuffer`(L0,§3.1)、`outbox`(§3.0/§3.2)、`audit`(§8)、`soul_history`(§4.4)四张表;另有**独立存储域 `neural_mind_extract`**(A10 起,`batches` 表存批次答卷,与主域 `neural_mind` 分开、不改主域版本)与 **`neural_mind_usage`**(0.6.7 §14 起,`days`/`recent` 两表存使用遥测——只有计数与质量元数据,不含记忆正文,同样不升主域版本),逐字段定义以 `lib/schema.js` 为准(新增字段同样走本节的版本纪律);域 spec 与改名前的旧域 spec 分别见 `domainSpec()` / `legacyDomainSpec()`(旧域只读迁移用,新写入一律用新域名)。
 
 **版本纪律**:记录的**破坏性/语义**变更走 domain `version` 升版 + `compatibleVersions` 声明;**新增可选字段若旧记录仍合法、双向读取不受影响,可不升**(0.6.6 前半段的 `confirmedByUser` 与 `source:'unknown'` 即如此,当时 domain 仍为 2);纯新增一张表不升——记录格式没变,升了反而给降级上锁(§4.4);第一版即立规矩,不攒迁移债。V2 的 tool-guard 所需 `precondition` 字段届时按同一裁决处理(不预留空字段)。**已执行(2026-09-18,V1.1 第 3 步)**:`evidenceEvent` 新增可选 `targetId`(争议对对端,§3.2)→ version **1 → 2**、`compatibleVersions: [1]`;当时 1183 条既有记录按新 schema 校验 0 失败(**历史快照,仓库内不可复算**)。**已执行(2026-11-09,改名)**:域名 `memory` → `neural_mind`、`globalState` 新增可选 `migratedDomains` → version **2 → 3**、`compatibleVersions: [1, 2]`,启动时把旧域记录一次性补进新域(只读旧域,旧目录保留可回滚)。
 
@@ -142,3 +142,4 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
 ## 修订记录
 
 - 2026-11-09：从 DESIGN.md §1 原样拆出（内容未改语义）
+- 2026-11-10：独立域清单补 `neural_mind_usage`（0.6.7 §14 使用观测；`days`/`recent` 两表，不升主域版本）

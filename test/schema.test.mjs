@@ -13,6 +13,7 @@ import {
   domainSpec, DOMAIN_NAME, DOMAIN_VERSION, batchDomainSpec, BATCH_DOMAIN_NAME, globalState,
   legacyDomainSpec, LEGACY_DOMAIN_NAME, LEGACY_DOMAIN_VERSION,
   legacyBatchDomainSpec, LEGACY_BATCH_DOMAIN_NAME,
+  usageDomainSpec, USAGE_DOMAIN_NAME, usageDayRecord, usageRecentRecord,
 } from '../lib/schema.js'
 
 /** 与 @deepseek-ai/dsh-storage 的 UNIT_NAME_RE 保持一致(域名与表名共用同一条规则)。 */
@@ -70,6 +71,31 @@ test('batch domain spec:独立 neural_mind_extract 域,不改主域版本', () =
  * zod 默认 strip 未声明的键——漏声明会让"见过的工作区"在每次热重建/重启后被剥光,
  * 配置页的「已知工作区」回到 0,下一次写入也只剩刚记的一条(真实事故)。
  */
+/**
+ * §14 使用观测域(0.6.7):独立短命域 + 两表。与 batch 域同一裁决——不升主域版本,
+ * 旧插件回滚时忽略它即可。
+ */
+test('usage domain spec:独立 neural_mind_usage 域,两表合法且不跟主域升版', () => {
+  const spec = usageDomainSpec()
+  assert.equal(spec.name, USAGE_DOMAIN_NAME)
+  assert.equal(spec.name, 'neural_mind_usage')
+  assert.match(spec.name, UNIT_NAME_RE)
+  assert.equal(spec.version, 1)
+  assert.equal(spec.layout, 'per-record')
+  assert.equal(spec.invalidRecords, 'backup-and-skip')
+  assert.deepEqual(Object.keys(spec.tables).sort(), ['days', 'recent'])
+  for (const name of Object.keys(spec.tables)) assert.match(name, UNIT_NAME_RE)
+  assert.notEqual(spec.name, DOMAIN_NAME, '不能写进主域')
+  // 记录形状:日汇总 / 明细各一条最小合法样本
+  assert.equal(usageDayRecord.parse({ id: 'u_2026-11-10', date: '2026-11-10', counters: { 'inject.inject': 1 }, updatedAt: '2026-11-10T00:00:00.000Z' }).date, '2026-11-10')
+  const recent = usageRecentRecord.parse({
+    id: 'r_1794238785501_1', ts: '2026-11-10T00:19:45.000Z', mode: 'inject', records: 3, chars: 420, sessionId: 'sess',
+    items: [{ id: 'm_1', r: 0.72, s: 0.41, c: 0.8, e: 1.3, src: 'user', k: 'fact', v: true }],
+  })
+  assert.equal(recent.items[0].src, 'user')
+  assert.throws(() => usageRecentRecord.parse({ id: 'x', ts: 't', mode: 'nope', records: 0, chars: 0, sessionId: '' }), /mode/)
+})
+
 test('global schema:seenWorkspaces 必须被保留(不能被 zod strip)', () => {
   const seen = [{ id: 'A:\\proj\\dsh-memory', label: 'dsh-memory', lastSeenMs: 1_700_000_000_000 }]
   const parsed = globalState.parse({ version: 1, onboardedAt: '2026-11-07T00:00:00.000Z', seenWorkspaces: seen })

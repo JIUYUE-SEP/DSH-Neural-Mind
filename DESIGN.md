@@ -36,7 +36,7 @@
 | §11 | 实施路线（历史） | 归档 | [implementation-roadmap.md](docs/legacy/implementation-roadmap.md) | — |
 | §12 | 决策记录与差异化定位 | 本文 | — | — |
 | §13 | 审核溯源（历史） | 归档 | [review-provenance.md](docs/legacy/review-provenance.md) | — |
-| §14 | 使用观测与容量统计（R3 / R9 只读） | 草稿 | [14-observability.md](docs/design/14-observability.md) | `lib/api.js` |
+| §14 | 使用观测与容量统计（R3 / R9 只读） | 草稿 | [14-observability.md](docs/design/14-observability.md) | `lib/usage.js`、`lib/api.js` |
 
 ## 1. 记忆模型
 > 正文：**[§1 记忆模型](docs/design/01-memory-model.md)**。

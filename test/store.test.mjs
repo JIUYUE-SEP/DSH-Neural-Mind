@@ -57,6 +57,7 @@ test('存储:主域成功、neural_mind_extract 超时,主存储仍可用且晚�
   let closed = 0
   let calls = 0
   const lateBatchDomain = { close: async () => { closed += 1 } }
+  const usage = makeDomain()
   const memoryDomain = {
     close: async () => { closed += 1 },
     table: () => ({
@@ -70,17 +71,20 @@ test('存储:主域成功、neural_mind_extract 超时,主存储仍可用且晚�
       calls += 1
       if (calls === 1) return Promise.resolve(memoryDomain)
       if (calls === 2) return new Promise((resolve) => setTimeout(() => resolve(lateBatchDomain), 60))
-      // 第三次是旧域名迁移探测:本用例不覆盖迁移,让 open 失败 → openStore 跳过迁移,不影响主流程。
+      if (spec.name === 'neural_mind_usage') return Promise.resolve(usage)
+      // 之后是旧域名迁移探测:本用例不覆盖迁移,让 open 失败 → openStore 跳过迁移,不影响主流程。
       throw new Error(`unexpected domain: ${spec.name}`)
     },
   }
   const store = await openStore({ get: () => storageDomain }, logger, { timeoutMs: 10 })
   assert.equal(store.persisted, true, '主域成功')
   assert.equal(store.batchesPersisted, false, 'batch 域超时降级为进程内')
+  assert.equal(store.usagePersisted, true, 'usage 域独立打开,不受 batch 超时影响')
   await new Promise((resolve) => setTimeout(resolve, 100))
   assert.equal(closed, 1, '晚到的 batch domain 必须被关闭')
   await store.close()
   assert.equal(closed, 2, '正常关闭时主域也要 close')
+  assert.equal(usage.closed, 1, 'usage 独立域也要 close')
 })
 
 test('存储:改名迁移把旧 memory 域记录补进新域,旧域只读且只迁移一次', async () => {
@@ -95,12 +99,14 @@ test('存储:改名迁移把旧 memory 域记录补进新域,旧域只读且只�
   }, { ...legacyGlobal })
   const target = makeDomain({ memories: new Map([['m_2', { id: 'm_2', kept: true }]]) })
   const batch = makeDomain()
+  const usage = makeDomain()
   const opens = []
   const storageDomain = {
     open: async (spec) => {
       opens.push(spec.name)
       if (spec.name === 'neural_mind') return target
       if (spec.name === 'neural_mind_extract') return batch
+      if (spec.name === 'neural_mind_usage') return usage
       if (spec.name === 'memory') return legacy
       throw new Error(`unexpected domain: ${spec.name}`)
     },
@@ -114,7 +120,7 @@ test('存储:改名迁移把旧 memory 域记录补进新域,旧域只读且只�
   assert.equal(target.globalValue.onboardedAt, legacyGlobal.onboardedAt)
   assert.equal(legacy.closed, 1, '旧域读完必须关闭')
   assert.equal(legacy.globalValue.migratedDomains, undefined, '旧域保持只读,不写迁移标记')
-  assert.deepEqual(opens, ['neural_mind', 'neural_mind_extract', 'memory'])
+  assert.deepEqual(opens, ['neural_mind', 'neural_mind_extract', 'neural_mind_usage', 'memory'])
   await store.close()
 
   // 第二次启动:标记已写在新域 global 里,不再打开旧域
@@ -133,6 +139,7 @@ test('存储:旧域打不开时跳过迁移且不写标记(下次启动重试),�
       if (spec.name === 'memory') throw new Error('legacy broken')
       if (spec.name === 'neural_mind') return target
       if (spec.name === 'neural_mind_extract') return batch
+      if (spec.name === 'neural_mind_usage') return makeDomain()
       throw new Error(`unexpected domain: ${spec.name}`)
     },
   }
@@ -155,6 +162,7 @@ test('存储:旧域是空目录时也写标记,不留重复迁移', async () => 
       opens.push(spec.name)
       if (spec.name === 'neural_mind') return target
       if (spec.name === 'neural_mind_extract') return batch
+      if (spec.name === 'neural_mind_usage') return makeDomain()
       if (spec.name === 'memory') return legacy
       throw new Error(`unexpected domain: ${spec.name}`)
     },

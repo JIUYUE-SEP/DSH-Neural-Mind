@@ -46,6 +46,7 @@ Cordis 语义:`inject` 声明的是**必需服务**——缺席则插件永不�
 | 原文读取 | 本会话=`turns.cachedTurn` 内存缓存;他会话=`ctx.get('sessionQuery')` 读会话日志 | 缓存未命中再读会话日志;**sessionQuery 是冷会话的主路径**(trajectory 也依赖它),失败才退热缓冲副本;两者都没有才"原文已不可考" |
 | 检索异常 | — | **渲染"记忆检索暂时不可用",不伪装**(§4.2;检索抛错 → `search()` 返回 `null`);"没有命中"是另一回事:空结果,本轮"没想起事",对话继续 |
 | storageDomain.open 卡住 | 超时(`storageOpenTimeoutMs`) | 按打开失败处理:降级纯内存态 + stderr 一行;其余功能照常注册(实测:不设超时时插件整体静默失效) |
+| 观测域 `neural_mind_usage` | `storageDomain.open` + 超时(独立于主域) | 打开失败/超时 → 使用观测退化为进程内(重启归零,等价 0.6.6 行为),主域读写与注入照常;stderr 一行(§14) |
 | systemPrompt(SOUL 段) | `agent/created` + `agent.ctx.inject` | 装不上则不注入 SOUL(记日志),`soul_update` 仍可写文件;`complete: true` 的人设下本就缺席(§4.4) |
 | SOUL 文件 | 直接读盘(异步,装配路径之外) | 启动首读的**非 ENOENT 错误** → 不注入 + 记 `soul-read-failed`;`ENOENT` = 有意清空(镜像置空);**运行期读错 → 保留旧镜像继续注入**(§4.4);写盘失败 → 工具返回可行动错误,内存镜像不变 |
 | tools(记忆工具,含 SOUL) | `ctx.get('tools')` + `ctx.inject(['tools'])` 兜底 | **两条路都拿不到**才不注册(打一行 stderr);注入与检索照常。`inject` 兜底是为了等晚挂载的服务(§13 实现回流) |
@@ -56,3 +57,4 @@ Cordis 语义:`inject` 声明的是**必需服务**——缺席则插件永不�
 ## 修订记录
 
 - 2026-11-09：从 DESIGN.md §6、§7 原样合并拆出（内容未改语义）
+- 2026-11-10：§7 降级表补 `neural_mind_usage` 观测域（独立打开，失败退化为进程内，0.6.7 §14）
