@@ -1,6 +1,6 @@
 # neural-mind
 
-给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的**心智插件**：一个自动记住、自动想起、可显式管理的**长期记忆池**，外加一层可自改的 **SOUL 人格设定**与 **L1 用户画像**。（0.6.6 由 `dsh-plugin-memory` 改名为 `neural-mind`；旧数据首次启动自动迁移，见下文「隐私与数据边界」。）
+给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的**心智插件**：一个自动记住、自动想起、可显式管理的**长期记忆池**，外加一层可自改的 **SOUL 人格设定**与 **L1 用户画像**。（0.6.6 由 `dsh-plugin-memory` 改名为 `neural-mind`；0.6.7 起把注入 / 提炼 / 召回计数与注入质量元数据落到独立观测域——只记录，不改记忆行为；旧数据首次启动自动迁移，见下文「隐私与数据边界」。）
 
 - **不打扰聊天**：耗时操作全在后台；任何环节失败，对话照常；每轮内联注入预算 ≤ 300ms。
 - **有凭有据**：每条记忆带来源（工作区 / 会话 / 时间），可被印证、可被质疑、可被取代；来源按会话原文角色判定，模型自报不算数（0.6.6 R13b）。

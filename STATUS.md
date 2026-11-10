@@ -1,7 +1,7 @@
 # neural-mind 当前状态
 
 > **本文是当前状态的唯一事实来源**（覆写式：每次发布 / 验证 / 里程碑后重写）。
-> 最后更新：2026-11-10（0.6.7 候选验证 PASS，待 tag / Release 授权）
+> 最后更新：2026-11-10（0.6.7 已发布：tag + GitHub Release + asset 校验）
 > 现行文档：[README](README.md) · [DESIGN](DESIGN.md) · [NEXT_STEPS](NEXT_STEPS.md) · [CHANGELOG](CHANGELOG.md)
 > 历史过程见 [docs/legacy/](docs/legacy/README.md)；历史验证记录见 [docs/legacy/VERIFICATION-2026-11.md](docs/legacy/VERIFICATION-2026-11.md)。
 
@@ -11,10 +11,12 @@
 |---|---|
 | 仓库 | `JIUYUE-SEP/neural-mind`（public，MIT License） |
 | 工作树版本 | **0.6.7**（S12 使用观测） |
-| 最新已发布 | **0.6.6**（2026-11-09，Release [v0.6.6](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.6)） |
+| 最新已发布 | **0.6.7**（2026-11-10，Release [v0.6.7](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.7)） |
 | 下一版 | **0.7.0**（记忆质量，S13–S16；S12 观测已随 0.6.7 交付） |
-| 0.6.7 状态 | **候选已验证 PASS**：`neural-mind-0.6.7-candidate.tgz`（60 文件，353,521 B）；`verify:release` EXIT=0；tag / Release 待用户明确授权 |
+| 0.6.7 状态 | **已发布**：tag `v0.6.7`（提交 `3fd6055`）+ GitHub Release 已按用户明确授权创建（**不发 npm**）；asset = `neural-mind-0.6.7-candidate.tgz`（60 文件，353,521 B），下载校验 SHA256 `DA3F45B8…D93120` 一致 |
 | 0.6.6 状态 | **已发布**：tag `v0.6.6` + GitHub Release 已按用户明确授权创建（**不发 npm**）；Release asset = 候选 tarball（59 文件，339,282 B，SHA256 见 `bench-results/artifacts/SHA256SUMS`） |
+
+**0.6.7 内容**：S12 使用观测——独立观测域 `neural_mind_usage`（R3 计数 + 明细 + 注入质量元数据）+ R9 只读容量统计；**不改记忆行为**。逐条见 [CHANGELOG](CHANGELOG.md)。
 
 0.6.6 内容：正确性补丁 R1a / R4 / R8a / R13a / R13b / R14 / R15a / R16 / R16b / R18 / R26（R0 是 0.6.5 的发版收尾，不计入本版），外加**插件改名 `dsh-plugin-memory` → `neural-mind`**（entry id / 设置命名空间 / 存储域名 / 注入来源 kind / 数据路由全量同步，旧数据自动迁移）。逐条见 [CHANGELOG](CHANGELOG.md)。
 
@@ -68,7 +70,7 @@ node tools/check-design.mjs --history # 只查"代码改了、对应设计文档
 
 | 文件 | 用途 | 大小 |
 |---|---|---:|
-| `neural-mind-0.6.7-candidate.tgz` | 0.6.7 候选（60 文件，含 MIT LICENSE；待发布为 v0.6.7 asset） | 353,521 B |
+| `neural-mind-0.6.7-candidate.tgz` | 0.6.7 已发布候选（60 文件，含 MIT LICENSE；即 v0.6.7 Release asset） | 353,521 B |
 | `neural-mind-0.6.6-candidate.tgz` | 0.6.6 已发布候选（59 文件，含 MIT LICENSE；即 v0.6.6 Release asset） | 339,282 B |
 | `dsh-plugin-memory-0.5.0-pre-f0ec867.tgz` | 升级 / 回滚基线（0.5.0，**文件名保留改名前的旧名**，是真实历史产物） | 160,967 B |
 | `SHA256SUMS` | 校验和 | — |
@@ -92,7 +94,7 @@ node tools/check-design.mjs --history # 只查"代码改了、对应设计文档
 
 ## 下一个里程碑
 
-**0.6.7 发版（等用户明确确认）**：S12 已实现并验收（独立观测域 + 注入质量元数据 + R9 只读统计；行为不变）——重打包 candidate → `verify:release` → tag / GitHub Release。之后 0.7.0 记忆质量（S13 数据积累 → S16 按数据调关系判断与相关性门槛）。步骤与 start gate 见 [NEXT_STEPS](NEXT_STEPS.md) §1。
+**0.7.0 记忆质量（下一步）**：先做 S13 数据积累——解除日常使用工作区的停用（保留隐私 / 测试工作区），正常使用 1–2 周，让 0.6.7 的使用观测攒出样本；达到 [NEXT_STEPS](NEXT_STEPS.md) §1.1 start gate 后进 S16（R19 / R23 调参）。S14/S15 的确定性工程项可与积累期并行。
 
 ## 更新触发
 
