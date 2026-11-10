@@ -33,6 +33,7 @@ node tools/check-design.mjs --history --strict   # 设计同提交纪律（基�
 | `lib/search.js` / `lib/rank.js` | BM25 / 向量 / RRF 检索、排序、衰减与证据 |
 | `lib/tools.js` / `lib/ops.js` | 工具（remember / recall / forget / soul_update）与操作实现 |
 | `lib/api.js` | 记忆页 `/neural-mind/api`（同源校验） |
+| `lib/usage.js` | 使用观测（§14）：计数 / 明细落盘 / 保留裁剪 / `pool` 只读统计 |
 | `lib/compat.js` | DSH 版本 / 形状兼容（含会话来源 kind） |
 | `lib/client/**` + `lib/client.js` | 浏览器半（页面 / 卡片 / i18n / CSS）；`lib/client.js` 是生成物 |
 | `test/` / `tools/` | `node:test` 测试（fake ctx / storage 在 `helpers.mjs`）/ 门禁、E2E、评估脚本 |

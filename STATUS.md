@@ -1,7 +1,7 @@
 # neural-mind 当前状态
 
 > **本文是当前状态的唯一事实来源**（覆写式：每次发布 / 验证 / 里程碑后重写）。
-> 最后更新：2026-11-10（S12：0.6.7 观测设计草稿定稿，未实现）
+> 最后更新：2026-11-10（S12 实现与验收完成，0.6.7 待发版）
 > 现行文档：[README](README.md) · [DESIGN](DESIGN.md) · [NEXT_STEPS](NEXT_STEPS.md) · [CHANGELOG](CHANGELOG.md)
 > 历史过程见 [docs/legacy/](docs/legacy/README.md)；历史验证记录见 [docs/legacy/VERIFICATION-2026-11.md](docs/legacy/VERIFICATION-2026-11.md)。
 
@@ -10,9 +10,9 @@
 | 项 | 值 |
 |---|---|
 | 仓库 | `JIUYUE-SEP/neural-mind`（public，MIT License） |
-| 工作树版本 | **0.6.6** |
+| 工作树版本 | **0.6.6**（S12 代码已合入，发版时升 0.6.7） |
 | 最新已发布 | **0.6.6**（2026-11-09，Release [v0.6.6](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.6)） |
-| 下一版 | **0.6.7**（观测落盘，S12；设计草稿，未实现）→ 0.7.0（记忆质量，S13–S16） |
+| 下一版 | **0.6.7**（观测落盘，S12；已实现，待发版）→ 0.7.0（记忆质量，S13–S16） |
 | 0.6.6 状态 | **已发布**：tag `v0.6.6` + GitHub Release 已按用户明确授权创建（**不发 npm**）；Release asset = 候选 tarball（59 文件，339,282 B，SHA256 见 `bench-results/artifacts/SHA256SUMS`） |
 
 0.6.6 内容：正确性补丁 R1a / R4 / R8a / R13a / R13b / R14 / R15a / R16 / R16b / R18 / R26（R0 是 0.6.5 的发版收尾，不计入本版），外加**插件改名 `dsh-plugin-memory` → `neural-mind`**（entry id / 设置命名空间 / 存储域名 / 注入来源 kind / 数据路由全量同步，旧数据自动迁移）。逐条见 [CHANGELOG](CHANGELOG.md)。
@@ -34,9 +34,9 @@
 
 | 项目 | 结果 |
 |---|---|
-| 单测（逐文件 `node --test`） | **378 测试 / 375 通过 / 0 失败 / 3 跳过**（36 个测试文件） |
-| `check:ledger` | §10 配置账本 **68/68**，零差异 |
-| `check:seams` | **12 项**（volatile 28 双侧闭合；bundle 306,621 B） |
+| 单测（逐文件 `node --test`） | **379 测试 / 376 通过 / 0 失败 / 3 跳过**（36 个测试文件） |
+| `check:ledger` | §10 配置账本 **70/70**，零差异 |
+| `check:seams` | **12 项**（volatile 28 双侧闭合；bundle 311,964 B） |
 | `check:design` | **8 份设计文档 / 索引 13 行 / 代码归属 24 条**：front-matter 与索引双向一致；漂移检查（P1）走 `verify:release --strict` |
 | `check:conform` | **39 条 / 0 不符** |
 | `check:host` | **51/51**（本机 DSH Desktop 0.2.2-rc.1） |
@@ -87,7 +87,7 @@ node tools/check-design.mjs --history # 只查"代码改了、对应设计文档
 
 ## 下一个里程碑
 
-**0.6.7 观测落盘（S12，设计草稿已定稿，未实现）**：R3 使用情况持久化 + 注入质量元数据（只记录）+ R9 只读统计；行为不变，单独发版。之后 0.7.0 记忆质量（S13 数据积累 → S16 按数据调关系判断与相关性门槛）。步骤与 start gate 见 [NEXT_STEPS](NEXT_STEPS.md) §1。
+**0.6.7 发版（等用户明确确认）**：S12 已实现并验收（独立观测域 + 注入质量元数据 + R9 只读统计；行为不变）——重打包 candidate → `verify:release` → tag / GitHub Release。之后 0.7.0 记忆质量（S13 数据积累 → S16 按数据调关系判断与相关性门槛）。步骤与 start gate 见 [NEXT_STEPS](NEXT_STEPS.md) §1。
 
 ## 更新触发
 

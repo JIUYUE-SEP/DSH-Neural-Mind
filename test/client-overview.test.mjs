@@ -425,3 +425,42 @@ test('总览:词典中英 key 齐平,样式只用主题令牌与 .ov- 前缀', (
   const classNames = [...css.matchAll(/\.([a-zA-Z][a-zA-Z0-9-]*)/g)].map((match) => match[1])
   assert.deepEqual(classNames.filter((name) => !name.startsWith('ov') && name !== 'mem-stat-grid'), [], '只写自己的 .ov- 类或复用共享类')
 })
+
+test('总览:§14 使用量卡与注入质量摘要(落盘数据优先;不可用如实提示)', () => {
+	const quality = { n: 2, rAvg: 0.72, rMin: 0.6, sAvg: 0.3, cAvg: 0.81, cMin: 0.7, eAvg: 1.2, lowTrust: 1, unverified: 0 }
+	const data = overviewData({
+		usage: {
+			available: true,
+			today: {
+				'inject.inject': 2, 'skip.no-hits': 3, 'extract.ok': 1, 'recall.calls': 4,
+				'inject.relevanceSum': 1.44, 'inject.relevanceCount': 2,
+				'inject.confSum': 1.56, 'inject.confCount': 2,
+			},
+			retention: { days: 30, recentDays: 7, recentMax: 2000 },
+			recent: [{
+				id: 'r_1',
+				ts: '2026-11-07T08:00:00.000Z',
+				mode: 'inject',
+				records: 2,
+				chars: 120,
+				sessionId: 'sess_01ab',
+				workspaceLabel: 'A:\\proj\\dsh-memory',
+				quality,
+			}],
+		},
+	})
+	const { tree } = mountOverview({ data })
+	const texts = collectText(tree)
+	assert.ok(texts.includes('ovUsageTitle'), '使用量卡出现')
+	assert.ok(texts.includes('ovUsageInject'), '今日注入行')
+	assert.ok(texts.some((text) => String(text).includes('ovUsageRelevance')), '质量均值(相关度)')
+	assert.ok(texts.includes('ovInjectQuality'), '注入行展示质量摘要(优先落盘明细)')
+	assert.ok(texts.includes('ovInjectLowTrust'), '低可信条数可见')
+	assert.equal(byClass(tree, 'ov-inj-row').length, 1, '落盘明细优先于进程内最近注入')
+
+	// 观测不可用:如实说明"未落盘",不伪造计数
+	const off = mountOverview({ data: overviewData({ usage: { available: false, today: null, recent: [] } }) })
+	const offTexts = collectText(off.tree)
+	assert.ok(offTexts.includes('ovUsageUnavailable'))
+	assert.ok(offTexts.includes('ovUsageUnavailableHint'))
+})

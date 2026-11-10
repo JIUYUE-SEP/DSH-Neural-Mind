@@ -36,7 +36,7 @@
 | §11 | 实施路线（历史） | 归档 | [implementation-roadmap.md](docs/legacy/implementation-roadmap.md) | — |
 | §12 | 决策记录与差异化定位 | 本文 | — | — |
 | §13 | 审核溯源（历史） | 归档 | [review-provenance.md](docs/legacy/review-provenance.md) | — |
-| §14 | 使用观测与容量统计（R3 / R9 只读） | 草稿 | [14-observability.md](docs/design/14-observability.md) | `lib/usage.js`、`lib/api.js` |
+| §14 | 使用观测与容量统计（R3 / R9 只读） | 现行 | [14-observability.md](docs/design/14-observability.md) | `lib/usage.js`、`lib/api.js` |
 
 ## 1. 记忆模型
 > 正文：**[§1 记忆模型](docs/design/01-memory-model.md)**。
@@ -130,7 +130,7 @@
 ---
 
 ## 14. 使用观测与容量统计
-> 草稿（0.6.7 S12，未实现）：**[§14 使用观测与容量统计](docs/design/14-observability.md)**——注入 / 提炼 / 召回计数按天落盘 + 注入滚动记录（含相关度 / 可信度元数据）+ 只读容量统计；独立短命域、不改记忆生命周期。
+> 现行（0.6.7 S12 已实现，待发版）：**[§14 使用观测与容量统计](docs/design/14-observability.md)**——注入 / 提炼 / 召回计数按天落盘 + 注入滚动记录（含相关度 / 可信度元数据）+ 只读容量统计；独立短命域、不改记忆生命周期。
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 id: 14
 title: "使用观测与容量统计（R3 / R9 只读部分）"
-status: 草稿
+status: 现行
 since: 0.6.7
 verified: 2026-11-10
 code: [lib/usage.js, lib/api.js]
@@ -11,8 +11,7 @@ superseded_by: null
 
 # §14 使用观测与容量统计（R3 / R9 只读部分）
 
-> 状态：**草稿**（0.6.7 S12 设计，未实现）。实现时与本文件同提交更新 §1 / §3 / §4 / §6 / §10，
-> 并把新模块 `lib/usage.js` 加进本文件的 `code` 清单（P0 要求 `code` 路径存在，所以草稿阶段只声明已存在的 `lib/api.js`）。
+> 状态：**现行**（0.6.7 S12 已实现并验收，待发版）。`code` 两条即实现落点：`lib/usage.js`（计数 / 落盘 / 裁剪 / `poolStats`）与 `lib/api.js`（`usage` / `pool` 动作）。
 > 覆盖节号：§14.1 目标与边界、§14.2 数据模型、§14.3 计数键（含注入质量元数据）、§14.4 写路径、§14.5 保留与清理、§14.6 读路径、§14.7 R9 统计口径、§14.8 配置与存储影响、§14.9 降级矩阵、§14.10 测试计划。
 
 ## 14.1 目标与边界（R3）
@@ -176,4 +175,4 @@ UI（最小改动，全部只读）：
 - 2026-11-10：初稿（S12 设计；R3 全量 + R9 只读部分）。待用户确认后实现；R9 的清理动作留 S16。
 - 2026-11-10：v2——补**注入质量元数据**（逐条 `r/s/c/e/src/k/v` + `quality` 聚合，只记录不拦截）；版本归属定为 **0.6.7**（用户裁决，单独发布）；R32「实时拦截」登记为待定（NEXT_STEPS §3.1.2）。
 - 2026-11-10：**S12a 落地存储核心**——`lib/schema.js` 新增 `neural_mind_usage` 域 spec（`days`/`recent`，v1）、`lib/store.js` 按独立域打开（失败退化进程内）、`lib/usage.js` 计数 / 明细分层 / read-merge-write 落盘 / 保留裁剪 / 快照 / `poolStats`；新增测试 8 条。API 与页面接线见 S12b/S12c。
-- 2026-11-10：**S12b 接线**——2 项配置（`usageLog`/`usageRetentionDays`，账本 68→70）；`injectionlog` 旁路 sink；`inject` 附质量元数据；`extract`/`tools` 计数；`/neural-mind/api` 新增 `usage`、`pool`，`stats`/`overview` 带 usage 块；boot 装配与 dispose 补 flush。
+- 2026-11-10：**S12c 客户端与验收**——总览卡「最近注入」优先读落盘明细（失败退回进程内）、新增只读「使用量」卡（今日计数 + 质量均值 + 保留策略）、注入行显示「相关 / 可信 / 低可信」；lib/client.js 重建（311,964 B）；全套测试 **379/376/0/3**。\n- 2026-11-10：**S12b 接线**——2 项配置（`usageLog`/`usageRetentionDays`，账本 68→70）；`injectionlog` 旁路 sink；`inject` 附质量元数据；`extract`/`tools` 计数；`/neural-mind/api` 新增 `usage`、`pool`，`stats`/`overview` 带 usage 块；boot 装配与 dispose 补 flush。
