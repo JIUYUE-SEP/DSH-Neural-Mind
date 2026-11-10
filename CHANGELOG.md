@@ -2,6 +2,19 @@
 
 格式：版本 — 日期 / 主题；未发布版本置顶并标注「未发布」。只记录版本级事实（改了什么、为什么），当前数字与验证状态以 [STATUS.md](STATUS.md) 为准；详细实现见对应提交。
 
+## 0.6.7 — 未发布（2026-11-10，使用观测）
+
+> **主题**：S12 使用观测（R3 + R9 只读部分），**不改记忆行为**——只把"插件自己干了什么"落成可跨重启读的数据，供 0.7.0 攒数据与调参（NEXT_STEPS §1.1 的 start gate 靠它）。设计合同：[§14 使用观测与容量统计](docs/design/14-observability.md)。
+> 发布物：候选包 `neural-mind-0.6.7-candidate.tgz`（60 文件，含 MIT LICENSE，353,521 B；SHA256 见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）；**不发 npm**，发版走 tag + GitHub Release。
+> **验证状态**：2026-11-10 从 0.6.7 最终 HEAD 重跑 `verify:release` **PASS**（EXIT=0）——npm test **380/377/0/3**、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（6 提交 / 0 漂移）、E2E 24/24（源码 + tarball 各一次）、升级 smoke 0.5.0→0.6.7 PASS、默认冒烟 26/26、N1 PASS、`release-matrix` PASS（60 文件 tarball）。原始日志：[bench-results/verify-release-0.6.7.log](bench-results/verify-release-0.6.7.log)（已脱敏）。
+
+- **R3 使用情况持久化（新增独立域 `neural_mind_usage` v1，不升主域版本）**：注入 / 跳过 / 提炼 / 召回计数按天汇总（默认保留 30 天，`usageRetentionDays`）+ 明细滚动记录（7 天 / 2000 条上限）；跳过原因分层——`workspace-disabled` / `auto-recall-off` / `subagent` 等环境类只进日汇总，`no-hits` 每日采样 20 条，`pressure` / `inline-timeout` / `search-unavailable` / `inject-error` 与成功注入写明细。落盘走 3 秒 debounce + read-merge-write，失败下轮重试、域打不开整体退化为进程内（等价 0.6.6 行为），清理写 `usage-pruned` 审计。**不存正文与查询原文**：只有计数、记忆 id 与分数/枚举。
+- **注入质量元数据（只记录，不拦截）**：成功注入的明细附逐条 `r`（RRF 融合相关度）/ `s`（最终分）/ `c`（可信度）/ `e`（证据净值）/ `src` / `k` / `v`（代码锚核验结果）与聚合 `quality`；**不参与排序、过滤与注入结果**（有测试断言遥测开关下注入文本一致）。低相关/低可信的实时拦截未做，登记为待定条目 R32（[NEXT_STEPS](NEXT_STEPS.md) §3.1.2）。
+- **R9 只读容量统计**：`/neural-mind/api` 新增 `usage` 与 `pool` 动作——日汇总 / 明细 / 保留策略，以及条数、体积估算（JSON 字节，标注"估算"）、重复候选组（只报组数不列正文）、过期候选、队列健康；只读（不 update/delete/写审计）、60 秒缓存、5 万条扫描上限 + `partial` 标记。清理动作（显式工具）留 S16。
+- **配置 +2 项**：`usageLog`（默认 true）、`usageRetentionDays`（默认 30），均在高级层；账本 68 → 70，常用层不变。
+- **总览卡**：最近注入优先读落盘明细（跨重启可看，失败退回进程内注入日志）；新增只读「使用量」卡（今日注入 / 跳过 / 提炼 / 召回 + 质量均值 + 保留策略）；注入行显示「相关 0.72 · 可信 0.81」与低可信条数。`lib/client.js` 重建：306,621 → 311,964 B。
+- **测试**：380 项 / 377 通过 / 0 失败 / 3 跳过（+13：观测核心 9、域 spec 1、sink/API 3、客户端 1）。
+
 ## 0.6.6 — 2026-11-09
 
 > **仓库重建（2026-11-09，用户裁决）**：旧仓库（含全部历史提交与旧 tag/Release）已删除，重建为 `JIUYUE-SEP/neural-mind` 的 **public 单提交仓库**（内容 = 改名后的 0.6.6 工作树）。0.6.5 及更早的 tag / Release 不再存在；下方历史条目里的旧 Release 链接仅作历史记录。

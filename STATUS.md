@@ -1,7 +1,7 @@
 # neural-mind 当前状态
 
 > **本文是当前状态的唯一事实来源**（覆写式：每次发布 / 验证 / 里程碑后重写）。
-> 最后更新：2026-11-10（S12 实现与验收完成，0.6.7 待发版）
+> 最后更新：2026-11-10（0.6.7 候选验证 PASS，待 tag / Release 授权）
 > 现行文档：[README](README.md) · [DESIGN](DESIGN.md) · [NEXT_STEPS](NEXT_STEPS.md) · [CHANGELOG](CHANGELOG.md)
 > 历史过程见 [docs/legacy/](docs/legacy/README.md)；历史验证记录见 [docs/legacy/VERIFICATION-2026-11.md](docs/legacy/VERIFICATION-2026-11.md)。
 
@@ -10,9 +10,10 @@
 | 项 | 值 |
 |---|---|
 | 仓库 | `JIUYUE-SEP/neural-mind`（public，MIT License） |
-| 工作树版本 | **0.6.6**（S12 代码已合入，发版时升 0.6.7） |
+| 工作树版本 | **0.6.7**（S12 使用观测） |
 | 最新已发布 | **0.6.6**（2026-11-09，Release [v0.6.6](https://github.com/JIUYUE-SEP/neural-mind/releases/tag/v0.6.6)） |
-| 下一版 | **0.6.7**（观测落盘，S12；已实现，待发版）→ 0.7.0（记忆质量，S13–S16） |
+| 下一版 | **0.7.0**（记忆质量，S13–S16；S12 观测已随 0.6.7 交付） |
+| 0.6.7 状态 | **候选已验证 PASS**：`neural-mind-0.6.7-candidate.tgz`（60 文件，353,521 B）；`verify:release` EXIT=0；tag / Release 待用户明确授权 |
 | 0.6.6 状态 | **已发布**：tag `v0.6.6` + GitHub Release 已按用户明确授权创建（**不发 npm**）；Release asset = 候选 tarball（59 文件，339,282 B，SHA256 见 `bench-results/artifacts/SHA256SUMS`） |
 
 0.6.6 内容：正确性补丁 R1a / R4 / R8a / R13a / R13b / R14 / R15a / R16 / R16b / R18 / R26（R0 是 0.6.5 的发版收尾，不计入本版），外加**插件改名 `dsh-plugin-memory` → `neural-mind`**（entry id / 设置命名空间 / 存储域名 / 注入来源 kind / 数据路由全量同步，旧数据自动迁移）。逐条见 [CHANGELOG](CHANGELOG.md)。
@@ -27,20 +28,23 @@
 - 每轮 step 1 检索并注入相关记忆；工具 `memory_remember` / `memory_recall` / `memory_forget` / `soul_update`；
 - 主侧栏「记忆」→ 7 页签记忆控制台（总览 / 记忆 / 召回 / 配置 / 画像 / SOUL / 审计）；
 - 隐私：`privateWorkspaces` 只进不出；sensitive 标记默认不自动产生（0.6.6 R4），打开 `sensitiveNoCross` 后才做跨域拦截；密钥形态拒收。
+- **使用观测（0.6.7）**：注入 / 跳过 / 提炼 / 召回计数与注入质量元数据按天落盘（独立域 `neural_mind_usage`），总览可见「使用量」与最近注入的相关/可信；只记录，不改变注入结果。
 
 ## 质量现状（全仓数字唯一来源）
 
-2026-11-09 实测：
+2026-11-10 实测：
 
 | 项目 | 结果 |
 |---|---|
-| 单测（逐文件 `node --test`） | **379 测试 / 376 通过 / 0 失败 / 3 跳过**（36 个测试文件） |
+| 单测（逐文件 `node --test`） | **380 测试 / 377 通过 / 0 失败 / 3 跳过**（36 个测试文件） |
 | `check:ledger` | §10 配置账本 **70/70**，零差异 |
 | `check:seams` | **12 项**（volatile 28 双侧闭合；bundle 311,964 B） |
-| `check:design` | **8 份设计文档 / 索引 13 行 / 代码归属 24 条**：front-matter 与索引双向一致；漂移检查（P1）走 `verify:release --strict` |
+| `check:design` | **9 份设计文档 / 索引 14 行 / 代码归属 26 条**：front-matter 与索引双向一致；漂移检查（P1）走 `verify:release --strict` |
 | `check:conform` | **39 条 / 0 不符** |
 | `check:host` | **51/51**（本机 DSH Desktop 0.2.2-rc.1） |
 | `check:shapes` | **10/10**（0.2.2-rc.1 的 `app.asar.unpacked` 布局） |
+
+**0.6.7 候选发布门禁（2026-11-10 从最终 HEAD 重跑）**：`verify:release` **PASS**（EXIT=0）——npm test **380/377/0/3**、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（6 提交 / 0 漂移）、E2E **24/24**（源码 + tarball 各一次）、升级 smoke PASS（0.5.0 → 0.6.7，记忆保留且被新版读到）、默认配置冒烟 **26/26**、N1 默认提炼 PASS、`release-matrix` PASS（60 文件 tarball）。原始日志：[bench-results/verify-release-0.6.7.log](bench-results/verify-release-0.6.7.log)（已脱敏）。
 
 **0.6.6 候选发布门禁（2026-11-09 改名 + 重打包后从最终 HEAD 重跑）**：`verify:release` **PASS**（EXIT=0）——npm test **367/364/0/3**、`check:shapes` **10/10**、E2E **24/24**（源码 + tarball 各一次）、升级 smoke PASS（0.5.0 → 0.6.6，记忆经旧域迁移保留且被新版读到）、默认配置冒烟 **26/26**、N1 默认提炼 PASS、`release-matrix` PASS（59 文件 tarball）。原始日志：[bench-results/verify-release-0.6.6.log](bench-results/verify-release-0.6.6.log)（已脱敏）。
 
@@ -64,7 +68,8 @@ node tools/check-design.mjs --history # 只查"代码改了、对应设计文档
 
 | 文件 | 用途 | 大小 |
 |---|---|---:|
-| `neural-mind-0.6.6-candidate.tgz` | 0.6.6 候选（59 文件，含 MIT LICENSE） | 339,282 B |
+| `neural-mind-0.6.7-candidate.tgz` | 0.6.7 候选（60 文件，含 MIT LICENSE；待发布为 v0.6.7 asset） | 353,521 B |
+| `neural-mind-0.6.6-candidate.tgz` | 0.6.6 已发布候选（59 文件，含 MIT LICENSE；即 v0.6.6 Release asset） | 339,282 B |
 | `dsh-plugin-memory-0.5.0-pre-f0ec867.tgz` | 升级 / 回滚基线（0.5.0，**文件名保留改名前的旧名**，是真实历史产物） | 160,967 B |
 | `SHA256SUMS` | 校验和 | — |
 

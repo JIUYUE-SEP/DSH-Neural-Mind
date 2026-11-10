@@ -220,3 +220,22 @@ test('使用观测:质量分档与聚合函数的边界', () => {
   assert.equal(q.lowTrust, 1)
   assert.equal(q.unverified, 1)
 })
+
+test('使用观测:关停期域已被宿主关闭时静默跳过(不写 stderr、不谎报)', async () => {
+  const store = makeStore()
+  const { usage } = makeUsage(store)
+  await usage.start({ scheduleTrim: false })
+  usage.recordInjection(injectRow({ mode: 'skip', reason: 'no-hits', records: 0, chars: 0 }))
+  // 模拟宿主先关域:写入抛 "domain is closed"
+  store.usage.days.put = async () => { throw new Error("domain 'neural_mind_usage' is closed") }
+  const original = process.stderr.write
+  let captured = ''
+  process.stderr.write = (chunk) => { captured += String(chunk); return true }
+  try {
+    await usage.dispose()
+  } finally {
+    process.stderr.write = original
+  }
+  assert.equal(captured, '', '关停期域关闭属预期:不得写 stderr')
+  assert.match(String(usage.status().error), /closed/, '错误记录在 status 里可诊断')
+})
