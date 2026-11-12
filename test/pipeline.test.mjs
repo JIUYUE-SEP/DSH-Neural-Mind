@@ -2319,6 +2319,9 @@ test('提炼 prompt 契约:关系枚举 dispute/并真判例/soulProposal/自指
     const prompt = JSON.stringify(llm.calls[0].messages) + (llm.calls[0].system ?? '')
     assert.ok(prompt.includes('dispute'), 'prompt 含 dispute 枚举')
     assert.ok(prompt.includes('soulProposal'), 'prompt 含 soulProposal 字段')
+    assert.ok(prompt.includes('不算人格提议'), 'prompt 明确排除流程/偏好类内容（R33 前哨）')
+    assert.ok(prompt.includes('流程/协作要求'), 'prompt 列出被排除的流程/协作要求')
+    assert.ok(prompt.includes('换一个项目或换一类任务仍成立'), 'prompt 要求人格提议跨项目/跨任务成立')
     assert.ok(prompt.includes('并真'), 'prompt 含并真判例')
     assert.ok(prompt.includes('归仓库文档'), 'prompt 含自指指引')
     // R4(0.6.6):整理提示词不再要求模型标 sensitive(字段仍解析,兼容旧数据/旧模型)。

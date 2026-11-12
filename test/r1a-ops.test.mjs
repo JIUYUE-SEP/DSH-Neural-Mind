@@ -334,3 +334,33 @@ test('R1a:expandSource —— 读回来源轮次;hard forget 的区间不展示;
     await env.fake.dispose()
   }
 })
+
+test('SOUL 提议从记忆页恢复后回到暂存(待采纳),不是 active(手滑纠正)', async () => {
+  const env = await boot({
+    memories: [
+      record({
+        id: 'm_soul',
+        entity: 'soul',
+        kind: 'lesson',
+        source: 'assistant',
+        stagedBy: 'model',
+        status: 'archived',
+        content: '我回复倾向于简短',
+        importance: 6,
+        confidence: 0.7,
+      }),
+    ],
+  })
+  try {
+    const restored = await env.call({ action: 'restore', id: 'm_soul' })
+    assert.equal(restored.ok, true)
+    assert.equal(restored.row.status, 'staged', 'SOUL 提议必须回到待采纳,不能变成 active')
+    assert.equal(env.memoryOf('m_soul').status, 'staged')
+    const audit = env.auditRows().find((row) => row.kind === 'memory-restored')
+    assert.ok(/SOUL 提议/.test(String(audit?.detail)), '审计写明恢复为 SOUL 提议')
+    // 恢复后仍走 SOUL 通道:普通暂存确认继续拒绝,避免被当成普通记忆转正
+    assert.equal((await env.call({ action: 'confirm', id: 'm_soul' })).ok, false)
+  } finally {
+    await env.fake.dispose()
+  }
+})
