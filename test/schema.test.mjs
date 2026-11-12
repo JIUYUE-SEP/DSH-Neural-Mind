@@ -28,11 +28,11 @@ test('domain spec:域名与每个表名都符合存储层命名规则(禁驼峰/
   assert.equal(spec.name, DOMAIN_NAME)
 })
 
-test('domain spec:声明了本次用到的五张表,版本纪律按 §1 执行', () => {
+test('domain spec:声明了本次用到的六张表,版本纪律按 §1 执行', () => {
   const spec = domainSpec()
   assert.deepEqual(
     Object.keys(spec.tables).sort(),
-    ['audit', 'hotbuffer', 'memories', 'outbox', 'soul_history'],
+    ['audit', 'hotbuffer', 'memories', 'outbox', 'soul_history', 'soul_signals'],
   )
   // v1 → v2(V1.1 第 3 步):evidenceEvent 新增可选 targetId(争议对对端)——首个字段级升版;
   // v2 → v3(2026-11-09 改名):global 增可选 migratedDomains,域名换新。记录形状不变。

@@ -24,13 +24,25 @@ import { DEFAULT_SENSITIVE_KEYWORDS } from '../lib/text.js'
  */
 const expiresTomorrow = () => new Date(Date.now() + 86_400_000).toISOString()
 
+/**
+ * §4.4 周回顾用例:预置一条人格信号(用户原话候选证据)。
+ * 用相对时间(而不是写死绝对日期),"跨天"判定随时间推移永远成立/不成立可控。
+ */
+function soulSignalRow(id, daysAgo, quote) {
+  return {
+    id, ts: new Date(Date.now() - daysAgo * 86_400_000).toISOString(), sessionId: 's-seed', quote, status: 'open',
+  }
+}
+
 function makeConfig(overrides = {}) {
   // 测试默认放宽内联预算(5000ms):全套并行时事件循环拥塞会超过默认 300ms,
   // 预算门会把注入整轮丢掉造成断言抖动(实测 flaky);预算机制本身由专门用例锁定
   return testConfig({ inlineBudgetMs: 5000, ...overrides })
 }
 
-function bootPlugin({ services = {}, config = {}, seed = [], hotSeed = [], outboxSeed = [], globalInitial } = {}) {
+function bootPlugin({
+  services = {}, config = {}, seed = [], hotSeed = [], outboxSeed = [], signalSeed = [], auditSeed = [], globalInitial,
+} = {}) {
   const fake = createFakeCtx({ services, ...(globalInitial === undefined ? {} : { globalInitial }) })
   // 关系候选必须在 boot rebuild 前进表;put 是 async 但 map.set 同步完成。
   if (seed.length > 0) {
@@ -45,6 +57,15 @@ function bootPlugin({ services = {}, config = {}, seed = [], hotSeed = [], outbo
   if (outboxSeed.length > 0) {
     fake.tables.outbox = memoryTable()
     for (const [id, item] of outboxSeed) fake.tables.outbox.put(id, item)
+  }
+  // §4.4 周回顾:信号与审计要在 boot 前预置(提炼开始时判定已经算好)
+  if (signalSeed.length > 0) {
+    fake.tables.soul_signals = memoryTable()
+    for (const [id, row] of signalSeed) fake.tables.soul_signals.put(id, row)
+  }
+  if (auditSeed.length > 0) {
+    fake.tables.audit = memoryTable()
+    for (const [id, row] of auditSeed) fake.tables.audit.put(id, row)
   }
   // 默认挂假 storageDomain,让测试可直查落盘表(tables.*)
   const svc = { storageDomain: fake.fakeStorageDomain, ...services }
@@ -1922,10 +1943,15 @@ test('内联预算:超时整体跳过本轮动态注入(§4.2 三档降级末档
   }
 })
 
-test('SOUL 提议通道:提炼提议落暂存(entity=soul,model 严检);同内容不重复;命中特征拒收(§9-17,V1.1)', async () => {
+test('SOUL 提议通道:周回顾轮次提议落暂存(entity=soul,model 严检);同内容不重复;命中特征拒收(§9-17,V1.1)', async () => {
+  // 0.7.0 起提议只在周回顾轮次产出:预置 2 条跨天信号 + 没有 soul-review-run 审计 → 满足条件
+  const reviewSignals = [
+    ['ss_1', soulSignalRow('ss_1', 1, '你说话别绕,先给结论')],
+    ['ss_2', soulSignalRow('ss_2', 3, '别总列清单,说人话')],
+  ]
   const mk = (proposal) => {
     const llm = fakeLlm(JSON.stringify({ episode: null, facts: [], lessons: [], relations: [], soulProposal: proposal }))
-    return { fake: bootPlugin({ services: { llm, timer: {} }, config: { extractBatchTurns: 1 } }), llm }
+    return { fake: bootPlugin({ services: { llm, timer: {} }, config: { extractBatchTurns: 1 }, signalSeed: reviewSignals }), llm }
   }
 
   // 正常提议 → 落暂存区(entity='soul',stagedBy='model');同内容跨批次不重复
@@ -1959,6 +1985,80 @@ test('SOUL 提议通道:提炼提议落暂存(entity=soul,model 严检);同内�
     assert.ok(await waitFor(() => (evil.tables.audit?.entries() ?? []).some(([, a]) => a.kind === 'injection-rejected')), '拒收进审计')
   } finally {
     await evil.dispose()
+  }
+})
+
+// ── §4.4 节奏:信号 → 周回顾(0.7.0)──────────────────────────────────────────
+test('SOUL 周回顾:2 条跨天信号 + 没有回顾审计 → prompt 带「周回顾」,提议进 staged 且记 soul-review-run', async () => {
+  const proposal = '我不相信没跑过的东西,宁可慢,只要没有验证就别说"好了"。'
+  const canned = JSON.stringify({
+    episode: null, facts: [], lessons: [], relations: [], soulProposal: proposal, soulSignal: '别老给我表格',
+  })
+  const llm = fakeLlm(canned)
+  const fake = bootPlugin({
+    services: { llm, timer: {} },
+    config: { extractBatchTurns: 1 },
+    signalSeed: [['ss_a', soulSignalRow('ss_a', 1, '不确定就说不确定')], ['ss_b', soulSignalRow('ss_b', 2, '别拿没验证的当结论')]],
+  })
+  try {
+    const session = fakeSession('s-review-a', { cwd: '/nonexistent-dir' })
+    for (const e of turnEvents(1, 0, '这东西你验证过了吗', '还没,我这就跑。')) fake.emit('session/event', session, e)
+    assert.ok(await waitFor(() => llm.calls.length >= 1), '提炼调用发生')
+    const prompt = JSON.stringify(llm.calls[0].messages)
+    assert.ok(prompt.includes('周回顾'), 'prompt 进入周回顾态(插入了 buildReviewBlock)')
+
+    assert.ok(await waitFor(() => (fake.tables.memories?.entries() ?? []).some(([, m]) => m.entity === 'soul')), '提议落盘')
+    const rec = [...fake.tables.memories.entries()].find(([, m]) => m.entity === 'soul')[1]
+    assert.equal(rec.content, proposal)
+    assert.equal(rec.status, 'staged', '仍走现有 staged 提议路径')
+    assert.equal(rec.stagedBy, 'model')
+    assert.equal(rec.soulMode, undefined, '提炼器保持 append 形态(不写 soulMode)')
+    assert.ok(await waitFor(() => [...fake.tables.audit.entries()].some(([, a]) => a.kind === 'soul-review-run')), '记 soul-review-run 推进间隔')
+    const audits = [...fake.tables.audit.entries()].map(([, a]) => a)
+    assert.ok(audits.some((a) => a.kind === 'soul-proposal-staged'), '保留原有提议审计')
+    const run = audits.find((a) => a.kind === 'soul-review-run')
+    assert.ok(run.detail.includes('2 条') && run.detail.includes('已产出新提议'), `run detail 写清信号数/是否产出提议: ${run.detail}`)
+  } finally {
+    await fake.dispose()
+  }
+})
+
+test('SOUL 周回顾:刚跑过回顾 → prompt 不含「周回顾」,提议被忽略,但 soulSignal 落进 soul_signals', async () => {
+  const canned = JSON.stringify({
+    episode: null, facts: [], lessons: [], relations: [],
+    soulProposal: '我宁可慢也要先验证。',
+    soulSignal: '我说话可以慢一点,但别糊弄我',
+  })
+  const llm = fakeLlm(canned)
+  const freshRun = { id: 'au_run', ts: new Date().toISOString(), kind: 'soul-review-run', detail: '周回顾:无新提议' }
+  // 信号够(2 条跨天),但间隔没到:单靠"刚跑过回顾"就不能进周回顾态
+  const fake = bootPlugin({
+    services: { llm, timer: {} },
+    config: { extractBatchTurns: 1 },
+    signalSeed: [['ss_a', soulSignalRow('ss_a', 1, '不确定就说不确定')], ['ss_b', soulSignalRow('ss_b', 2, '别拿没验证的当结论')]],
+    auditSeed: [['au_run', freshRun]],
+  })
+  try {
+    const session = fakeSession('s-review-b', { cwd: '/nonexistent-dir' })
+    for (const e of turnEvents(1, 0, '慢慢来,别糊弄', '好。')) fake.emit('session/event', session, e)
+    assert.ok(await waitFor(() => llm.calls.length >= 1), '提炼调用发生')
+    const prompt = JSON.stringify(llm.calls[0].messages)
+    assert.ok(!prompt.includes('周回顾'), 'prompt 不进入周回顾态')
+
+    assert.ok(await waitFor(() => fake.tables.outbox.size === 0), '整批消化完(信号处理在批次完成之前)')
+    assert.ok(![...fake.tables.memories.entries()].some(([, m]) => m.entity === 'soul'), '常态下 soulProposal 一律忽略,不落提议')
+    const audits = [...fake.tables.audit.entries()].map(([, a]) => a)
+    assert.ok(audits.some((a) => a.kind === 'soul-proposal-skipped'), '忽略也留审计(可诊断)')
+    assert.equal(audits.filter((a) => a.kind === 'soul-review-run').length, 1, '间隔照旧(没有新增 run)')
+
+    const signals = [...fake.tables.soul_signals.entries()].map(([, row]) => row)
+    assert.equal(signals.length, 3, '新信号入池(2 条预置 + 1 条本批)')
+    const collected = signals.find((row) => row.quote === '我说话可以慢一点,但别糊弄我')
+    assert.ok(collected !== undefined, 'soulSignal 按用户原话落进 soul_signals')
+    assert.equal(collected.status, 'open')
+    assert.equal(collected.sessionId, 's-review-b')
+  } finally {
+    await fake.dispose()
   }
 })
 
@@ -2309,14 +2409,21 @@ test('A10:批次中途 put 失败后重启补齐剩余事实,已落盘不重复'
   }
 })
 
-test('提炼 prompt 契约:关系枚举 dispute/并真判例/soulProposal/自指指引都在(canned 假件防 prompt 回退)(§3.2,V1.1)', async () => {
+test('提炼 prompt 契约:周回顾块 + 判断形态/排除项/关系枚举/自指指引都在(canned 假件防 prompt 回退)(§3.2/§4.4,V1.1)', async () => {
   const llm = fakeLlm(JSON.stringify({ episode: null, facts: [], lessons: [], relations: [] }))
-  const fake = bootPlugin({ services: { llm, timer: {} }, config: { extractBatchTurns: 1 } })
+  // 0.7.0 起 SOUL 判据只在周回顾轮次的 prompt 里(常态只收信号)——预置跨天信号进入周回顾态
+  const fake = bootPlugin({
+    services: { llm, timer: {} },
+    config: { extractBatchTurns: 1 },
+    signalSeed: [['ss_1', soulSignalRow('ss_1', 1, '别绕弯子')], ['ss_2', soulSignalRow('ss_2', 2, '先给结论')]],
+  })
   try {
     const session = fakeSession('s-prompt', { cwd: '/nonexistent-dir' })
     for (const e of turnEvents(1, 0, '随便聊聊', '好。')) fake.emit('session/event', session, e)
     assert.ok(await waitFor(() => llm.calls.length >= 1), '提炼调用发生')
     const prompt = JSON.stringify(llm.calls[0].messages) + (llm.calls[0].system ?? '')
+    assert.ok(prompt.includes('周回顾'), 'prompt 说明这一轮是周回顾')
+    assert.ok(prompt.includes('soulSignal'), 'prompt 含 soulSignal 字段')
     assert.ok(prompt.includes('dispute'), 'prompt 含 dispute 枚举')
     assert.ok(prompt.includes('soulProposal'), 'prompt 含 soulProposal 字段')
     assert.ok(prompt.includes('不算人格提议'), 'prompt 明确排除流程/偏好类内容（R33 前哨）')

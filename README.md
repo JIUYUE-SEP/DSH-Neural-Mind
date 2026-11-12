@@ -185,7 +185,7 @@ npm test              # bundle 校验 + §10 配置账本 + DSH 接缝对账（1
 npm run verify:release  # 全量发布门禁：host / shapes / conform / 设计 P1 strict / E2E / release-matrix
 ```
 
-改完自己跑一遍：本机 Windows 上**再跑 398 项**（395 通过 / 0 失败 / 3 跳过）。3 项跳过都带判据：建 symlink 需开发者模式（2 项，探测而非猜平台）、边车看门狗依赖 POSIX shell（Windows 1 项，显式 SKIP），Linux / WSL / macOS 照常跑。
+改完自己跑一遍：本机 Windows 上**再跑 407 项**（404 通过 / 0 失败 / 3 跳过）。3 项跳过都带判据：建 symlink 需开发者模式（2 项，探测而非猜平台）、边车看门狗依赖 POSIX shell（Windows 1 项，显式 SKIP），Linux / WSL / macOS 照常跑。
 
 **两条收口纪律**（`npm run check:conform` 机械守住）：① 故意吞掉失败必须走 `bestEffort`（可 grep、可数），要留痕的失败走 `fireAndForget` 或审计；② 未接线的配置项必须在 schema 描述里标 `[未实现]`，由 `check:ledger` 双向对账。
 

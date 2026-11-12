@@ -57,3 +57,4 @@ superseded_by: null
 - 2026-11-10：0.6.7 §14 接线——boot 创建使用观测（独立域失败退化为进程内），旁路接 injectionLog / extractor / tools / `/neural-mind/api` 的 `usage`、`pool` 动作；不改任何宿主接缝
 
 - 2026-11-12：**0.7.0 工具改名接线口径**——`lib/index.js` 的注释与接线说明由 `soul_update` 改为 `soul_propose`；宿主接缝（volatile / `loader/volatile-update` / 会话来源）无变化，`check:seams` 12 项仍全绿。
+- 2026-11-12：**周回顾接线**——插件入口把 SOUL 运行时传给提炼器（`createExtractor({ …, soul })`），周回顾 prompt 用 `soul.current()` 摘要避免重复提议；宿主接缝无变化，`check:seams` 12 项仍全绿。

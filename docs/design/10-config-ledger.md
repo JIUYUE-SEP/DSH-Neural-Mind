@@ -93,7 +93,7 @@ superseded_by: null
     autoStartWaitMs: number            // 默认 20000;就绪审计窗口(超时记 unready,继续等到 3× 再 late-ready)
     autoStartWarmup: boolean           // 默认 false;就绪后预热一次,第一条检索不再冷启动降级(§5,§13-⑤)
   }
-  // providerId 未采用(实现以 baseUrl 直连,§13-①);上表与 lib/config.js 顶层 70 项机械对账一致
+  // providerId 未采用(实现以 baseUrl 直连,§13-①);上表与 lib/config.js 顶层 72 项机械对账一致
   chunkPlainMaxChars: number           // 默认 8192,向量分段阈值(≤此整条单向量)
   chunkSize: number                    // 默认 1000,向量分段长度(字符)
   chunkOverlap: number                 // 默认 100,段间重叠
@@ -172,6 +172,9 @@ superseded_by: null
                                          // (写入超限拒绝;注入超长截断并留"(已截断)"标记;刷新时记 soul-oversize 审计)
   soulEditDailyBudget: number            // 高级:默认 5,每天 SOUL **提议**次数上限(采纳不占额度;
                                          //   被拒不计数;按 UTC 日界数当日 entity='soul' 记录)
+  soulProposalIntervalDays: number       // 高级:默认 7,SOUL 提议**周回顾**的最小间隔(天);
+                                         //   未到期时提炼器只存人格信号、不产出提议(§4.4「节奏:信号 → 周回顾」)
+  soulSignalRetentionDays: number        // 高级:默认 30,人格信号(用户原话)保留天数,过期裁剪
   soulHistoryMaxEntries: number          // 高级:默认 50,版本快照保留条数;
                                          // 实际下界 10,且当日条目不裁(当日行是日预算依据)
   storageOpenTimeoutMs: number           // 高级:默认 5000;storageDomain.open 超时即按「降级纯内存态」处理
@@ -193,3 +196,4 @@ superseded_by: null
 ## 修订记录
 
 - 2026-11-09：从 DESIGN.md §10 原样拆出；同日源码逐条抽查后校正描述——`autoStartCommand` 仅 POSIX、死信定义补"单回合超批量上限"、常驻 lesson 选择改为"本地优先+组内权重降序"、`semanticSearch.enabled` 生效条件改为 baseUrl+modelId；随后 R26 把 `profileFile` 改为支持 `~/…` 展开（光写 `~` 非法、缺失文件留一次提示）；`check-config-ledger` 已同步读取本文
+- 2026-11-12：SOUL 段新增两项高级配置——`soulProposalIntervalDays`（默认 7，周回顾最小间隔）与 `soulSignalRetentionDays`（默认 30，人格信号保留天数）；顶层 70 → **72 项**，账本与 `lib/config.js` 机械对账一致（§4.4「节奏：信号 → 周回顾」）

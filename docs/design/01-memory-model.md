@@ -66,6 +66,8 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
                             // 采纳时整篇替换;缺省 = 'append' = 提炼器提的一句(采纳时追加)。
                             // 只对 entity='soul' 的暂存条有意义;可选字段,不升存储格式版本
   soulReason?: string       // SOUL 提议的理由(agent 通道必填;进提议列表与审计)
+  soulNote?: string         // 用户忽略 SOUL 提议时填的理由(周回顾 prompt 用它讲"被拒过、为什么",
+                            // 避免重复提);可选字段,不升存储格式版本——同 confirmedByUser 先例
   filePaths?: string[]      // 文件锚(§4.2 注入前核验);代码/配置的值类事实必须带(§3.2 铁律;
                             // 提炼 prompt 只写了代码/配置域,办公产物锚规则尚未写进 prompt)
   anchorRoot?: string       // filePaths 锚的物理根 = 提炼时的 **git 根**(worktree 已归并为主仓根);
@@ -137,7 +139,7 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
 }
 ```
 
-> **表与字段的真相源**:上面只列 L2/L3 记忆本体;同域另有 `hotbuffer`(L0,§3.1)、`outbox`(§3.0/§3.2)、`audit`(§8)、`soul_history`(§4.4)四张表;另有**独立存储域 `neural_mind_extract`**(A10 起,`batches` 表存批次答卷,与主域 `neural_mind` 分开、不改主域版本)与 **`neural_mind_usage`**(0.6.7 §14 起,`days`/`recent` 两表存使用遥测——只有计数与质量元数据,不含记忆正文,同样不升主域版本),逐字段定义以 `lib/schema.js` 为准(新增字段同样走本节的版本纪律);域 spec 与改名前的旧域 spec 分别见 `domainSpec()` / `legacyDomainSpec()`(旧域只读迁移用,新写入一律用新域名)。
+> **表与字段的真相源**:上面只列 L2/L3 记忆本体;同域另有 `hotbuffer`(L0,§3.1)、`outbox`(§3.0/§3.2)、`audit`(§8)、`soul_history`(§4.4)、`soul_signals`(§4.4「节奏:信号 → 周回顾」,`{ id, ts, sessionId, quote, note?, status: 'open' | 'consumed' }`:平时的用户原话候选证据,quote 写入侧截断 200 字符)**五张表**——`soul_signals` 是**纯新增一张表,不升 domain 版本**(记录格式没变,升版只会给降级上锁);另有**独立存储域 `neural_mind_extract`**(A10 起,`batches` 表存批次答卷,与主域 `neural_mind` 分开、不改主域版本)与 **`neural_mind_usage`**(0.6.7 §14 起,`days`/`recent` 两表存使用遥测——只有计数与质量元数据,不含记忆正文,同样不升主域版本),逐字段定义以 `lib/schema.js` 为准(新增字段同样走本节的版本纪律);域 spec 与改名前的旧域 spec 分别见 `domainSpec()` / `legacyDomainSpec()`(旧域只读迁移用,新写入一律用新域名)。
 
 **版本纪律**:记录的**破坏性/语义**变更走 domain `version` 升版 + `compatibleVersions` 声明;**新增可选字段若旧记录仍合法、双向读取不受影响,可不升**(0.6.6 前半段的 `confirmedByUser` 与 `source:'unknown'` 即如此,当时 domain 仍为 2);纯新增一张表不升——记录格式没变,升了反而给降级上锁(§4.4);第一版即立规矩,不攒迁移债。V2 的 tool-guard 所需 `precondition` 字段届时按同一裁决处理(不预留空字段)。**已执行(2026-09-18,V1.1 第 3 步)**:`evidenceEvent` 新增可选 `targetId`(争议对对端,§3.2)→ version **1 → 2**、`compatibleVersions: [1]`;当时 1183 条既有记录按新 schema 校验 0 失败(**历史快照,仓库内不可复算**)。**已执行(2026-11-09,改名)**:域名 `memory` → `neural_mind`、`globalState` 新增可选 `migratedDomains` → version **2 → 3**、`compatibleVersions: [1, 2]`,启动时把旧域记录一次性补进新域(只读旧域,旧目录保留可回滚)。
 
@@ -149,3 +151,4 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
 - 2026-11-09：从 DESIGN.md §1 原样拆出（内容未改语义）
 - 2026-11-10：独立域清单补 `neural_mind_usage`（0.6.7 §14 使用观测；`days`/`recent` 两表，不升主域版本）
 - 2026-11-12：`memoryRecord` 新增可选 `soulMode` / `soulReason`（0.7.0 §4.4 提议通道；只对 `entity='soul'` 有意义，**不升 domain 版本**——同 `confirmedByUser` 先例）
+- 2026-11-12：新增可选 `soulNote`（用户忽略 SOUL 提议时填的理由，周回顾 prompt 用来避免重复提，**不升 domain 版本**）；同域新增 `soul_signals` 表（§4.4 信号 → 周回顾，字段见上文表与字段说明，**纯新增一张表、不升 domain 版本**）

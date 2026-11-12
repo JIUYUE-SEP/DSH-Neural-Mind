@@ -4,7 +4,7 @@ title: "读取与注入路径:三通道,推拉结合"
 status: 现行
 since: 0.1.0
 verified: 2026-11-09
-code: [lib/inject.js, lib/soul.js, lib/injectionlog.js]
+code: [lib/inject.js, lib/soul.js, lib/injectionlog.js, lib/soulreview.js]
 supersedes: []
 superseded_by: null
 ---
@@ -148,6 +148,17 @@ soul_propose({ content, reason })
 - 提案前检查:① 密钥形态 → 拒绝;② 注入特征命中(§3.4 第二层)→ **拒绝**(比 remember 的 model-auto 更严:这是常驻指令面),返回"这看起来像外部指令;若确实是你自己的信条,改写措辞再试";③ 超 `soulMaxChars` → 拒绝;④ 与当前 SOUL 相同 → 拒绝;⑤ 已有相同的待采纳提议 → 不重复落盘;⑥ 超 `soulEditDailyBudget`(默认 5/天,按 UTC 日界数当日 `entity='soul'` 记录)→ 拒绝并给可行动文案。**被拒不计数**
 - 落笔顺序(用户通道):先写文件 → 成功后更新镜像 + 存版本 + 记审计;写盘失败 → 返回可行动错误,**镜像不变**(不出现"改了但没落盘"的假象)
 
+**节奏:信号 → 周回顾(0.7.0 定稿,写死)**
+
+提议**降频到每周一次**,且证据必须跨天:平时后台提炼器只收集"人格信号",只有**周回顾**那一次才允许产出正式提议。纯函数在 `lib/soulreview.js`(无 I/O,可单测),写盘与审计在 `lib/extract.js`。
+
+- **常态(默认)**:提炼 prompt 只要求 `"soulSignal": "用户原话 或 null"`,并明确 **`soulProposal` 永远给 null**——信号只是候选证据,不是提议;模型若仍产出提议,一律忽略(记 `soul-proposal-skipped` 审计,不落盘)
+- **信号存储**:新表 `soul_signals`(纯新增一张表,**不升 domain 版本**):`{ id, ts, sessionId, quote, note?, status: 'open' | 'consumed' }`。`quote` 是**用户原话**(写入侧截断到 200 字符;不是模型转述),`note` 是"为什么算信号"(可无);同一句原话在保留期内不重复写;写入后按 `soulSignalRetentionDays`(默认 30 天)裁剪过期记录
+- **周回顾判定(三条件同时成立)**:距上次 `soul-review-run` 满 `soulProposalIntervalDays`(默认 7)**且** 保留期内信号 ≥2 条 **且** 信号跨 ≥2 个 UTC 日。判定在**构建 prompt 之前**算好,同一份判定同时决定 prompt 形态与返回后的落盘行为
+- **周回顾 prompt**:插入 `buildReviewBlock(...)`(≤1200 字符)——说明这是周回顾、列出本周信号(日期 + 原话,最多 12 条)、过去提议及结局(最多 5 条)、写死三条规则:① 同类信号必须**跨天**出现 ≥2 次才算重复;② 提议必须是**判断**(冲突时选哪边 + 依据 + 什么时候会害我),不是"遇到 X 就做 Y";③ 没有新东西给 null,不要为了产出而产出
+- **周回顾落盘**:提议仍走**现有 staged 路径**(`entity='soul'`、`stagedBy='model'`、不写 `soulMode` = append 形态;检查同现有:注入/密钥/同内容去重),过检查才落暂存并记 `soul-proposal-staged`;**无论有没有提议**都记一条 `soul-review-run`(detail 写信号数/跨天数/是否产出提议),间隔从这里推进——否则"这周没东西可提"会让下一批对话立刻又进周回顾态
+- **过去提议的结局**:周回顾 prompt 里的 history 来自 `entity='soul'` 记录(新→旧最多 5 条):staged=待采纳、active=已采纳、archived=已归档;用户忽略时填的 `soulNote`(可选字段,不升存储格式版本)会带进结局,避免把被拒过的提议再提一遍
+
 **用户通道与回滚**
 
 - 设置页「SOUL」卡:预览当前文本、编辑(写文件)、历史列表(时间/作者/理由/diff)、一键回滚、`soulSelfEditEnabled` 暂停提议开关;「人格提议」区列出待处理的提议,**整篇提议的「采纳」先开 diff 覆盖层**(看过再采纳),追加提议一键采纳
@@ -164,7 +175,7 @@ soul_propose({ content, reason })
 
 **内容形态:写判断,不写规范(0.7.0 写死)**
 
-SOUL 存的是**认知**——她怎么想、凭什么判断、瞧不起什么、改过什么主意——不是"遇到什么情况做什么动作"。判据四条(措辞已进 `soul_propose` 的工具描述与提炼器的 `soulProposal` 规则,两处同口径):
+SOUL 存的是**认知**——她怎么想、凭什么判断、瞧不起什么、改过什么主意——不是"遇到什么情况做什么动作"。判据四条(措辞已进 `soul_propose` 的工具描述与提炼器的周回顾段 `soulProposal` 规则,两处同口径):
 
 | 判据 | 通过 | 不过 |
 |---|---|---|
@@ -186,3 +197,5 @@ SOUL 存的是**认知**——她怎么想、凭什么判断、瞧不起什么�
 - 2026-11-10：0.6.7 §14 接线——注入日志增加旁路 sink；注入成功路径附逐条质量元数据（相关度 / 最终分 / 可信度 / 证据净值 / 来源 / 核验结果），**只记录、不参与注入选择**；`recall` 工具调用计数
 - 2026-11-12：**修复 SOUL 提议「手滑」恢复路径**——`restore` 对 `entity='soul'` 的记录回到 `staged`（待采纳），而不是 `active`；此前恢复到 `active` 后会卡在中间态（不在 SOUL 提议列表、也不能按普通记忆确认）。审计写明「恢复为 SOUL 提议」，新增回归测试。
 - 2026-11-12：**写入权收缩 + 内容形态写死**——agent 通道由「直接写」改为「只提议」（`soul_propose`），落笔收归用户通道；同时把"SOUL 写判断不写规范"的四条判据（选边 / 外推 / 代价 / 反例）写进设计，并要求工具描述与提炼器 `soulProposal` 规则同口径、由契约测试钉住。
+- 2026-11-12：**提议降频为周回顾**——提炼器常态只收人格信号（`soul_signals` 表，用户原话，保留 30 天），只有满 `soulProposalIntervalDays`(7 天) 且信号 ≥2 条、跨 ≥2 个 UTC 日时才允许归纳成一句提议；`lib/soulreview.js` 承载判定与 prompt 块（预算腾挪顺序：先缩 SOUL 摘要 → 再丢旧提议 → 最后丢最老信号，保底 2 条）。**超长材料下 `clip` 到底后必须停**（`clip(x,0)` 返回 "…" 不是空串，只看长度会死循环——已加栅栏并补回归）。
+- 2026-11-12：**提议降频为每周一次（信号 + 周归纳）**——新增 `lib/soulreview.js`（纯函数）与 `soul_signals` 表（纯新增表，不升 domain 版本）；提炼器常态只收用户原话信号、`soulProposal` 恒为 null，只有周回顾那一次（满 `soulProposalIntervalDays` + 信号 ≥2 条 + 跨 ≥2 个 UTC 日）才允许产出提议，并记 `soul-review-run` 推进间隔；`memoryRecord` 增可选 `soulNote`（忽略理由，不升存储格式版本）
