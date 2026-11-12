@@ -1,12 +1,8 @@
 ---
 id: 15
 title: "项目规则与 AGENTS.md 托管块（R33 / R34）"
-status: 草稿
-since: 0.7.0
 verified: 2026-11-10
 code: [lib/rules.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §15 项目规则与 AGENTS.md 托管块（R33 / R34）

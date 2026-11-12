@@ -1,12 +1,8 @@
 ---
 id: 5
 title: "检索:混合双路(决策②)"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/search.js, lib/embed.js, lib/sidecar.js, lib/bm25.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §5 检索:混合双路(决策②)

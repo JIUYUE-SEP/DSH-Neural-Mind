@@ -1,12 +1,8 @@
 ---
 id: 14
 title: "使用观测与容量统计（R3 / R9 只读部分）"
-status: 现行
-since: 0.6.7
 verified: 2026-11-10
 code: [lib/usage.js, lib/api.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §14 使用观测与容量统计（R3 / R9 只读部分）

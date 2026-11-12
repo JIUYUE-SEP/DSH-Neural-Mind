@@ -1,12 +1,8 @@
 ---
 id: 2
 title: "全局记忆池与来源标注"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/provenance.js, lib/workspace.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §2 全局记忆池与来源标注

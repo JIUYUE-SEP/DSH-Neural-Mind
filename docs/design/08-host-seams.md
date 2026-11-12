@@ -1,12 +1,8 @@
 ---
 id: 8
 title: "DSH 接缝映射 v2.0(已对照宿主发行版源码逐条核实;v2.0 基线 0.2.0-rc.1,现行认证基线 0.2.1-rc.3 / 0.2.2-rc.1)"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/index.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §8 DSH 接缝映射 v2.0(已对照宿主发行版源码逐条核实;v2.0 基线 0.2.0-rc.1,现行认证基线 0.2.1-rc.3 / 0.2.2-rc.1)

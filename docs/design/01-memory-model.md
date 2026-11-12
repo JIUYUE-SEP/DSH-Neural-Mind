@@ -1,12 +1,8 @@
 ---
 id: 1
 title: "记忆模型:热缓冲 + 四层 + 暂存区"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/schema.js, lib/hotbuffer.js, lib/text.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §1 记忆模型:热缓冲 + 四层 + 暂存区

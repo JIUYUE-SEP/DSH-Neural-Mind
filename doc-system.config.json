@@ -1,0 +1,21 @@
+{
+  "template": { "version": "0.3.1", "tier": "full", "profile": "plugin" },
+  "design": {
+    "designDir": "docs/design",
+    "indexFile": "DESIGN.md",
+    "indexHeading": "## 设计树索引",
+    "baselineFile": "docs/design/.baseline",
+    "requireCode": true,
+    "codeRoots": ["lib"],
+    "sectionIdRule": "increasing"
+  },
+  "ops": {
+    "draftDir": "docs/ops",
+    "legacyDir": "docs/legacy/ops",
+    "queueFile": "NEXT_STEPS.md",
+    "completedFile": "docs/legacy/completed.md",
+    "maxCurrent": 1
+  },
+  "testCount": { "mode": "off" }
+}
+

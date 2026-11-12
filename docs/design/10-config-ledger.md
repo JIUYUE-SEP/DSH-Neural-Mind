@@ -1,12 +1,8 @@
 ---
 id: 10
 title: "配置项清单(Schemastery schema,可调不许硬编码)"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/config.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §10 配置项清单(Schemastery schema,可调不许硬编码)

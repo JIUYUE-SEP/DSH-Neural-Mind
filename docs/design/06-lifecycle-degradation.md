@@ -1,12 +1,8 @@
 ---
 id: 6
 title: "生命周期与能力降级（§6 + §7）"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/rank.js, lib/store.js, lib/compat.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §6 + §7 生命周期与能力降级

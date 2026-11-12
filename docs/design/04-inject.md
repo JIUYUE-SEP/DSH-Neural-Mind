@@ -1,12 +1,8 @@
 ---
 id: 4
 title: "读取与注入路径:三通道,推拉结合"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/inject.js, lib/soul.js, lib/injectionlog.js, lib/soulreview.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §4 读取与注入路径:三通道,推拉结合

@@ -1,12 +1,8 @@
 ---
 id: 3
 title: "写入路径:双速通道 + 显式通道"
-status: 现行
-since: 0.1.0
 verified: 2026-11-09
 code: [lib/turns.js, lib/extract.js, lib/tools.js, lib/outbox.js, lib/relation.js, lib/dedupe.js, lib/audit.js]
-supersedes: []
-superseded_by: null
 ---
 
 # §3 写入路径:双速通道 + 显式通道

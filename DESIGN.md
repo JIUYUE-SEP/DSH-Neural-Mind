@@ -21,23 +21,21 @@
 
 ## 设计树索引
 
-| § | 主题 | 状态 | 文件 | 代码入口 |
-|---|---|---|---|---|
-| §0 | 核心原则 | 本文 | — | — |
-| §1 | 记忆模型:热缓冲 + 四层 + 暂存区 | 现行 | [01-memory-model.md](docs/design/01-memory-model.md) | `lib/schema.js`、`lib/hotbuffer.js` |
-| §2 | 全局记忆池与来源标注 | 现行 | [02-global-pool.md](docs/design/02-global-pool.md) | `lib/provenance.js` |
-| §3 | 写入路径:双速通道 + 显式通道 | 现行 | [03-write-path.md](docs/design/03-write-path.md) | `lib/turns.js`、`lib/extract.js`、`lib/tools.js` |
-| §4 | 读取与注入路径:三通道,推拉结合 | 现行 | [04-inject.md](docs/design/04-inject.md) | `lib/inject.js`、`lib/soul.js` |
-| §5 | 检索:混合双路(决策②) | 现行 | [05-search.md](docs/design/05-search.md) | `lib/search.js`、`lib/embed.js`、`lib/sidecar.js` |
-| §6+§7 | 生命周期与能力降级 | 现行 | [06-lifecycle-degradation.md](docs/design/06-lifecycle-degradation.md) | `lib/rank.js`、`lib/store.js`、`lib/compat.js` |
-| §8 | DSH 接缝映射 v2.0 | 现行 | [08-host-seams.md](docs/design/08-host-seams.md) | `lib/index.js` |
-| §9 | 明确不做的事 | 本文 | — | — |
-| §10 | 配置项清单（Schemastery 账本） | 现行 | [10-config-ledger.md](docs/design/10-config-ledger.md) | `lib/config.js` |
-| §11 | 实施路线（历史） | 归档 | [implementation-roadmap.md](docs/legacy/implementation-roadmap.md) | — |
-| §12 | 决策记录与差异化定位 | 本文 | — | — |
-| §13 | 审核溯源（历史） | 归档 | [review-provenance.md](docs/legacy/review-provenance.md) | — |
-| §14 | 使用观测与容量统计（R3 / R9 只读） | 现行 | [14-observability.md](docs/design/14-observability.md) | `lib/usage.js`、`lib/api.js` |
-| §15 | 项目规则与 AGENTS.md 托管块（R33 / R34） | 草稿 | [15-project-rules.md](docs/design/15-project-rules.md) | `lib/rules.js` |
+| § | 主题 | 文件 | 代码入口 |
+|---|---|---|---|
+| §0 | 核心原则 / 不变量 / 术语 / 不做清单(§9) / 决策记录(§12) | 本文 | — |
+| §1 | 记忆模型:热缓冲 + 四层 + 暂存区 | [01-memory-model.md](docs/design/01-memory-model.md) | `lib/schema.js`、`lib/hotbuffer.js`、`lib/text.js` |
+| §2 | 全局记忆池与来源标注 | [02-global-pool.md](docs/design/02-global-pool.md) | `lib/provenance.js`、`lib/workspace.js` |
+| §3 | 写入路径:双速通道 + 显式通道 | [03-write-path.md](docs/design/03-write-path.md) | `lib/turns.js`、`lib/extract.js`、`lib/tools.js`、`lib/outbox.js`、`lib/relation.js`、`lib/dedupe.js`、`lib/audit.js` |
+| §4 | 读取与注入路径:三通道,推拉结合 | [04-inject.md](docs/design/04-inject.md) | `lib/inject.js`、`lib/soul.js`、`lib/injectionlog.js`、`lib/soulreview.js` |
+| §5 | 检索:混合双路(决策②) | [05-search.md](docs/design/05-search.md) | `lib/search.js`、`lib/embed.js`、`lib/sidecar.js`、`lib/bm25.js` |
+| §6 | 生命周期与能力降级(§7 并入本文档) | [06-lifecycle-degradation.md](docs/design/06-lifecycle-degradation.md) | `lib/rank.js`、`lib/store.js`、`lib/compat.js` |
+| §8 | DSH 接缝映射 v2.0 | [08-host-seams.md](docs/design/08-host-seams.md) | `lib/index.js` |
+| §10 | 配置项清单（Schemastery 账本） | [10-config-ledger.md](docs/design/10-config-ledger.md) | `lib/config.js` |
+| §14 | 使用观测与容量统计（R3 / R9 只读） | [14-observability.md](docs/design/14-observability.md) | `lib/usage.js`、`lib/api.js` |
+| §15 | 项目规则与 AGENTS.md 托管块（R33 / R34） | [15-project-rules.md](docs/design/15-project-rules.md) | `lib/rules.js` |
+
+> **索引只列现行设计**：§7（能力降级）并入 §6 的文档（编号保留，代码注释里的 `§7` 仍指能力降级）；§9（不做清单）与 §12（决策记录与差异化定位）的正文在本文，没有独立文件，故不占索引行；§11（实施路线）与 §13（审核溯源）是历史，已归档在 `docs/legacy/`。机制退役时删文档 + 删索引行，编号留空号、永不复用。
 
 ## 1. 记忆模型
 > 正文：**[§1 记忆模型](docs/design/01-memory-model.md)**。
