@@ -2,6 +2,17 @@
 
 格式：版本 — 日期 / 主题；未发布版本置顶并标注「未发布」。只记录版本级事实（改了什么、为什么），当前数字与验证状态以 [STATUS.md](STATUS.md) 为准；详细实现见对应提交。
 
+## 0.6.8 — 未发布（2026-11-12，SOUL 提议通道修正）
+
+> **主题**：0.6.7 使用中发现的两处 SOUL 提议问题——手滑忽略后恢复会卡在中间态；流程 / 偏好类内容被误判为人格提议。本版修正这两处，并把设计侧 §15（项目规则）与 R33 落到草稿 / 原语；**不改记忆检索、注入与存储语义**。
+> 发布物：候选包 `neural-mind-0.6.8-candidate.tgz`（61 文件，含 MIT LICENSE，356,538 B；SHA256 见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）；**不发 npm**，发版走 tag + GitHub Release。
+> **验证状态**：2026-11-12 从 0.6.8 最终 HEAD 重跑 `verify:release` **PASS**（EXIT=0）——npm test **394/391/0/3**、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（16 提交 / 0 漂移）、E2E 24/24（源码 + tarball 各一次）、升级 smoke 0.5.0→0.6.8 PASS、默认冒烟 26/26、N1 PASS、`release-matrix` PASS（61 文件 tarball）。原始日志：[bench-results/verify-release-0.6.8.log](bench-results/verify-release-0.6.8.log)（已脱敏）。
+
+- **修复：SOUL 提议「手滑」恢复路径**：`restore` 对 `entity='soul'` 的记录回到 `staged`（待采纳），不再落到 `active` 中间态——此前恢复到 `active` 后既不在 SOUL 提议列表（要求 staged），也不能按普通记忆确认。审计写明「恢复为 SOUL 提议」，新增回归测试。
+- **收紧 `soulProposal` 判据（R33 前哨）**：只收真正的自我人格（跨项目 / 跨任务仍成立的身份、原则、边界），明确排除流程 / 协作要求、单项目约定、任务级偏好、用户事实与模型自我反思；提示词契约测试同步加断言。回应「这些提议不像 SOUL」的实测问题。
+- **设计侧（无运行时行为）**：新增 §15 项目规则与 `AGENTS.md` 托管块设计草稿 + `lib/rules.js` 纯函数原语（13 条测试，未接线）；R33 / R34 设计与决策进入 `NEXT_STEPS` 待设计池。
+- **测试**：394 项 / 391 通过 / 0 失败 / 3 跳过（37 个测试文件）。
+
 ## 0.6.7 — 2026-11-10
 
 > **主题**：S12 使用观测（R3 + R9 只读部分），**不改记忆行为**——只把"插件自己干了什么"落成可跨重启读的数据，供 0.7.0 攒数据与调参（NEXT_STEPS §1.1 的 start gate 靠它）。设计合同：[§14 使用观测与容量统计](docs/design/14-observability.md)。

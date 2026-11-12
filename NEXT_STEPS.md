@@ -15,6 +15,7 @@
 |---|---|---|---|---|
 | S12 | **观测落盘（尺子先行，发 0.6.7）**：R3 使用情况持久化（按天汇总 + 按轮次滚动记录，跨重启保留）+ **注入质量元数据（只记录，不拦截）**；R9 只读统计（条数 / 体积估算 / 重复 / 过期 / 待整理队列） | [R3 / R9](docs/legacy/REVIEW.md) §9.1、[§14 设计](docs/design/14-observability.md) | 注入 / 跳过计数与原因重启后仍在；质量元数据可跨重启回看；统计接口只读、不改存储语义；套件 380/377/0/3、各门禁全绿 | 完成（0.6.7 已发布：tag `v0.6.7` + Release，asset SHA 校验一致） |
 | S12f | **0.6.7 发版**：升版本 → 从最终 HEAD 重打包 candidate → 更新尺寸 / SHA / `SHA256SUMS` → 从最终 HEAD 跑 `verify:release` → tag `v0.6.7` + GitHub Release（不发 npm）→ 下载 asset 校验 SHA | 用户授权（2026-11-10） | `verify:release` PASS；Release asset 353,521 B、SHA256 与本地一致 | 完成 |
+| S12g | **0.6.8 发版**：SOUL 提议修正（恢复回 staged + 人格判据收紧）+ §15 草稿；升版本 → 打包 → 更新尺寸 / SHA → `verify:release` → tag / GitHub Release → asset 校验 | 用户授权（2026-11-12） | `verify:release` PASS；asset SHA 与本地一致 | 进行中 |
 | S13 | **数据积累期**：只解除日常使用工作区的停用（隐私 / 测试工作区继续停用），确认 `autoRecall` 与提炼参数；正常使用 1–2 周，不刻意造数据 | §1.1 start gate | start gate 达成；期间不改行为、不发版 | 未开始 |
 | S14 | **B 类确定性工程项**（与数据量无关，可并行）：R27 / R28 / R29 / R30 / R31 / R15b / R20 / R21 / R22 / R8b | 各自 REVIEW 条目 + `docs/design/` 设计文档 | 一项一 commit；行为变更加测试；设计文档同提交或 `Design: none` | 未排期 |
 | S15 | **C 类产品功能**：R2a 导出 / R1b 编辑 / R1c 反馈 / R5 零配置引导 / R7 设置上移 / R6 画像晋升 | 同上 | 同上 | 未排期 |

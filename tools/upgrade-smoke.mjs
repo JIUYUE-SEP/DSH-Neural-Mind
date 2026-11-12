@@ -32,10 +32,10 @@ const profile = flag('--profile', 'neural-mind-upgrade')
  * 升级路径要覆盖"旧包写入旧域名 storages/memory → 新包改名 + 迁移读入 storages/neural_mind"。
  */
 const previous = resolve(flag('--previous', join(REPO, 'bench-results', 'artifacts', 'dsh-plugin-memory-0.5.0-pre-f0ec867.tgz')))
-const candidate = resolve(flag('--candidate', join(REPO, 'bench-results', 'artifacts', 'neural-mind-0.6.7-candidate.tgz')))
+const candidate = resolve(flag('--candidate', join(REPO, 'bench-results', 'artifacts', 'neural-mind-0.6.8-candidate.tgz')))
 /**
  * 版本断言从候选包文件名里取(而不是写死某个版本):
- * npm pack 产物叫 `…-0.6.7.tgz`,artifacts 里叫 `…-0.6.7-candidate.tgz`,两种都要认。
+ * npm pack 产物叫 `…-0.6.8.tgz`,artifacts 里叫 `…-0.6.8-candidate.tgz`,两种都要认。
  */
 const candidateVersion = /neural-mind-(\d+\.\d+\.\d+)/.exec(basename(candidate))?.[1] ?? ''
 const mockBundle = join(REPO, 'test', 'fixtures', 'mock-llm-bundle')

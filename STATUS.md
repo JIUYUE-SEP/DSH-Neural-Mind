@@ -1,7 +1,7 @@
 # neural-mind 当前状态
 
 > **本文是当前状态的唯一事实来源**（覆写式：每次发布 / 验证 / 里程碑后重写）。
-> 最后更新：2026-11-10（0.6.7 已发布：tag + GitHub Release + asset 校验）
+> 最后更新：2026-11-12（0.6.8 候选验证 PASS，待 tag / Release 授权）
 > 现行文档：[README](README.md) · [DESIGN](DESIGN.md) · [NEXT_STEPS](NEXT_STEPS.md) · [CHANGELOG](CHANGELOG.md)
 > 历史过程见 [docs/legacy/](docs/legacy/README.md)；历史验证记录见 [docs/legacy/VERIFICATION-2026-11.md](docs/legacy/VERIFICATION-2026-11.md)。
 
@@ -10,11 +10,14 @@
 | 项 | 值 |
 |---|---|
 | 仓库 | `JIUYUE-SEP/DSH-Neural-Mind`（public，MIT License；2026-11-10 由 `neural-mind` 改名，旧名自动重定向） |
-| 工作树版本 | **0.6.7**（S12 使用观测） |
+| 工作树版本 | **0.6.8**（SOUL 提议通道修正） |
 | 最新已发布 | **0.6.7**（2026-11-10，Release [v0.6.7](https://github.com/JIUYUE-SEP/DSH-Neural-Mind/releases/tag/v0.6.7)） |
 | 下一版 | **0.7.0**（记忆质量，S13–S16；S12 观测已随 0.6.7 交付） |
+| 0.6.8 状态 | **候选已验证 PASS**：`neural-mind-0.6.8-candidate.tgz`（61 文件，356,538 B）；`verify:release` EXIT=0；tag / Release 待用户确认 |
 | 0.6.7 状态 | **已发布**：tag `v0.6.7`（提交 `3fd6055`）+ GitHub Release 已按用户明确授权创建（**不发 npm**）；asset = `neural-mind-0.6.7-candidate.tgz`（60 文件，353,521 B），下载校验 SHA256 `DA3F45B8…D93120` 一致 |
 | 0.6.6 状态 | **已发布**：tag `v0.6.6` + GitHub Release 已按用户明确授权创建（**不发 npm**）；Release asset = 候选 tarball（59 文件，339,282 B，SHA256 见 `bench-results/artifacts/SHA256SUMS`） |
+
+**0.6.8 内容**：SOUL 提议通道修正——恢复回 `staged`（修手滑中间态）+ 收紧人格提议判据（排除流程/偏好/推断）；另含 §15 设计草稿与未接线原语。**不改检索、注入与存储语义**。逐条见 [CHANGELOG](CHANGELOG.md)。
 
 **0.6.7 内容**：S12 使用观测——独立观测域 `neural_mind_usage`（R3 计数 + 明细 + 注入质量元数据）+ R9 只读容量统计；**不改记忆行为**。逐条见 [CHANGELOG](CHANGELOG.md)。
 
@@ -34,7 +37,7 @@
 
 ## 质量现状（全仓数字唯一来源）
 
-2026-11-10 实测：
+2026-11-12 实测：
 
 | 项目 | 结果 |
 |---|---|
@@ -45,6 +48,8 @@
 | `check:conform` | **39 条 / 0 不符** |
 | `check:host` | **51/51**（本机 DSH Desktop 0.2.2-rc.1） |
 | `check:shapes` | **10/10**（0.2.2-rc.1 的 `app.asar.unpacked` 布局） |
+
+**0.6.8 候选发布门禁（2026-11-12 从最终 HEAD 重跑）**：`verify:release` **PASS**（EXIT=0）——npm test **394/391/0/3**、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（16 提交 / 0 漂移）、E2E **24/24**（源码 + tarball 各一次）、升级 smoke PASS（0.5.0 → 0.6.8，记忆保留且被新版读到）、默认配置冒烟 **26/26**、N1 默认提炼 PASS、`release-matrix` PASS（61 文件 tarball）。原始日志：[bench-results/verify-release-0.6.8.log](bench-results/verify-release-0.6.8.log)（已脱敏）。
 
 **0.6.7 候选发布门禁（2026-11-10 从最终 HEAD 重跑）**：`verify:release` **PASS**（EXIT=0）——npm test **380/377/0/3**、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（6 提交 / 0 漂移）、E2E **24/24**（源码 + tarball 各一次）、升级 smoke PASS（0.5.0 → 0.6.7，记忆保留且被新版读到）、默认配置冒烟 **26/26**、N1 默认提炼 PASS、`release-matrix` PASS（60 文件 tarball）。原始日志：[bench-results/verify-release-0.6.7.log](bench-results/verify-release-0.6.7.log)（已脱敏）。
 
@@ -70,6 +75,7 @@ node tools/check-design.mjs --history # 只查"代码改了、对应设计文档
 
 | 文件 | 用途 | 大小 |
 |---|---|---:|
+| `neural-mind-0.6.8-candidate.tgz` | 0.6.8 候选（61 文件，含 MIT LICENSE；待发布为 v0.6.8 asset） | 356,538 B |
 | `neural-mind-0.6.7-candidate.tgz` | 0.6.7 已发布候选（60 文件，含 MIT LICENSE；即 v0.6.7 Release asset） | 353,521 B |
 | `neural-mind-0.6.6-candidate.tgz` | 0.6.6 已发布候选（59 文件，含 MIT LICENSE；即 v0.6.6 Release asset） | 339,282 B |
 | `dsh-plugin-memory-0.5.0-pre-f0ec867.tgz` | 升级 / 回滚基线（0.5.0，**文件名保留改名前的旧名**，是真实历史产物） | 160,967 B |
