@@ -87,7 +87,7 @@ test('settings:自带页面策略登记(configure auto:false),配置变更走 lo
     // 用户在设置页关掉提炼 → Loader 原地提交引用 + 发 volatile-update → 热重建
     setVolatile(config, 'extractEnabled', false)
     fake.emitVolatile([['extractEnabled']])
-    await new Promise((r) => setTimeout(r, 200))
+    await new Promise((r) => setTimeout(r, 600))
     for (const e of turnEvents(2, 10, '再说点别的', '好的。')) fake.emit('session/event', session, e)
     assert.ok(await waitFor(() => fake.tables.hotbuffer.size === 2), '热重建后热缓冲照常')
     assert.equal(fake.tables.outbox.size, 1, '新配置生效:不再登记 outbox')
@@ -95,7 +95,7 @@ test('settings:自带页面策略登记(configure auto:false),配置变更走 lo
     // 再打开 → 又恢复登记
     setVolatile(config, 'extractEnabled', true)
     fake.emitVolatile([['extractEnabled']])
-    await new Promise((r) => setTimeout(r, 200))
+    await new Promise((r) => setTimeout(r, 600))
     for (const e of turnEvents(3, 20, '继续', '嗯。')) fake.emit('session/event', session, e)
     assert.ok(await waitFor(() => fake.tables.outbox.size === 2), '热重建往返一致')
   } finally {

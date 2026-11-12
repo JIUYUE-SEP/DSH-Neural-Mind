@@ -41,10 +41,10 @@
 
 | 项目 | 结果 |
 |---|---|
-| 单测（逐文件 `node --test`） | **412 测试 / 409 通过 / 0 失败 / 3 跳过**（38 个测试文件） |
+| 单测（逐文件 `node --test`） | **399 测试 / 396 通过 / 0 失败 / 3 跳过**（37 个测试文件） |
 | `check:ledger` | §10 配置账本 **72/72**，零差异 |
 | `check:seams` | **12 项**（volatile 28 双侧闭合；bundle 316,685 B） |
-| `check:design` | **10 份设计文档 / 索引 15 行 / 代码归属 28 条**：front-matter 与索引双向一致；漂移检查（P1）走 `verify:release --strict` |
+| `check:design` | **9 份设计文档 / 索引 10 行 / 代码归属 27 条**：front-matter 与索引双向一致；漂移检查（P1）走 `verify:release --strict` |
 | `check:conform` | **39 条 / 0 不符** |
 | `check:host` | **51/51**（本机 DSH Desktop 0.2.2-rc.1） |
 | `check:shapes` | **10/10**（0.2.2-rc.1 的 `app.asar.unpacked` 布局） |
