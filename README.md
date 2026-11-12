@@ -197,6 +197,7 @@ npm run verify:release  # 全量发布门禁：host / shapes / conform / 设计 
 node tools/check-config-ledger.mjs   # §10 配置账本 ↔ schema 机械对账（挂进 npm test；有差异退出码 1）
 node tools/check-seams.mjs           # DSH 接缝对账 12 项：volatile 可编辑面两侧闭合 + entry id 同源 + 浏览器半产物形态（挂进 npm test）
 node tools/check-design.mjs          # 设计文档门禁 P0：docs/design/ 的 front-matter + DESIGN 索引双向一致（挂进 npm test）；--history 查"代码改了、对应设计文档没改"的漂移（verify:release 用 --strict）
+node tools/check-ops.mjs             # 操作队列门禁：OP 编号 / 定稿计划 / NEXT_STEPS 队列 / completed 完成登记四者一致（挂进 npm test）
 node tools/check-host-compat.mjs     # 宿主升级后跑：直接读实机 app.asar，断言插件消费的 51 条接缝 + 清单声明
 node tools/check-session-shapes.mjs  # 宿主升级后跑：把插件产出的会话消息喂给 live 宿主的 Session V4 编解码器
 node tools/e2e-conversation.mjs      # 对话链路 E2E：隔离 DSH + 本地 mock LLM，断言注入消息被持久化

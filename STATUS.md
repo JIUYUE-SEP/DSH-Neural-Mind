@@ -45,6 +45,7 @@
 | `check:ledger` | §10 配置账本 **72/72**，零差异 |
 | `check:seams` | **12 项**（volatile 28 双侧闭合；bundle 316,685 B） |
 | `check:design` | **9 份设计文档 / 索引 10 行 / 代码归属 27 条**：front-matter 与索引双向一致；漂移检查（P1）走 `verify:release --strict` |
+| `check:ops` | **9 份定稿计划 / 当前操作 1（上限 1）/ 排队 3 / 完成登记 5**：OP 编号、计划文件、队列与完成登记一致 |
 | `check:conform` | **39 条 / 0 不符** |
 | `check:host` | **51/51**（本机 DSH Desktop 0.2.2-rc.1） |
 | `check:shapes` | **10/10**（0.2.2-rc.1 的 `app.asar.unpacked` 布局） |

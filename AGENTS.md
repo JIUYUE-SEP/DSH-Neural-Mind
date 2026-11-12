@@ -14,10 +14,11 @@
 ## 命令
 
 ```sh
-npm test                 # 配置账本 + 接缝 + 设计 P0 + 全部单测
+npm test                 # 配置账本 + 接缝 + 设计 P0 + 操作队列 + 全部单测
 npm run verify:release   # 全量发布门禁：host / shapes / conform / 设计 P1 / E2E / release-matrix
 npm run build:client     # 改 lib/client/** 后必须重建 lib/client.js
 node tools/check-design.mjs --history --strict   # 设计同提交纪律（基线 docs/design/.baseline = ROOT）
+node tools/check-ops.mjs                         # 操作队列：OP 编号 / 定稿计划 / 完成登记一致
 ```
 
 只跑单个测试文件：`node --test test/<name>.test.mjs`。门禁失败先修根因，不要绕过。
@@ -36,8 +37,8 @@ node tools/check-design.mjs --history --strict   # 设计同提交纪律（基�
 | `lib/usage.js` | 使用观测（§14）：计数 / 明细落盘 / 保留裁剪 / `pool` 只读统计 |
 | `lib/compat.js` | DSH 版本 / 形状兼容（含会话来源 kind） |
 | `lib/client/**` + `lib/client.js` | 浏览器半（页面 / 卡片 / i18n / CSS）；`lib/client.js` 是生成物 |
-| `test/` / `tools/` | `node:test` 测试（fake ctx / storage 在 `helpers.mjs`）/ 门禁、E2E、评估脚本 |
-| `docs/design/` / `bench-results/` | 设计合同（front-matter `code:` 声明归属）/ 冻结评估数据、发布物与校验和 |
+| `test/` / `tools/` | `node:test` 测试（fake ctx / storage 在 `helpers.mjs`）/ 门禁（含 `check-ops.mjs` 操作队列）、E2E、评估脚本 |
+| `docs/design/` / `docs/ops/` / `docs/legacy/ops/` / `bench-results/` | 设计合同（front-matter `code:` 声明归属）/ 计划草稿 / 定稿计划（OP，冻结）/ 冻结评估数据、发布物与校验和 |
 
 ## 约定（改代码前先读）
 

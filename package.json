@@ -35,7 +35,7 @@
     "build:client": "node tools/build-client.mjs",
     "prepack": "node tools/build-client.mjs",
     "pretest": "node tools/build-client.mjs --check",
-    "test": "node tools/check-config-ledger.mjs && node tools/check-seams.mjs && node tools/check-design.mjs && node --test test/*.test.mjs",
+    "test": "node tools/check-config-ledger.mjs && node tools/check-seams.mjs && node tools/check-design.mjs && node tools/check-ops.mjs && node --test test/*.test.mjs",
     "check:ledger": "node tools/check-config-ledger.mjs",
     "check:seams": "node tools/check-seams.mjs",
     "check:design": "node tools/check-design.mjs",
@@ -47,7 +47,8 @@
     "test:upgrade": "node tools/upgrade-smoke.mjs",
     "test:release-matrix": "node tools/release-matrix.mjs",
     "check:conform": "node tools/check-code-vs-docs.mjs",
-    "verify:release": "npm test && node tools/check-host-compat.mjs && node tools/check-session-shapes.mjs && node tools/check-code-vs-docs.mjs && node tools/check-design.mjs --history --strict && node tools/e2e-conversation.mjs && node tools/release-matrix.mjs"
+    "verify:release": "npm test && node tools/check-host-compat.mjs && node tools/check-session-shapes.mjs && node tools/check-code-vs-docs.mjs && node tools/check-design.mjs --history --strict && node tools/check-ops.mjs && node tools/e2e-conversation.mjs && node tools/release-matrix.mjs",
+    "check:ops": "node tools/check-ops.mjs"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "^3.18.4",

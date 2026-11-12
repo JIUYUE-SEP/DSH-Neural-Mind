@@ -1,75 +1,26 @@
 # 下一步执行清单
 
-> **本文是"接下来怎么一步步做"的唯一入口**（执行文档）：本期步骤 + 待设计池 + 最近完成 + 工作规矩。
-> **最后更新**：2026-11-12（0.6.8 已发布；0.7.0 进行中：S17 SOUL 写入权收缩已完成、待发版）
+> **本文是唯一的待办状态板**：在队列 = 还没做；不在队列 = 不再做。
+> 完成的操作登记在 [docs/legacy/completed.md](docs/legacy/completed.md)；计划原文在 `docs/legacy/ops/`；未定稿草稿在 `docs/ops/`。
+> **最后更新**：2026-11-13（OP 模型生效：原 S 编号表迁为「当前 / 排队 / 待设计池」）
 > 现状数字看 [STATUS.md](STATUS.md)；版本历史看 [CHANGELOG.md](CHANGELOG.md)；设计合同见 [DESIGN.md](DESIGN.md) 与 [docs/design/](docs/design/)；R 项定义见 [docs/legacy/REVIEW.md](docs/legacy/REVIEW.md)。
 > **发布纪律**：tag / GitHub Release / push 必须由用户明确确认；本文件不授权任何对外动作。
 
-## 1. 本期：0.6.7 观测落盘（S12 已发布）→ 0.7.0 记忆质量（S13–S16）
+## 1. 当前操作
 
-**目标**：先把 0.6.6 的使用情况变成**可跨重启观测**的数据，单独发 **0.6.7**（行为不变，纯观测）；再用一段时间真实使用攒出样本；最后按数据调记忆质量（关系判断 / 相关性门槛 / 画像晋升）。**S12 已实现、验收并随 0.6.7 发布**（重打包 candidate → `verify:release` PASS → tag/Release）。
-
-**起点**：0.6.6 已发布（tag `v0.6.6` + GitHub Release，2026-11-09，不发 npm）；**S12 已随 0.6.7 发布**（tag `v0.6.7` + Release，2026-11-10，用户授权），S13–S16 归 0.7.0。0.6.6 的任务表已移入 §2.1。
-
-| # | 任务 | 设计依据 | 验收 | 状态 |
+| OP | 标题 | 计划 | 开始日期 | 备注 |
 |---|---|---|---|---|
-| S12 | **观测落盘（尺子先行，发 0.6.7）**：R3 使用情况持久化（按天汇总 + 按轮次滚动记录，跨重启保留）+ **注入质量元数据（只记录，不拦截）**；R9 只读统计（条数 / 体积估算 / 重复 / 过期 / 待整理队列） | [R3 / R9](docs/legacy/REVIEW.md) §9.1、[§14 设计](docs/design/14-observability.md) | 注入 / 跳过计数与原因重启后仍在；质量元数据可跨重启回看；统计接口只读、不改存储语义；套件 380/377/0/3、各门禁全绿 | 完成（0.6.7 已发布：tag `v0.6.7` + Release，asset SHA 校验一致） |
-| S12f | **0.6.7 发版**：升版本 → 从最终 HEAD 重打包 candidate → 更新尺寸 / SHA / `SHA256SUMS` → 从最终 HEAD 跑 `verify:release` → tag `v0.6.7` + GitHub Release（不发 npm）→ 下载 asset 校验 SHA | 用户授权（2026-11-10） | `verify:release` PASS；Release asset 353,521 B、SHA256 与本地一致 | 完成 |
-| S12g | **0.6.8 发版**：SOUL 提议修正（恢复回 staged + 人格判据收紧）+ §15 草稿；升版本 → 打包 → 更新尺寸 / SHA → `verify:release` → tag / GitHub Release → asset 校验 | 用户授权（2026-11-12） | `verify:release` PASS；asset SHA 与本地一致 | 完成（tag `v0.6.8` + Release，asset 356,538 B SHA 一致） |
-| S13 | **数据积累期**：只解除日常使用工作区的停用（隐私 / 测试工作区继续停用），确认 `autoRecall` 与提炼参数；正常使用 1–2 周，不刻意造数据 | §1.1 start gate | start gate 达成；期间不改行为、不发版 | 未开始 |
-| S14 | **B 类确定性工程项**（与数据量无关，可并行）：R27 / R28 / R29 / R30 / R31 / R15b / R20 / R21 / R22 / R8b | 各自 REVIEW 条目 + `docs/design/` 设计文档 | 一项一 commit；行为变更加测试；设计文档同提交或 `Design: none` | 未排期 |
-| S15 | **C 类产品功能**：R2a 导出 / R1b 编辑 / R1c 反馈 / R5 零配置引导 / R7 设置上移 / R6 画像晋升 | 同上 | 同上 | 未排期 |
-| S16 | **D 类数据依赖项**（等 S13 数据）：R19 对象覆盖门槛、R23 关系候选与 D2b 阈值调优（冻结关系集 ≥ 20 条）、R9 清理触发 | R19 / R23 | 评估集指标达标；关键负例零违规；指标不达标宁可不上 | 未排期 |
-| S17 | **SOUL 写入权收缩（C 方向）**：`soul_update` → `soul_propose`（破坏性改名），agent 只落整篇提议、用户采纳才落笔；采纳支持整篇替换（界面先看 diff 再确认）；日预算口径改为"今日提议"，检查收窄为内容三关 | [§4.4 提议通道](docs/design/04-inject.md) | 工具调用不写文件、不产生版本；整篇提议采纳 = 整篇替换；398/395/0/3 全绿 | 完成（未发布，待 0.7.0 发版） |
+| OP-0006 | S13 数据积累期 | [OP-0006-s13-data-accumulation.md](docs/legacy/ops/OP-0006-s13-data-accumulation.md) | 2026-11-13 | 等真实使用样本；gate 见 §6.1 |
 
-### 1.1 数据积累 start gate（够条件才进 S16）
+## 2. 排队操作（按执行顺序）
 
-| 指标 | 门槛 | 采集方式 |
-|---|---|---|
-| L2 记忆条数 | ≥ 100 条，其中 `source: user` ≥ 20 条 | R9 统计接口 / 存储只读统计 |
-| 跨重启观测 | 按天汇总覆盖 ≥ 7 天、≥ 5 次重启 | R3 |
-| 真实召回 | 注入 / 跳过记录 ≥ 50 次，跳过原因分布可解释 | R3 注入日志 |
-| 关系标注集 | ≥ 20 条 same / update / conflict / unrelated（含关键负例），脱敏或合成 | 冻结评估集 |
-| 池子规模（R19） | ≥ 300 条 active | R9 |
+| 顺序 | OP | 标题 | 计划 | 备注 |
+|---|---|---|---|---|
+| 1 | OP-0007 | S14 B 类确定性工程项 | [OP-0007-s14-deterministic-work.md](docs/legacy/ops/OP-0007-s14-deterministic-work.md) | 与数据量无关，可随时开工 |
+| 2 | OP-0008 | S15 C 类产品功能 | [OP-0008-s15-product-features.md](docs/legacy/ops/OP-0008-s15-product-features.md) | R6 与 R33b 合并做 |
+| 3 | OP-0009 | S16 D 类数据依赖项 | [OP-0009-s16-data-dependent.md](docs/legacy/ops/OP-0009-s16-data-dependent.md) | 必须等 OP-0006 的 gate |
 
-> 纪律：评估集只用**脱敏或合成**内容，真实记忆正文不进仓库。
-
-### 1.2 顺序裁决（2026-11-09 讨论结论）
-
-- **先尺子后数据**：0.6.6 的注入日志与 `stats` 都是**进程内**的——[lib/injectionlog.js](lib/injectionlog.js) 明示"环形缓冲，不落盘"，桌面应用一重启就归零。先做 R3，积累期才有可复盘的数据，否则"攒了多久"无法回答"有没有用"。
-- **多数条目不必等数据**：0.7.0 池里 R27–R31、R15b、R20–R22、R8b 是确定性工程，R1b / R1c / R2a / R5 / R7 是产品功能；真正依赖真实规模的只有 R19 / R23（R19 原文即"需要用真实规模的记忆库再验证"）。
-- **版本归属已定（2026-11-10 用户裁决）**：S12（观测，行为不变）**单独发 0.6.7**；R19 / R23 一旦调阈值必须单独升版（归 0.7.0）。
-
-## 2. 最近完成
-
-> **历史说明**：S1–S10e 的 commit 列指向**旧仓库历史**（公开前已压缩为单提交，仅本地 `backup/pre-rewrite` 分支可查）；新公开仓库从 S10f 的单提交开始，commit 列不再可点。
-
-### 2.1 0.6.6 发布收尾（S8–S11，2026-11-09，已归档）
-
-| # | 任务 | 设计依据 | 验收 | 状态 | commit |
-|---|---|---|---|---|---|
-| S8 | 本文件重写 + 删除 ROADMAP（内容并入待设计池） | — | 本文；全仓无失效链接 | 完成 | `e9076c6` |
-| S9 | README 重构为公开主页（安装 / 上手 / 隐私 / FAQ / 已知限制），保留门禁依赖的声明 | README 骨架：`.scratch/docs-audit/BLUEPRINT.md` | `check:conform` 0 不符；19 个 `tools/*.mjs` 全被提到；`常用层(N 项` 与 `再跑 N 项` 声明仍在 | 完成 | `a450f34` |
-| S10 | 从最终 HEAD 重打包 candidate → 更新尺寸 / SHA / `SHA256SUMS` → 翻转状态 → 重跑 `verify:release` 并存原始日志 | [§10 配置账本](docs/design/10-config-ledger.md)、`tools/release-matrix.mjs` | `bench-results/` 里有 0.6.6 原始日志；STATUS / CHANGELOG 才标 PASS | 完成 | `dc96c20` |
-| S10b | 源码逐条抽查：6 组并行审计 `docs/design/` + DESIGN / STATUS / 账本，修正与代码不符的断言（含 3 处契约级错误） | 各设计文档 front-matter `code:` 清单 | `npm test` 门禁全绿；`check:design --history --strict` 0 漂移；本文件/STATUS 状态同步 | 完成 | 旧历史 |
-| S10d | **R26**：`profileFile` 支持 `~/…` 展开；光写 `~` 拒绝并留痕；配了但文件缺失 → 按空画像 + 一次提示；画像页显示"文件不存在"警告；保存自动建父目录（含测试与文档） | [§4.1](docs/design/04-inject.md)、[§10 账本](docs/design/10-config-ledger.md) | 新增 5 项测试全绿；`check:ledger` / `check:design` 通过 | 完成 | `9e13340` |
-| S10e | R26 后重打包 candidate → 更新尺寸 / SHA / `SHA256SUMS` / STATUS / CHANGELOG → 重跑 `verify:release` 并存脱敏日志 | 同 S10 | `verify:release` PASS（EXIT=0）；`bench-results/` 日志与 SHA 一致 | 完成 | `655b0dd` |
-| S10f | **用户裁决改名 `neural-mind`**：包名 / entry id / 设置命名空间 / 存储域名 / 注入来源 kind / 数据路由全量同步 + 旧存储域一次性迁移；旧仓库删除后重建 public 单提交仓库 | [§1 版本纪律](docs/design/01-memory-model.md)、`lib/schema.js`、`lib/store.js` | 367/364/3 全绿；ledger / seams / design / conform / host / shapes 通过；`verify:release` PASS；仓库 public 单提交 | 完成 | 公开仓库首个提交 |
-| S11 | tag `v0.6.6` + GitHub Release（不发 npm；Release asset = 候选 tarball） | — | 用户已明确授权（2026-11-09）；tag / Release / asset 均已创建并核对 | 完成 | tag `v0.6.6` |
-
-### 2.2 文档体系重整（S1–S7）
-
-| # | 内容 | commit |
-|---|---|---|
-| S1 | DESIGN 事实修正：按源码核实 v1.26 / 认证基线，修 8 错 15 过时 3 部分 | `a2e060a` |
-| S2 | 删除失效的 `test/settings-e2e.mjs`；`acp-driver.mjs` 移入 `tools/` | `079f9ce` |
-| S3 | 旧文档迁入 `docs/legacy/`（实施状态横幅 + 索引）；删除 `DOCS.md` | `d6cf4ac` |
-| S4 | STATUS 重写为唯一事实来源（90 行）；VERIFICATION 拆入 legacy | `8aacc05` |
-| S5 | CHANGELOG 修正：0.6.6 验证状态诚实化 + MIT / 公开 / 脱敏条目 | `90fba19` |
-| S6 | DESIGN 拆分：总览 141 行 + `docs/design/` 8 份 + 历史三节归 legacy | `6c82cac` |
-| S7 | 新增 `check:design`：P0 进 `npm test`；P1 同提交纪律进 `verify:release --strict` | `b1997fb` |
-
-0.6.6 的功能项（R4 / R18 / R13a / R8a / R14 / R16 / R16b / R13b / R15a / R1a / R26 + 改名 `neural-mind`）逐条记在 [CHANGELOG.md](CHANGELOG.md)，本文件不再重复。
+> 同时最多一个「当前操作」（`ops.maxCurrent = 1`）；要插队先把新的 OP 定稿进 `docs/legacy/ops/`，再调整本表顺序。
 
 ## 3. 待设计池
 
@@ -194,10 +145,14 @@ R5、R1b、R1c、R2a、R3、R6、R7、R8b、R9、R15b、R19、R20、R21、R22、
 
 ## 4. 工作规矩
 
-- **一个 commit 一项**：每步独立提交，可单独 `git revert`。
-- **先写测试再写实现**，至少同提交；没有回归测试的行为算没做完。
+- **队列是唯一待办状态板**：在队列 = 要做，不在队列 = 不再做；不要另建 TODO 清单。
+- **同一时间最多一个「当前操作」**（`ops.maxCurrent = 1`）；要并行先把配置调大并说明原因。
+- **计划定稿即冻结**：分配 OP 编号、移入 `docs/legacy/ops/`，之后不再修改；要改方向就开新 OP。
+- **执行中的操作不能静默取消**：要么完成，要么先把代码与现行设计回滚到一致再取消。
+- **完成时同一提交做三件事**：从本文件移除、在 [docs/legacy/completed.md](docs/legacy/completed.md) 加一行、`CHANGELOG.md` 记一条（引用 OP）。
+- **一个 commit 一项**：每步独立提交，可单独 `git revert`；先写测试再写实现，至少同提交。
 - **文档随步更新**：改机制必须同提交改对应 `docs/design/*.md`（`check:design` P1 会查）；改不变量 / 不做清单 / 决策改 DESIGN；数字只写 STATUS；版本事实只写 CHANGELOG。
-- **不擅自 push / 打 tag / 发 Release**：每步给用户看 diff + 门禁结果，确认后才继续；tag 需单独明确授权。
+- **不擅自 push / 打 tag / 发 Release**：tag 与 Release 需单独明确授权。
 - **豁免通道**：确实不必同步设计文档的提交（纯措辞 / 构建脚本 / 测试夹具），在提交信息里写独占一行 `Design: none`，P1 会放行并计数。
 
 ## 5. 每步怎么验收
@@ -210,3 +165,54 @@ npm run verify:release         # 发布门禁（host / shapes / conform / 设计
 ```
 
 一步完成 = 相关用例通过 + 门禁全绿 + 文档同步 + 独立 commit。发布前额外要求 `bench-results/` 里有对应原始日志——**没有日志不算 PASS**。
+
+## 6. 背景：0.7.0 排期与裁决
+
+### 6.1 数据积累 start gate（OP-0006 的验收口径）
+
+| 指标 | 门槛 | 采集方式 |
+|---|---|---|
+| L2 记忆条数 | ≥ 100 条，其中 `source: user` ≥ 20 条 | R9 统计接口 / 存储只读统计 |
+| 跨重启观测 | 按天汇总覆盖 ≥ 7 天、≥ 5 次重启 | R3 |
+| 真实召回 | 注入 / 跳过记录 ≥ 50 次，跳过原因分布可解释 | R3 注入日志 |
+| 关系标注集 | ≥ 20 条 same / update / conflict / unrelated（含关键负例），脱敏或合成 | 冻结评估集 |
+| 池子规模（R19） | ≥ 300 条 active | R9 |
+
+> 纪律：评估集只用**脱敏或合成**内容，真实记忆正文不进仓库。
+
+### 6.2 顺序裁决（2026-11-09 讨论结论）
+
+- **先尺子后数据**：0.6.6 的注入日志与 `stats` 都是**进程内**的——[lib/injectionlog.js](lib/injectionlog.js) 明示"环形缓冲，不落盘"，桌面应用一重启就归零。先做 R3，积累期才有可复盘的数据，否则"攒了多久"无法回答"有没有用"。
+- **多数条目不必等数据**：0.7.0 池里 R27–R31、R15b、R20–R22、R8b 是确定性工程，R1b / R1c / R2a / R5 / R7 是产品功能；真正依赖真实规模的只有 R19 / R23（R19 原文即"需要用真实规模的记忆库再验证"）。
+- **版本归属已定（2026-11-10 用户裁决）**：S12（观测，行为不变）**单独发 0.6.7**；R19 / R23 一旦调阈值必须单独升版（归 0.7.0）。
+
+## 7. 历史：0.6.x 收尾记录
+
+> **历史说明**：S1–S10e 的 commit 列指向**旧仓库历史**（公开前已压缩为单提交，仅本地 `backup/pre-rewrite` 分支可查）；新公开仓库从 S10f 的单提交开始，commit 列不再可点。
+
+### 7.1 0.6.6 发布收尾（S8–S11，2026-11-09，已归档）
+
+| # | 任务 | 设计依据 | 验收 | 状态 | commit |
+|---|---|---|---|---|---|
+| S8 | 本文件重写 + 删除 ROADMAP（内容并入待设计池） | — | 本文；全仓无失效链接 | 完成 | `e9076c6` |
+| S9 | README 重构为公开主页（安装 / 上手 / 隐私 / FAQ / 已知限制），保留门禁依赖的声明 | README 骨架：`.scratch/docs-audit/BLUEPRINT.md` | `check:conform` 0 不符；19 个 `tools/*.mjs` 全被提到；`常用层(N 项` 与 `再跑 N 项` 声明仍在 | 完成 | `a450f34` |
+| S10 | 从最终 HEAD 重打包 candidate → 更新尺寸 / SHA / `SHA256SUMS` → 翻转状态 → 重跑 `verify:release` 并存原始日志 | [§10 配置账本](docs/design/10-config-ledger.md)、`tools/release-matrix.mjs` | `bench-results/` 里有 0.6.6 原始日志；STATUS / CHANGELOG 才标 PASS | 完成 | `dc96c20` |
+| S10b | 源码逐条抽查：6 组并行审计 `docs/design/` + DESIGN / STATUS / 账本，修正与代码不符的断言（含 3 处契约级错误） | 各设计文档 front-matter `code:` 清单 | `npm test` 门禁全绿；`check:design --history --strict` 0 漂移；本文件/STATUS 状态同步 | 完成 | 旧历史 |
+| S10d | **R26**：`profileFile` 支持 `~/…` 展开；光写 `~` 拒绝并留痕；配了但文件缺失 → 按空画像 + 一次提示；画像页显示"文件不存在"警告；保存自动建父目录（含测试与文档） | [§4.1](docs/design/04-inject.md)、[§10 账本](docs/design/10-config-ledger.md) | 新增 5 项测试全绿；`check:ledger` / `check:design` 通过 | 完成 | `9e13340` |
+| S10e | R26 后重打包 candidate → 更新尺寸 / SHA / `SHA256SUMS` / STATUS / CHANGELOG → 重跑 `verify:release` 并存脱敏日志 | 同 S10 | `verify:release` PASS（EXIT=0）；`bench-results/` 日志与 SHA 一致 | 完成 | `655b0dd` |
+| S10f | **用户裁决改名 `neural-mind`**：包名 / entry id / 设置命名空间 / 存储域名 / 注入来源 kind / 数据路由全量同步 + 旧存储域一次性迁移；旧仓库删除后重建 public 单提交仓库 | [§1 版本纪律](docs/design/01-memory-model.md)、`lib/schema.js`、`lib/store.js` | 367/364/3 全绿；ledger / seams / design / conform / host / shapes 通过；`verify:release` PASS；仓库 public 单提交 | 完成 | 公开仓库首个提交 |
+| S11 | tag `v0.6.6` + GitHub Release（不发 npm；Release asset = 候选 tarball） | — | 用户已明确授权（2026-11-09）；tag / Release / asset 均已创建并核对 | 完成 | tag `v0.6.6` |
+
+### 7.2 文档体系重整（S1–S7）
+
+| # | 内容 | commit |
+|---|---|---|
+| S1 | DESIGN 事实修正：按源码核实 v1.26 / 认证基线，修 8 错 15 过时 3 部分 | `a2e060a` |
+| S2 | 删除失效的 `test/settings-e2e.mjs`；`acp-driver.mjs` 移入 `tools/` | `079f9ce` |
+| S3 | 旧文档迁入 `docs/legacy/`（实施状态横幅 + 索引）；删除 `DOCS.md` | `d6cf4ac` |
+| S4 | STATUS 重写为唯一事实来源（90 行）；VERIFICATION 拆入 legacy | `8aacc05` |
+| S5 | CHANGELOG 修正：0.6.6 验证状态诚实化 + MIT / 公开 / 脱敏条目 | `90fba19` |
+| S6 | DESIGN 拆分：总览 141 行 + `docs/design/` 8 份 + 历史三节归 legacy | `6c82cac` |
+| S7 | 新增 `check:design`：P0 进 `npm test`；P1 同提交纪律进 `verify:release --strict` | `b1997fb` |
+
+0.6.6 的功能项（R4 / R18 / R13a / R8a / R14 / R16 / R16b / R13b / R15a / R1a / R26 + 改名 `neural-mind`）逐条记在 [CHANGELOG.md](CHANGELOG.md)，本文件不再重复。
