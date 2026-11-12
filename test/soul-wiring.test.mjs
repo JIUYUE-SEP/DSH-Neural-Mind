@@ -222,6 +222,11 @@ test('soul_propose:只落提议不落盘(整篇形态 + 理由);采纳前 SOUL �
   })
   try {
     assert.ok(await waitFor(() => fake.tools.has('soul_propose')), '工具已注册')
+    // 内容形态(0.7.0):描述本身要钉住"写判断、不写规范"的四条判据,防止下一版滑回"性格、价值观、口吻"清单
+    const description = fake.tools.get('soul_propose').description
+    assert.ok(description.includes('判断'), '把 SOUL 的内容定义成判断')
+    assert.ok(description.includes('遇到 X 就做 Y'), '明确排除情形规则')
+    assert.ok(description.includes('零成本表态'), '明确排除零成本表态')
     assert.equal(fake.tools.has('soul_update'), false, '直写工具已撤(0.7.0)')
     const tool = fake.tools.get('soul_propose')
     const result = await tool.execute(

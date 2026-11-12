@@ -2322,6 +2322,9 @@ test('提炼 prompt 契约:关系枚举 dispute/并真判例/soulProposal/自指
     assert.ok(prompt.includes('不算人格提议'), 'prompt 明确排除流程/偏好类内容（R33 前哨）')
     assert.ok(prompt.includes('流程/协作要求'), 'prompt 列出被排除的流程/协作要求')
     assert.ok(prompt.includes('换一个项目或换一类任务仍成立'), 'prompt 要求人格提议跨项目/跨任务成立')
+    assert.ok(prompt.includes('冲突时选哪边'), 'prompt 要求提议写成"判断"的形态(0.7.0 内容形态)')
+    assert.ok(prompt.includes('情形规则'), 'prompt 排除"遇到 X 就做 Y"的情形规则')
+    assert.ok(prompt.includes('零成本表态'), 'prompt 排除不选边、不付代价的表态')
     assert.ok(prompt.includes('并真'), 'prompt 含并真判例')
     assert.ok(prompt.includes('归仓库文档'), 'prompt 含自指指引')
     // R4(0.6.6):整理提示词不再要求模型标 sensitive(字段仍解析,兼容旧数据/旧模型)。
