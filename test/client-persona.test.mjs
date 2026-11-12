@@ -562,7 +562,7 @@ test('SOUL:人格提议「采纳」走 soulAdoptProposal 并刷新', async () =>
   }
 })
 
-test('SOUL:人格提议「忽略」走 soulIgnoreProposal 并刷新', async () => {
+test('SOUL:人格提议「忽略」先展开内联确认;确认后带 reason 调 soulIgnoreProposal(留空不带)', async () => {
   const proposal = { id: 'm_prop2', content: '我说话更直一点。', createdAt: '2026-10-20T00:00:00.000Z' }
   const panel = await mountPanel('soul-card', 'SoulCard', {
     payloads: {
@@ -571,12 +571,50 @@ test('SOUL:人格提议「忽略」走 soulIgnoreProposal 并刷新', async () =
     },
   })
   try {
-    const tree = panel.render()
+    let tree = panel.render()
     assert.ok(collectText(tree).includes('soulIgnore'), '有忽略入口')
+
+    // 点「忽略」→ 先展开一行内联确认,不直接调后端
     buttonByText(tree, 'soulIgnore').props.onClick()
+    tree = panel.render()
+    let texts = collectText(tree)
+    assert.ok(texts.includes('soulIgnoreTitle'), '出现内联确认标题')
+    assert.ok(
+      collectByProp(tree, 'placeholder').some((node) => node.props.placeholder === 'soulIgnoreHint'),
+      '输入行就位(placeholder 提示可填理由)',
+    )
+    assert.ok(texts.includes('soulIgnoreConfirm') && texts.includes('soulIgnoreCancel'), '确认 / 取消就位')
+    assert.equal(panel.calls.some((call) => call.action === 'soulIgnoreProposal'), false, '未确认前不调后端')
+
+    // 取消:收起确认行,仍不调后端
+    buttonByText(tree, 'soulIgnoreCancel').props.onClick()
+    tree = panel.render()
+    assert.equal(collectText(tree).includes('soulIgnoreTitle'), false, '取消后确认行收起')
+    assert.equal(panel.calls.some((call) => call.action === 'soulIgnoreProposal'), false, '取消不调后端')
+
+    // 再点忽略,填理由后确认 → 调 soulIgnoreProposal 并带 reason
+    buttonByText(tree, 'soulIgnore').props.onClick()
+    tree = panel.render()
+    const input = collectByProp(tree, 'placeholder').find((node) => node.props.placeholder === 'soulIgnoreHint')
+    assert.ok(input !== undefined, '理由输入框就位')
+    input.props.onChange({ target: { value: '太像套话' } })
+    tree = panel.render()
+    buttonByText(tree, 'soulIgnoreConfirm').props.onClick()
     await panel.harness.settle(4)
-    assert.ok(panel.calls.some((candidate) => candidate.action === 'soulIgnoreProposal'), '忽略走 soulIgnoreProposal')
+    const withReason = panel.calls.find((call) => call.action === 'soulIgnoreProposal')
+    assert.ok(withReason !== undefined, '忽略走 soulIgnoreProposal')
+    assert.equal(withReason.body.id, 'm_prop2')
+    assert.equal(withReason.body.reason, '太像套话', '确认后带上填写的理由')
     assert.ok(collectText(panel.render()).includes('soulIgnored'), '显示已忽略')
+    assert.deepEqual(actionsOf(panel.calls).slice(-2), ['soulIgnoreProposal', 'soul'], '忽略后刷新预览')
+
+    // 理由留空 = 不带 reason 字段(后端按"无理由"处理)
+    buttonByText(panel.render(), 'soulIgnore').props.onClick()
+    tree = panel.render()
+    buttonByText(tree, 'soulIgnoreConfirm').props.onClick()
+    await panel.harness.settle(4)
+    const blank = panel.calls.filter((call) => call.action === 'soulIgnoreProposal').pop()
+    assert.equal('reason' in blank.body, false, '留空不倒造 reason 字段')
   } finally {
     panel.restore()
   }

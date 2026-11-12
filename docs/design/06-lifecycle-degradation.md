@@ -41,7 +41,7 @@ Cordis 语义:`inject` 声明的是**必需服务**——缺席则插件永不�
 | 向量维度变化(端点换模型但 `modelId` 未改) | 响应维数当场校验(同批不等长 → shape) | 跨响应维度变化记 `dim-mismatch` 并降级纯 BM25,**绝不混算**;库中旧维度向量被检索侧跳过并记账,同时触发后台重嵌入自愈(v1.13) |
 | tokenMeter | `ctx.get` | 调用已接线(`measure(session)`,50ms 让路、常驻除外),但**当前认证宿主 0.2.2-rc.1 的 `measure()` 无容量字段**(返回 totalTokens/surfaceTokens 等,无 ratio/pressure/limit/contextWindow)→ 占比恒 `undefined`,压力门实际不生效,等于退回纯会话级注入总量上限;适配宿主 `contextPressure()` 后才能兑现(§4.2) |
 | agentDefaultModel | `ctx.get` | 提炼路由的第二环缺席 → 用请求头里的 provider/model;**两者都没有 → 记"没有可用的模型路由",提炼留待下批(不会调用 `llm.stream()` 的默认路由)** |
-| agents | `ctx.get` | SOUL 段装不上(记 stderr + 审计 `soul-inject-unavailable`),`soul_propose` 与设置页照常;**SOUL 层最典型的静默失败路径** |
+| agents | `ctx.get` | SOUL 段装不上(记 stderr + 审计 `soul-inject-unavailable`),`soul_propose` 与设置页照常;**SOUL 层最典型的静默失败路径**。另:`soulEnabled=false` 时提炼器的信号 / 周回顾通道也停(§4.4) |
 | workspaceRegistry | **可选读取** | 籍贯不用它(git 根+子路径/worktree 归并/cwd,§2);控制台工作区选择器可选读注册表补标题与顺序,服务缺席/抛错时静默退回 |
 | 原文读取 | 本会话=`turns.cachedTurn` 内存缓存;他会话=`ctx.get('sessionQuery')` 读会话日志 | 缓存未命中再读会话日志;**sessionQuery 是冷会话的主路径**(trajectory 也依赖它),失败才退热缓冲副本;两者都没有才"原文已不可考" |
 | 检索异常 | — | **渲染"记忆检索暂时不可用",不伪装**(§4.2;检索抛错 → `search()` 返回 `null`);"没有命中"是另一回事:空结果,本轮"没想起事",对话继续 |
@@ -49,6 +49,7 @@ Cordis 语义:`inject` 声明的是**必需服务**——缺席则插件永不�
 | 观测域 `neural_mind_usage` | `storageDomain.open` + 超时(独立于主域) | 打开失败/超时 → 使用观测退化为进程内(重启归零,等价 0.6.6 行为),主域读写与注入照常;stderr 一行(§14) |
 | systemPrompt(SOUL 段) | `agent/created` + `agent.ctx.inject` | 装不上则不注入 SOUL(记日志),`soul_propose` 仍能落提议(采纳前不写文件);`complete: true` 的人设下本就缺席(§4.4) |
 | SOUL 文件 | 直接读盘(异步,装配路径之外) | 启动首读的**非 ENOENT 错误** → 不注入 + 记 `soul-read-failed`;`ENOENT` = 有意清空(镜像置空);**运行期读错 → 保留旧镜像继续注入**(§4.4);写盘失败 → 工具返回可行动错误,内存镜像不变 |
+| SOUL 提炼通道(信号 / 周回顾) | `cfg.soulEnabled` 总开关 | `soulEnabled=false` → 整层停用:不收信号、不做周回顾、不写 `soul-review-run`(已有 `soul_signals` 记录**不删**);其余记忆提炼照常(§4.4) |
 | tools(记忆工具,含 SOUL) | `ctx.get('tools')` + `ctx.inject(['tools'])` 兜底 | **两条路都拿不到**才不注册(打一行 stderr);注入与检索照常。`inject` 兜底是为了等晚挂载的服务(§13 实现回流) |
 
 ---
@@ -59,3 +60,4 @@ Cordis 语义:`inject` 声明的是**必需服务**——缺席则插件永不�
 - 2026-11-09：从 DESIGN.md §6、§7 原样合并拆出（内容未改语义）
 - 2026-11-10：§7 降级表补 `neural_mind_usage` 观测域（独立打开，失败退化为进程内，0.6.7 §14）
 - 2026-11-12：§4.4 周回顾接线波及 `lib/store.js`——主域表集合与 `openStore` 增 `soul_signals`（纯新增表，不升 domain 版本；旧域迁移表清单同步）；降级姿势不变（内存态同样有该表，重启归零）。
+- 2026-11-12：SOUL 相关行补 `soulEnabled=false` 的整层停用口径——提炼器的信号 / 周回顾也停（不写 `soul_signals` / `soul-review-run`，已有信号不删），新增「SOUL 提炼通道」一行。

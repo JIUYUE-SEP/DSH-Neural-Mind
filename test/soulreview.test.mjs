@@ -8,7 +8,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
-  DAY_MS, buildReviewBlock, collectSignals, isReviewDue, lastReviewTs, signalSpanDays,
+  DAY_MS, buildReviewBlock, collectSignals, ignoredHistory, isReviewDue, lastReviewTs, signalSpanDays,
 } from '../lib/soulreview.js'
 import { memoryTable } from './helpers.mjs'
 
@@ -123,4 +123,96 @@ test('buildReviewBlock:材料长到把 SOUL 摘要挤空也不死循环(clip 到
   assert.ok(text.length <= 1200, `块长度 ${text.length} 应 ≤1200`)
   assert.ok(text.includes('规则(写死)'), '固定规则不被截掉')
   assert.ok(text.includes('本周人格信号'), '结构仍在(不是被截成半句)')
+})
+
+// ── §4.4 回执:被忽略的提议(0.7.0)──────────────────────────────────────────
+
+/** 造一条 SOUL 记录(默认=已归档的旧提议);字段与 memoryRecord 一致。 */
+function soulRecord(id, over = {}) {
+  const createdAt = over.createdAt ?? isoOf(BASE)
+  return {
+    id,
+    content: '我说话总像在泼冷水。',
+    kind: 'lesson',
+    source: 'assistant',
+    entity: 'soul',
+    stagedBy: 'model',
+    importance: 6,
+    confidence: 0.7,
+    temporal: 'pattern',
+    eventTime: createdAt,
+    workspaceId: '(unknown)',
+    sessionId: 's-review',
+    evidence: [],
+    status: 'archived',
+    createdAt,
+    ...over,
+  }
+}
+
+test('ignoredHistory:按 soulDecision 判定;hidden/staged/已采纳不算', () => {
+  const store = { memories: memoryTable(), audit: memoryTable() }
+  store.memories.put('m_settled', soulRecord('m_settled', {
+    createdAt: isoOf(BASE - 3 * DAY_MS), soulDecision: 'ignored', soulNote: '太像自我贬低',
+  }))
+  store.memories.put('m_latest', soulRecord('m_latest', {
+    createdAt: isoOf(BASE - 1 * DAY_MS), soulDecision: 'ignored',
+  }))
+  store.memories.put('m_adopted', soulRecord('m_adopted', {
+    createdAt: isoOf(BASE - 2 * DAY_MS), soulDecision: 'adopted',
+  }))
+  store.memories.put('m_hidden', soulRecord('m_hidden', {
+    createdAt: isoOf(BASE), soulDecision: 'ignored', hidden: true,
+  }))
+  store.memories.put('m_staged', soulRecord('m_staged', {
+    createdAt: isoOf(BASE), soulDecision: 'ignored', status: 'staged',
+  }))
+  store.memories.put('m_plain', soulRecord('m_plain', { createdAt: isoOf(BASE - 5 * DAY_MS) }))
+
+  const rows = ignoredHistory(store)
+  assert.deepEqual(rows.map((row) => row.id), ['m_latest', 'm_settled'], '只认已归档 + soulDecision=ignored,新 → 旧')
+  assert.equal(rows[1].note, '太像自我贬低', 'note 取 soulNote')
+  assert.equal(rows[0].content, '我说话总像在泼冷水。')
+  assert.equal(rows[0].ts, isoOf(BASE - 1 * DAY_MS))
+})
+
+test('ignoredHistory:老记录没有 soulDecision 时按审计 soul-proposal-ignored 兜底;新字段优先', () => {
+  const store = { memories: memoryTable(), audit: memoryTable() }
+  store.memories.put('m_legacy', soulRecord('m_legacy', { createdAt: isoOf(BASE - 2 * DAY_MS) }))
+  store.audit.put('au_1', {
+    id: 'au_1', ts: isoOf(BASE - 2 * DAY_MS), kind: 'soul-proposal-ignored', detail: 'm_legacy: 我说话总像在泼冷水。',
+  })
+  // 已采纳的记录即使审计里残留一条 ignore(理论上不该有),也不得算被忽略
+  store.memories.put('m_adopted', soulRecord('m_adopted', {
+    createdAt: isoOf(BASE - 1 * DAY_MS), soulDecision: 'adopted',
+  }))
+  store.audit.put('au_2', {
+    id: 'au_2', ts: isoOf(BASE - 1 * DAY_MS), kind: 'soul-proposal-ignored', detail: 'm_adopted: 旧审计残留',
+  })
+  // detail 只是"正文里提到"该 id,不是以 id 开头:不算
+  store.memories.put('m_mention', soulRecord('m_mention', { createdAt: isoOf(BASE) }))
+  store.audit.put('au_3', {
+    id: 'au_3', ts: isoOf(BASE), kind: 'soul-proposal-ignored', detail: '旧提议被忽略(见 m_mention)',
+  })
+
+  assert.deepEqual(ignoredHistory(store).map((row) => row.id), ['m_legacy'], '只有审计兜底命中的旧记录')
+})
+
+test('ignoredHistory:排序取最新、limit 生效、原话截 80 字符;空 store 不炸', () => {
+  const store = { memories: memoryTable(), audit: memoryTable() }
+  for (let i = 0; i < 4; i += 1) {
+    store.memories.put(`m_${i}`, soulRecord(`m_${i}`, {
+      createdAt: isoOf(BASE - i * DAY_MS),
+      soulDecision: 'ignored',
+      content: '甲'.repeat(120),
+      soulNote: `理由 ${i}`,
+    }))
+  }
+  const rows = ignoredHistory(store)
+  assert.deepEqual(rows.map((row) => row.id), ['m_0', 'm_1', 'm_2'], '默认取最新 3 条,新 → 旧')
+  assert.equal(rows[0].content.length, 81, '120 字原话截到 80 字符 + 省略号')
+  assert.ok(rows[0].content.endsWith('…'), '截断带省略号')
+  assert.deepEqual(ignoredHistory(store, { limit: 1 }).map((row) => row.id), ['m_0'], 'limit 生效')
+  assert.deepEqual(ignoredHistory(store, { limit: 0 }), [], 'limit=0 = 空')
+  assert.deepEqual(ignoredHistory({}, { limit: 3 }), [], '没有表也不能炸')
 })

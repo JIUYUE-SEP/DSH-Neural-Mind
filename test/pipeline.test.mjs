@@ -2062,6 +2062,41 @@ test('SOUL 周回顾:刚跑过回顾 → prompt 不含「周回顾」,提议被�
   }
 })
 
+test('SOUL 整层停用:soulEnabled=false → 提炼不写 soul_signals / soul-review-run,也不落提议(0.7.0)', async () => {
+  const canned = JSON.stringify({
+    episode: null, facts: [], lessons: [], relations: [],
+    soulProposal: '我宁可慢也要先验证。',
+    soulSignal: '我说话可以慢一点,但别糊弄我',
+  })
+  const llm = fakeLlm(canned)
+  // 预置 2 条跨天信号:若闸门失效,这一批会进周回顾态并收下新信号
+  const fake = bootPlugin({
+    services: { llm, timer: {} },
+    config: { extractBatchTurns: 1, soulEnabled: false },
+    signalSeed: [['ss_a', soulSignalRow('ss_a', 1, '不确定就说不确定')], ['ss_b', soulSignalRow('ss_b', 2, '别拿没验证的当结论')]],
+  })
+  try {
+    const session = fakeSession('s-soul-off', { cwd: '/nonexistent-dir' })
+    for (const e of turnEvents(1, 0, '慢慢来,别糊弄', '好。')) fake.emit('session/event', session, e)
+    assert.ok(await waitFor(() => llm.calls.length >= 1), '提炼调用发生')
+    assert.ok(await waitFor(() => fake.tables.outbox.size === 0), '整批消化完')
+
+    const prompt = JSON.stringify(llm.calls[0].messages)
+    assert.ok(!prompt.includes('周回顾'), '整层停用 → prompt 不进周回顾态')
+    assert.ok(prompt.includes('SOUL 人格层已停用'), 'prompt 明确告知信号/提议字段一律 null')
+
+    const signals = [...fake.tables.soul_signals.entries()].map(([, row]) => row)
+    assert.equal(signals.length, 2, '不写新 soul_signals(已有记录不删)')
+    assert.ok(!signals.some((row) => row.quote === '我说话可以慢一点,但别糊弄我'), 'soulSignal 整层丢弃')
+    const kinds = [...fake.tables.audit.entries()].map(([, row]) => row.kind)
+    assert.ok(!kinds.includes('soul-review-run'), '不写 soul-review-run(间隔不推进)')
+    assert.ok(!kinds.includes('soul-signal-collected'), '不写 soul-signal-collected 审计')
+    assert.ok(![...fake.tables.memories.entries()].some(([, m]) => m.entity === 'soul'), '不落提议')
+  } finally {
+    await fake.dispose()
+  }
+})
+
 test('会话注入总量账目:按实际文本计一次,不双倍(低证据、非 staged)', async () => {
   const fake = createFakeCtx({})
   fake.tables.memories = memoryTable()

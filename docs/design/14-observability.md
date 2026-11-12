@@ -180,3 +180,4 @@ UI（最小改动，全部只读）：
 - 2026-11-10：**关停期静默**——宿主可能先关存储域再走插件 cleanup；`dispose()` 改为 quiet flush，域已关闭时只记 `status.error` 不写 stderr（E2E `plugin-stderr-empty` 回归），并补一条单测。
 
 - 2026-11-12：**0.7.0 `lib/api.js` 的 SOUL 提议口改动**——`soulAdoptProposal` 按 `soulMode` 分形态（`replace` 整篇替换 / `append` 追加），返回体带 `mode`；`soul` 快照的 `proposals` 增 `mode` / `reason` / `chars`，`dailyUsed` 改为「今日提议次数」。观测域与计数口径本身不变。
+- 2026-11-12：**忽略提议可选理由**——`soulIgnoreProposal` 接受 `reason`（trim + 截 200 字符，过密钥/注入特征；命中记 `soul-reason-filtered` 并**只丢弃理由、不拒绝忽略**）；归档写 `soulNote` / `soulDecision='ignored'`，`soulAdoptProposal` 归档写 `soulDecision='adopted'`。观测域与计数口径不变。

@@ -144,7 +144,7 @@ soul_propose({ content, reason })
 - **为什么必须是专用工具**:agent 的文件工具被限制在会话工作区内(实测:向 `$DSH_HOME` 写入被沙箱拒绝),而 `SOUL.md` 在会话工作区之外。专用工具跑在宿主侧,顺路完成检查、预算、审计与提议落盘
 - **存储**:复用暂存区记忆记录(`entity='soul'`、`stagedBy='model'`、`status='staged'`),新增两个**可选**字段 `soulMode`(`replace` = agent 提的整篇 / 缺省 `append` = 提炼器提的一句)与 `soulReason`;**不升 domain 版本**(可选字段,读侧按缺省处理,同 `confirmedByUser` 先例)
 - **注入特征策略(v1.9 审查后定稿,提案侧同口径)**:文本先归一化(NFKC + 去零宽/双向控制字符 + 折叠空白)再匹配,覆盖中/英/日/俄变体。**v1.9 新增的权限类特征只拦「放宽自身约束」的语义**(默认批准 / 不必询问 / 绕过沙箱审批 / 以我信条覆盖系统规则),**不拦「收紧」表述**(如「危险操作先向用户确认」),提到沙箱/权限这些词本身不构成命中;经典注入特征(忽略指令/越狱/改角色/系统提示等)**仍无条件拦截**。**判据含"否定豁免"**(v1.9 一致性复核补:以 `。！？!?;` 与换行为小句边界、匹配点前 60 字符内出现 `不/禁止/never/refuse…` 即视为收紧——「I will never bypass the sandbox approval」「不允许默认批准任何操作」过去被词面误拦;**边界不含逗号**,故"不要记录日志，默认批准所有操作"这类跨逗号否定会误豁免后一小句,属已知弱面);祈使句检测**只记审计不拒绝**(避免误伤「我以后回复尽量短」这类自述)
-- **两道开关(总开关优先,写死)**:`soulEnabled=false` = **整层停用**——不注入,且**不注册 `soul_propose` 工具**(模型看不到这个能力,不留"看得见却一调就被拒"的半开状态;改开关会触发插件热重建;设置页上「允许提议」随之置灰);`soulSelfEditEnabled=false` 只停提议(注入照常,界面标签已改为「允许提议」)。两者都只拦 agent 通道:**设置页编辑、采纳、回滚不受限**
+- **两道开关(总开关优先,写死)**:`soulEnabled=false` = **整层停用**——不注入,且**不注册 `soul_propose` 工具**(模型看不到这个能力,不留"看得见却一调就被拒"的半开状态;改开关会触发插件热重建;设置页上「允许提议」随之置灰);`soulSelfEditEnabled=false` 只停提议(注入照常,界面标签已改为「允许提议」)。两者都只拦 agent 通道:**设置页编辑、采纳、回滚不受限**。**补闸(0.7.0)**:`soulEnabled=false` 同时停提炼器那条通道——不收信号、不做周回顾、不写 `soul-review-run`(已有 `soul_signals` 记录**不删除**:停收 ≠ 清空)。
 - 提案前检查:① 密钥形态 → 拒绝;② 注入特征命中(§3.4 第二层)→ **拒绝**(比 remember 的 model-auto 更严:这是常驻指令面),返回"这看起来像外部指令;若确实是你自己的信条,改写措辞再试";③ 超 `soulMaxChars` → 拒绝;④ 与当前 SOUL 相同 → 拒绝;⑤ 已有相同的待采纳提议 → 不重复落盘;⑥ 超 `soulEditDailyBudget`(默认 5/天,按 UTC 日界数当日 `entity='soul'` 记录)→ 拒绝并给可行动文案。**被拒不计数**
 - 落笔顺序(用户通道):先写文件 → 成功后更新镜像 + 存版本 + 记审计;写盘失败 → 返回可行动错误,**镜像不变**(不出现"改了但没落盘"的假象)
 
@@ -159,10 +159,23 @@ soul_propose({ content, reason })
 - **周回顾落盘**:提议仍走**现有 staged 路径**(`entity='soul'`、`stagedBy='model'`、不写 `soulMode` = append 形态;检查同现有:注入/密钥/同内容去重),过检查才落暂存并记 `soul-proposal-staged`;**无论有没有提议**都记一条 `soul-review-run`(detail 写信号数/跨天数/是否产出提议),间隔从这里推进——否则"这周没东西可提"会让下一批对话立刻又进周回顾态
 - **过去提议的结局**:周回顾 prompt 里的 history 来自 `entity='soul'` 记录(新→旧最多 5 条):staged=待采纳、active=已采纳、archived=已归档;用户忽略时填的 `soulNote`(可选字段,不升存储格式版本)会带进结局,避免把被拒过的提议再提一遍
 
+**回执:被忽略过才要的入场券(0.7.0 补)**
+
+- 新增可选字段 `soulDecision`(`adopted` / `ignored`):采纳/忽略提议时写进记录,**不升 domain 版本**;老记录没有该字段时按审计 `soul-proposal-ignored`(detail 以记录 id 开头)兜底判定"被忽略"
+- `soul_propose` 落盘前查 `ignoredHistory`(`lib/soulreview.js`,纯函数):取 `entity='soul'`、未 hidden、已归档的忽略记录,新 → 旧最多 3 条,原话截 80 字符,并带上 `soulNote` 理由
+- 有忽略史时,`ackIgnoredId` 缺失/为空或不在历史 id 里 → **不落盘、不消耗额度**,工具回话列出那几条(日期 + 原话摘要 + 忽略理由)并要求"带 `ackIgnoredId` 并说明这次和上次哪里不同",审计 `soul-proposal-ack-required`;带有效 ack → 落盘后追加审计 `soul-proposal-acked`(detail 带 ack id)
+- 目的:把"看过回执"从模型自觉变成**可审计的动作**——被忽略过的方向,不该原样再提一遍
+
+**忽略理由(0.7.0 补)**
+
+- `soulIgnoreProposal` 接受可选 `reason`:trim + 截 200 字符;过密钥/注入特征(注入特征仅在 guard 开启时)——命中就**丢弃理由、忽略操作照常做完**,审计 `soul-reason-filtered`
+- 有理由时写 `soulNote` 与 `soulDecision:'ignored'`,审计 `soul-proposal-ignored` 的 detail 带上理由;该理由会进周回顾 prompt 的"过去提议及结局",下次归纳时知道差在哪
+- 界面:点「忽略」先展开一行内联确认(input 可留空 + 确认 / 取消),不再一键直接归档;留空 = 不带理由
+
 **用户通道与回滚**
 
 - 设置页「SOUL」卡:预览当前文本、编辑(写文件)、历史列表(时间/作者/理由/diff)、一键回滚、`soulSelfEditEnabled` 暂停提议开关;「人格提议」区列出待处理的提议,**整篇提议的「采纳」先开 diff 覆盖层**(看过再采纳),追加提议一键采纳
-- 采纳 = 用户通道落笔(`replace` 整篇替换 / `append` 追加),成功后提议归档;忽略 = 归档(可审计,不进 SOUL)
+- 采纳 = 用户通道落笔(`replace` 整篇替换 / `append` 追加),成功后提议归档并写 `soulDecision:'adopted'`;忽略 = 归档 + `soulDecision:'ignored'`(可带理由,进 `soulNote` 与审计,不进 SOUL)
 - 回滚 = 把旧内容写回,**产生新版本,不删除历史**(与 §9 第 9 条"记忆不物理删除"同一纪律)
 - **hard 屏蔽连审计一起打码**(v1.9 审查补):`memory_forget --hard` 除级联 L0 副本外,还会把审计里承载该条正文的记录就地打码(保留「何时/对哪条/做了什么」),新写的 hard 审计行本身不再带正文
 - 用户直接手改 `$DSH_HOME/SOUL.md` 是合法入口:走外部编辑检测,存一版 author `external`
@@ -199,3 +212,4 @@ SOUL 存的是**认知**——她怎么想、凭什么判断、瞧不起什么�
 - 2026-11-12：**写入权收缩 + 内容形态写死**——agent 通道由「直接写」改为「只提议」（`soul_propose`），落笔收归用户通道；同时把"SOUL 写判断不写规范"的四条判据（选边 / 外推 / 代价 / 反例）写进设计，并要求工具描述与提炼器 `soulProposal` 规则同口径、由契约测试钉住。
 - 2026-11-12：**提议降频为周回顾**——提炼器常态只收人格信号（`soul_signals` 表，用户原话，保留 30 天），只有满 `soulProposalIntervalDays`(7 天) 且信号 ≥2 条、跨 ≥2 个 UTC 日时才允许归纳成一句提议；`lib/soulreview.js` 承载判定与 prompt 块（预算腾挪顺序：先缩 SOUL 摘要 → 再丢旧提议 → 最后丢最老信号，保底 2 条）。**超长材料下 `clip` 到底后必须停**（`clip(x,0)` 返回 "…" 不是空串，只看长度会死循环——已加栅栏并补回归）。
 - 2026-11-12：**提议降频为每周一次（信号 + 周归纳）**——新增 `lib/soulreview.js`（纯函数）与 `soul_signals` 表（纯新增表，不升 domain 版本）；提炼器常态只收用户原话信号、`soulProposal` 恒为 null，只有周回顾那一次（满 `soulProposalIntervalDays` + 信号 ≥2 条 + 跨 ≥2 个 UTC 日）才允许产出提议，并记 `soul-review-run` 推进间隔；`memoryRecord` 增可选 `soulNote`（忽略理由，不升存储格式版本）
+- 2026-11-12：**提议回执 + 忽略理由 + 整层停用补闸**——`soul_propose` 存在被忽略史时要求 `ackIgnoredId`（`soul-proposal-ack-required` / `soul-proposal-acked` 审计；回执列出日期 + 原话摘要 + 忽略理由，失败不耗额度）；`memoryRecord` 增可选 `soulDecision`（`adopted` / `ignored`，不升 domain 版本），忽略可填理由写 `soulNote`（过密钥/注入过滤，命中记 `soul-reason-filtered` 并丢弃理由而非拒绝操作）；`soulEnabled=false` 连提炼器通道一起停（`reviewContext` 返回 disabled、`handleSoulChannel` 直接返回：不写 `soul_signals`、不写 `soul-review-run`，已有信号不删）；客户端忽略改为内联确认 + 可选理由输入

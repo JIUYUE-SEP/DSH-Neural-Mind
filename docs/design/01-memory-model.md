@@ -68,6 +68,11 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
   soulReason?: string       // SOUL 提议的理由(agent 通道必填;进提议列表与审计)
   soulNote?: string         // 用户忽略 SOUL 提议时填的理由(周回顾 prompt 用它讲"被拒过、为什么",
                             // 避免重复提);可选字段,不升存储格式版本——同 confirmedByUser 先例
+  soulDecision?: 'adopted' | 'ignored'
+                            // SOUL 提议的最终处理(0.7.0):adopted = 用户采纳并落笔,
+                            // ignored = 用户忽略;只对 entity='soul' 的归档记录有意义。
+                            // 可选字段,不升存储格式版本——老记录没有它时按审计
+                            // soul-proposal-ignored(detail 以记录 id 开头)兜底判定,不猜
   filePaths?: string[]      // 文件锚(§4.2 注入前核验);代码/配置的值类事实必须带(§3.2 铁律;
                             // 提炼 prompt 只写了代码/配置域,办公产物锚规则尚未写进 prompt)
   anchorRoot?: string       // filePaths 锚的物理根 = 提炼时的 **git 根**(worktree 已归并为主仓根);
@@ -152,3 +157,4 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
 - 2026-11-10：独立域清单补 `neural_mind_usage`（0.6.7 §14 使用观测；`days`/`recent` 两表，不升主域版本）
 - 2026-11-12：`memoryRecord` 新增可选 `soulMode` / `soulReason`（0.7.0 §4.4 提议通道；只对 `entity='soul'` 有意义，**不升 domain 版本**——同 `confirmedByUser` 先例）
 - 2026-11-12：新增可选 `soulNote`（用户忽略 SOUL 提议时填的理由，周回顾 prompt 用来避免重复提，**不升 domain 版本**）；同域新增 `soul_signals` 表（§4.4 信号 → 周回顾，字段见上文表与字段说明，**纯新增一张表、不升 domain 版本**）
+- 2026-11-12：新增可选 `soulDecision`（`adopted` / `ignored`，SOUL 提议的最终处理；老记录缺该字段时按 `soul-proposal-ignored` 审计前缀兜底判定，**不升 domain 版本**——读侧只加不减，同 `confirmedByUser` 先例）

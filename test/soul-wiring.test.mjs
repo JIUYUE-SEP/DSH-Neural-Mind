@@ -332,6 +332,66 @@ test('soul_propose:日预算耗尽后拒绝(采纳不占额度)', async () => {
   }
 })
 
+test('soul_propose:有被忽略史 → 先看回执;ackIgnoredId 有效才落盘并记 acked 审计(0.7.0)', async () => {
+  const dir = await makeDir()
+  const fake = bootPlugin({
+    services: { agents: { list: () => [] } },
+    config: { soulFile: join(dir, 'SOUL.md'), extractEnabled: false },
+  })
+  try {
+    assert.ok(await waitFor(() => fake.tools.has('soul_propose')))
+    // 预置三条"已忽略"的旧提议:一条带忽略理由,一条不带;日期写死在过去(不占今日额度)
+    const ignoredRecord = (id, createdAt, content, note) => ({
+      id, content, kind: 'lesson', source: 'assistant', entity: 'soul', stagedBy: 'model',
+      soulDecision: 'ignored', ...(note === undefined ? {} : { soulNote: note }),
+      importance: 6, confidence: 0.7, temporal: 'pattern', eventTime: createdAt,
+      workspaceId: '(unknown)', sessionId: 's-old', evidence: [], status: 'archived', createdAt,
+    })
+    await fake.tables.memories.put('m_ignored1', ignoredRecord('m_ignored1', '2026-11-03T08:00:00.000Z', '我说话总像在泼冷水。', '太像自我贬低'))
+    await fake.tables.memories.put('m_ignored2', ignoredRecord('m_ignored2', '2026-11-02T08:00:00.000Z', '我回复一律先给结论。'))
+    await fake.tables.memories.put('m_ignored3', ignoredRecord('m_ignored3', '2026-11-01T08:00:00.000Z', '我不做零成本表态。', '太像口号'))
+    const tool = fake.tools.get('soul_propose')
+    const soulRowsNow = () => [...fake.tables.memories.entries()].filter(([, m]) => m.entity === 'soul').map(([, m]) => m)
+
+    // ① 不带 ack:不落盘、回话列出回执(日期 + 原话摘要 + 忽略理由),审计 ack-required
+    const blocked = await tool.execute({ content: '我说话更直一点。', reason: '这次会具体' }, {})
+    assert.match(blocked.text, /ackIgnoredId/, '回话要求带 ackIgnoredId')
+    for (const needle of ['2026-11-03', '我说话总像在泼冷水', '太像自我贬低', 'm_ignored1', 'm_ignored2', 'm_ignored3']) {
+      assert.ok(blocked.text.includes(needle), `回执缺少 ${needle}:${blocked.text}`)
+    }
+    assert.equal(soulRowsNow().length, 3, '回执检查失败不落盘(也不消耗额度)')
+    let kinds = auditKinds(fake.tables)
+    assert.ok(kinds.includes('soul-proposal-ack-required'), '记 ack-required 审计')
+    assert.equal(kinds.includes('soul-proposal-staged'), false, '被拦下时没有 staged 审计')
+    assert.equal(kinds.includes('soul-proposal-acked'), false, '没带 ack 就没有 acked 审计')
+
+    // ② ack 不在历史 id 里:同样拦下
+    const wrongAck = await tool.execute({ content: '我说话更直一点。', reason: 'r', ackIgnoredId: 'm_not_there' }, {})
+    assert.match(wrongAck.text, /ackIgnoredId/)
+    assert.equal(soulRowsNow().length, 3, '无效 ack 不落盘')
+
+    // ③ 带正确 ack:落盘成功,并在 staged 之后补一条 acked 审计(detail 带 ack id)
+    const ok = await tool.execute({
+      content: '我说话更直一点,但先把最坏的路说清。', reason: '上次太像自我贬低,这次写判断', ackIgnoredId: 'm_ignored1',
+    }, {})
+    assert.match(ok.text, /已提议/)
+    const rows = soulRowsNow()
+    assert.equal(rows.length, 4, '落了一条新提议')
+    const staged = rows.find((m) => m.status === 'staged')
+    assert.ok(staged !== undefined, '新提议进暂存区')
+    assert.equal(staged.soulReason, '上次太像自我贬低,这次写判断')
+    kinds = auditKinds(fake.tables)
+    assert.ok(kinds.includes('soul-proposal-staged'))
+    assert.ok(kinds.includes('soul-proposal-acked'))
+    const acked = [...fake.tables.audit.entries()].map(([, row]) => row).find((row) => row.kind === 'soul-proposal-acked')
+    assert.ok(acked.detail.includes('m_ignored1'), 'acked 审计 detail 带 ack id')
+    assert.ok(acked.detail.includes(staged.id), 'acked 审计也指回本次提议')
+  } finally {
+    await fake.dispose()
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
 test('soul_propose:总开关 soulEnabled=false 时不注册该工具(整层停用,不留半开状态)', async () => {
   const dir = await makeDir()
   const fake = bootPlugin({
