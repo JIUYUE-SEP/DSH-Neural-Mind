@@ -30,7 +30,7 @@
 ## 现在能做什么
 
 - 回合结束后原文进 L0 热缓冲（秒级可检索），后台提炼成 L2 事实 / 经验 / 话题摘要，并建立印证与矛盾关系；
-- 每轮 step 1 检索并注入相关记忆；工具 `memory_remember` / `memory_recall` / `memory_forget` / `soul_update`；
+- 每轮 step 1 检索并注入相关记忆；工具 `memory_remember` / `memory_recall` / `memory_forget` / `soul_propose`；
 - 主侧栏「记忆」→ 7 页签记忆控制台（总览 / 记忆 / 召回 / 配置 / 画像 / SOUL / 审计）；
 - 隐私：`privateWorkspaces` 只进不出；sensitive 标记默认不自动产生（0.6.6 R4），打开 `sensitiveNoCross` 后才做跨域拦截；密钥形态拒收。
 - **使用观测（0.6.7）**：注入 / 跳过 / 提炼 / 召回计数与注入质量元数据按天落盘（独立域 `neural_mind_usage`），总览可见「使用量」与最近注入的相关/可信；只记录，不改变注入结果。
@@ -41,7 +41,7 @@
 
 | 项目 | 结果 |
 |---|---|
-| 单测（逐文件 `node --test`） | **394 测试 / 391 通过 / 0 失败 / 3 跳过**（37 个测试文件） |
+| 单测（逐文件 `node --test`） | **398 测试 / 395 通过 / 0 失败 / 3 跳过**（37 个测试文件） |
 | `check:ledger` | §10 配置账本 **70/70**，零差异 |
 | `check:seams` | **12 项**（volatile 28 双侧闭合；bundle 311,964 B） |
 | `check:design` | **10 份设计文档 / 索引 15 行 / 代码归属 27 条**：front-matter 与索引双向一致；漂移检查（P1）走 `verify:release --strict` |

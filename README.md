@@ -62,12 +62,12 @@ dsh plugin --profile <profile> add /path/to/neural-mind   # 或 github: 地址
 |---|---|---|---|
 | 规矩 `~/.dsh/AGENTS.md` + 项目链 | "你要怎么做"（项目命令、代码规范） | 你 | DSH 原生，默认启用 |
 | 角色 preset persona | "你此刻是谁"（编码 / 编排 / 极简） | 装配时定 | DSH 原生，会话内不可改 |
-| **人格 `~/.dsh/SOUL.md`** | "我是个什么样的人"（性格、信条、口吻） | agent 自己 + 你 | 本插件 |
+| **人格 `~/.dsh/SOUL.md`** | "我是个什么样的人"（性格、信条、口吻） | 你（agent 只能提议） | 本插件 |
 | 事实 记忆 L0/L2 | 经历（数据，不是指令） | 提炼流水线 | 本插件 |
 
-- 真相源是一个 md 文件（可配 `soulFile`），你直接读改、能进 git；插件负责注入、记版本、给预算。
-- `soul_update({ content, reason })` 整篇替换，落盘前四道检查（密钥形态 / 注入特征 / 长度 / 日预算），被拒不计数。
-- 记忆页 SOUL 卡：预览、编辑、历史（时间 / 作者 / 理由 / diff）、一键回滚；「启用 SOUL 层」是总闸（关掉不注入、`soul_update` 不注册），「允许自改」只停自改；你的编辑与回滚不受开关限制。
+- 真相源是一个 md 文件（可配 `soulFile`），你直接读改、能进 git；插件负责注入、记版本、给提议额度。
+- `soul_propose({ content, reason })` **只提议、不落笔**：整篇提议进暂存区，你在记忆页 SOUL 卡看 diff 再采纳，采纳后才写文件（0.7.0 起）。提案前过密钥形态 / 注入特征 / 长度三关，并受日提议预算限制，被拒不计数。
+- 记忆页 SOUL 卡：预览、编辑、历史（时间 / 作者 / 理由 / diff）、一键回滚、人格提议（整篇先开对比覆盖层，追加一句直接采纳）；「启用 SOUL 层」是总闸（关掉不注入、`soul_propose` 不注册），「允许提议」只停 agent 提议；你的编辑、采纳与回滚不受开关限制。
 - 优先级写死：安全与权限 > 你当场的要求 > `AGENTS.md` > preset persona > SOUL。SOUL 不写工具战术、不复述角色、不碰安全规则。
 - 一份人格跨身份一致；在 `minimal` 这类 `complete: true` 的人设下 SOUL（和 L1 画像）不出现——那是身份定义，不是故障。
 
@@ -80,7 +80,7 @@ dsh plugin --profile <profile> add /path/to/neural-mind   # 或 github: 地址
 | `memory_recall` | 检索记忆，支持时间窗、session 回放、按 id 整条展开 | `limit` 1–20（默认 10），被截断会标注"还有更多" |
 | `memory_remember` | 显式记忆（进暂存区，`confirm` 可当场转正） | 0.6.6 起可带 `userQuote` 用户原话证明来源 |
 | `memory_forget` | 归档 / hard 屏蔽（级联 L0） | 同 entity 相关记忆最多回显 10 条 + 总数 |
-| `soul_update` | SOUL 自改 | 必须带 `reason`；受日预算与四道检查 |
+| `soul_propose` | SOUL 提议（不落笔） | 必须带 `reason`；采纳前不生效；受日提议预算与三道内容检查 |
 
 自动带入的长期记忆行带 `[m_…]` 编号，模型可对刚看到的事实直接 forget / 纠错。工具之外你也可以在记忆页手动操作：停用 / 恢复、标为敏感、彻底隐藏（二次确认）、展开来源轮次（0.6.6 R1a）。
 
@@ -109,8 +109,8 @@ dsh plugin --profile <profile> add /path/to/neural-mind   # 或 github: 地址
 | `toolOutputOverrides` | `{}` | 工具输出按工具名分流（`{"web_search": "head"}`）；**办公用户建议为表格 / 搜索类工具开大** |
 | `openingDigest` | `false` | 无有效命中时注入近期动态摘要；要"主动记挂"再打开（需改 profile 的 `cordis.patch.yml`） |
 | `profileFile` | `''` | 画像文件路径（支持 `~/…` 展开；光写 `~` 非法）；**唯一录入口**，手改下一轮自动生效 |
-| `soulEnabled` | `true` | SOUL 层总开关（注入 + 自改） |
-| `soulSelfEditEnabled` | `true` | 关掉后 `soul_update` 拒绝写入（记忆页仍可改） |
+| `soulEnabled` | `true` | SOUL 层总开关（注入 + 提议通道） |
+| `soulSelfEditEnabled` | `true` | 关掉后 `soul_propose` 拒绝（记忆页仍可改） |
 
 **高级层**：其余 77 项（注入治理 / 写入 / 检索 / BM25 / RRF / 排序系数 / 生命周期 / 注入防御）全在 Config schema（`lib/config.js`），默认值即全场景起点。注意两套分类**:「常用 / 高级」是文档分层，"能不能在记忆页改"由 `.volatile()` 决定（28 项 = 配置卡 26 + SOUL 卡 2），两者有差集。全量清单与默认值见 [docs/design/10-config-ledger.md](docs/design/10-config-ledger.md)（`check:ledger` 与 schema 机械对账，加配置忘写文档会红）。
 
@@ -142,7 +142,7 @@ ollama pull bge-m3                                  # 中文强，1024 维；小
 ## 隐私与数据边界
 
 - **落盘明文**，威胁模型是**本机单人使用**；存储在 `~/.dsh/storages/neural_mind/`（目录与文件 0600），`~/.dsh/SOUL.md` 同样 0600。本机其他进程能读写这些文件，本插件不改变这一点。**改名迁移**：0.6.6 之前的数据在 `~/.dsh/storages/memory/`，新版本首次启动会把它补进新目录（只读旧域、旧目录保留，可回滚；迁移失败会留 stderr 并在下次启动重试）。
-- **治理不是强制边界（如实声明）**：SOUL 的四道检查与开关只约束 `soul_update` 工具通道；手改文件是受支持入口、不受约束；agent 若同时具备 bash / 文件写入能力也能绕过工具通道。**这层防的是"手滑"与"外部内容注入"，不是"防 agent 越权"的铁门**——真正的强制边界在 DSH 的沙箱与审批策略。
+- **治理不是强制边界（如实声明）**：SOUL 的内容三关与提议额度只约束 `soul_propose` 工具通道，且 agent **已没有任何直接写 SOUL 的通道**（0.7.0 起只提议，落笔在记忆页）；手改文件是受支持入口、不受约束；agent 若同时具备 bash / 文件写入能力仍能绕过工具通道。**这层防的是"手滑"与"外部内容注入"，不是"防 agent 越权"的铁门**——真正的强制边界在 DSH 的沙箱与审批策略。
 - **隐私域**：`privateWorkspaces` 只进不出（含 L0）；敏感标记默认不再自动产生，打开 `sensitiveNoCross` 并手动标记后不跨 workspace 注入；`disabledWorkspaces` 可按工作区完全停用。**记忆页是你自己的视图**：隐私过滤约束注入与跨域检索，不约束你的管理页面。
 - **密钥形态拒绝落盘**（`sk-` / `glpat-` / `xoxb-` / `hf_` / AWS 密钥 / 内联私钥等）；自由文本口令不在覆盖内——任何凭据都不该写进记忆或 SOUL。
 - **清除**：记忆不物理删除，只有归档与访问屏蔽；彻底隐藏会级联热缓冲副本与审计正文打码，但**原文仍在 DSH 会话日志里**。真删会话日志超出本插件职责。
@@ -185,7 +185,7 @@ npm test              # bundle 校验 + §10 配置账本 + DSH 接缝对账（1
 npm run verify:release  # 全量发布门禁：host / shapes / conform / 设计 P1 strict / E2E / release-matrix
 ```
 
-改完自己跑一遍：本机 Windows 上**再跑 394 项**（391 通过 / 0 失败 / 3 跳过）。3 项跳过都带判据：建 symlink 需开发者模式（2 项，探测而非猜平台）、边车看门狗依赖 POSIX shell（Windows 1 项，显式 SKIP），Linux / WSL / macOS 照常跑。
+改完自己跑一遍：本机 Windows 上**再跑 398 项**（395 通过 / 0 失败 / 3 跳过）。3 项跳过都带判据：建 symlink 需开发者模式（2 项，探测而非猜平台）、边车看门狗依赖 POSIX shell（Windows 1 项，显式 SKIP），Linux / WSL / macOS 照常跑。
 
 **两条收口纪律**（`npm run check:conform` 机械守住）：① 故意吞掉失败必须走 `bestEffort`（可 grep、可数），要留痕的失败走 `fireAndForget` 或审计；② 未接线的配置项必须在 schema 描述里标 `[未实现]`，由 `check:ledger` 双向对账。
 

@@ -1,6 +1,6 @@
 {
   "name": "neural-mind",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "description": "DSH 心智插件(原名 dsh-plugin-memory):长期记忆池 + SOUL 人格自我设定 + L1 用户画像;热缓冲 + 双速写入 + 证据驱动生命周期(DESIGN.md v1.11;DSH 0.2.1-rc.3 / 0.2.2-rc.1 / Session 格式 V4 接缝)",
   "type": "module",
   "license": "MIT",

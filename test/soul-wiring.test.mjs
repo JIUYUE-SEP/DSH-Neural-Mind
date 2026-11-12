@@ -211,7 +211,7 @@ test('降级:agents 服务缺席 → 不装段、不崩、留一行日志', asyn
   }
 })
 
-test('soul_update:成功写盘 + 版本 + 审计;下一轮段文本生效', async () => {
+test('soul_propose:只落提议不落盘(整篇形态 + 理由);采纳前 SOUL 与版本都没变', async () => {
   const dir = await makeDir()
   const path = join(dir, 'SOUL.md')
   const sections = []
@@ -221,28 +221,32 @@ test('soul_update:成功写盘 + 版本 + 审计;下一轮段文本生效', asyn
     config: { soulFile: path, extractEnabled: false },
   })
   try {
-    assert.ok(await waitFor(() => fake.tools.has('soul_update')), '工具已注册')
-    const tool = fake.tools.get('soul_update')
+    assert.ok(await waitFor(() => fake.tools.has('soul_propose')), '工具已注册')
+    assert.equal(fake.tools.has('soul_update'), false, '直写工具已撤(0.7.0)')
+    const tool = fake.tools.get('soul_propose')
     const result = await tool.execute(
       { content: '我说话简短,不奉承;不确定就先问。', reason: '从这次协作里学到的' },
       { agent },
     )
-    assert.match(result.text, /SOUL 已更新/)
-    assert.equal((await readFile(path, 'utf8')).trim(), '我说话简短,不奉承;不确定就先问。')
-    const rows = soulRows(fake.tables)
-    assert.equal(rows.length, 1)
-    assert.equal(rows[0].author, 'agent')
-    assert.equal(rows[0].reason, '从这次协作里学到的')
-    assert.equal(rows[0].sessionId, 'a6')
-    assert.ok(auditKinds(fake.tables).includes('soul-update'), '审计有记录')
-    assert.ok(sections[0].text().includes('我说话简短'), '段文本立即跟上')
+    assert.match(result.text, /已提议/)
+    assert.match(result.text, /没有.*写入/, '回话必须说清"没有写"')
+    assert.equal(await readFile(path, 'utf8').catch(() => ''), '', '文件未创建(提议不落盘)')
+    assert.equal(soulRows(fake.tables).length, 0, '没有版本快照')
+    const proposals = [...fake.tables.memories.entries()].map(([, m]) => m).filter((m) => m.entity === 'soul')
+    assert.equal(proposals.length, 1)
+    assert.equal(proposals[0].status, 'staged')
+    assert.equal(proposals[0].soulMode, 'replace')
+    assert.equal(proposals[0].soulReason, '从这次协作里学到的')
+    assert.equal(proposals[0].sessionId, 'a6')
+    assert.ok(auditKinds(fake.tables).includes('soul-proposal-staged'), '审计有记录')
+    assert.equal(sections[0].text(), '', '注入段仍是旧内容(采纳才生效)')
   } finally {
     await fake.dispose()
     await rm(dir, { recursive: true, force: true })
   }
 })
 
-test('soul_update:reason 必填;四道检查各自给可行动文案;被拒不落盘', async () => {
+test('soul_propose:reason 必填;内容各关给可行动文案;被拒不落盘', async () => {
   const dir = await makeDir()
   const path = join(dir, 'SOUL.md')
   const fake = bootPlugin({
@@ -250,8 +254,8 @@ test('soul_update:reason 必填;四道检查各自给可行动文案;被拒不�
     config: { soulFile: path, soulMaxChars: 50, extractEnabled: false },
   })
   try {
-    assert.ok(await waitFor(() => fake.tools.has('soul_update')))
-    const tool = fake.tools.get('soul_update')
+    assert.ok(await waitFor(() => fake.tools.has('soul_propose')))
+    const tool = fake.tools.get('soul_propose')
 
     const noReason = await tool.execute({ content: '我谨慎。' }, {})
     assert.match(noReason.text, /reason 必填/)
@@ -267,13 +271,63 @@ test('soul_update:reason 必填;四道检查各自给可行动文案;被拒不�
 
     assert.equal(soulRows(fake.tables).length, 0, '被拒一律不落盘')
     assert.equal(await readFile(path, 'utf8').catch(() => ''), '', '文件未创建')
+    assert.deepEqual(
+      [...fake.tables.memories.entries()].filter(([, m]) => m.entity === 'soul'),
+      [],
+      '被拒不进暂存区',
+    )
   } finally {
     await fake.dispose()
     await rm(dir, { recursive: true, force: true })
   }
 })
 
-test('soul_update:总开关 soulEnabled=false 时不注册该工具(整层停用,不留半开状态)', async () => {
+test('soul_propose:与当前相同 / 已有相同待采纳提议 → 不重复落盘', async () => {
+  const dir = await makeDir()
+  const path = join(dir, 'SOUL.md')
+  await writeFile(path, '我谨慎。\n')
+  const fake = bootPlugin({
+    services: { agents: { list: () => [] } },
+    config: { soulFile: path, extractEnabled: false },
+  })
+  try {
+    assert.ok(await waitFor(() => fake.tools.has('soul_propose')))
+    const tool = fake.tools.get('soul_propose')
+    const same = await tool.execute({ content: '我谨慎。', reason: 'r' }, {})
+    assert.match(same.text, /相同/)
+
+    const first = await tool.execute({ content: '我谨慎,但会把坑说出来。', reason: 'r' }, {})
+    assert.match(first.text, /已提议/)
+    const second = await tool.execute({ content: '我谨慎,但会把坑说出来。', reason: 'r2' }, {})
+    assert.match(second.text, /已有相同的待采纳提议/)
+    const proposals = [...fake.tables.memories.entries()].filter(([, m]) => m.entity === 'soul')
+    assert.equal(proposals.length, 1, '只落一条')
+  } finally {
+    await fake.dispose()
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('soul_propose:日预算耗尽后拒绝(采纳不占额度)', async () => {
+  const dir = await makeDir()
+  const fake = bootPlugin({
+    services: { agents: { list: () => [] } },
+    config: { soulFile: join(dir, 'SOUL.md'), soulEditDailyBudget: 1, extractEnabled: false },
+  })
+  try {
+    assert.ok(await waitFor(() => fake.tools.has('soul_propose')))
+    const tool = fake.tools.get('soul_propose')
+    const ok = await tool.execute({ content: '第一条提议。', reason: 'r' }, {})
+    assert.match(ok.text, /已提议/)
+    const over = await tool.execute({ content: '第二条提议。', reason: 'r' }, {})
+    assert.match(over.text, /已达上限/)
+  } finally {
+    await fake.dispose()
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('soul_propose:总开关 soulEnabled=false 时不注册该工具(整层停用,不留半开状态)', async () => {
   const dir = await makeDir()
   const fake = bootPlugin({
     services: { agents: { list: () => [] } },
@@ -281,7 +335,7 @@ test('soul_update:总开关 soulEnabled=false 时不注册该工具(整层停用
   })
   try {
     await new Promise((resolve) => setTimeout(resolve, 80)) // 给 boot 跑完的时间
-    assert.equal(fake.tools.has('soul_update'), false, '总开关关闭 → 模型看不到这个能力')
+    assert.equal(fake.tools.has('soul_propose'), false, '总开关关闭 → 模型看不到这个能力')
     assert.equal(soulRows(fake.tables).length, 0, '没有任何写入')
   } finally {
     await fake.dispose()
@@ -289,7 +343,7 @@ test('soul_update:总开关 soulEnabled=false 时不注册该工具(整层停用
   }
 })
 
-test('soul_update:soulSelfEditEnabled=false 时被拒', async () => {
+test('soul_propose:soulSelfEditEnabled=false 时被拒', async () => {
   const dir = await makeDir()
   const fake = bootPlugin({
     services: { agents: { list: () => [] } },
@@ -300,9 +354,9 @@ test('soul_update:soulSelfEditEnabled=false 时被拒', async () => {
     },
   })
   try {
-    assert.ok(await waitFor(() => fake.tools.has('soul_update')))
-    const denied = await fake.tools.get('soul_update').execute({ content: '我谨慎。', reason: 'r' }, {})
-    assert.match(denied.text, /自改已被关闭/)
+    assert.ok(await waitFor(() => fake.tools.has('soul_propose')))
+    const denied = await fake.tools.get('soul_propose').execute({ content: '我谨慎。', reason: 'r' }, {})
+    assert.match(denied.text, /提议已被关闭/)
   } finally {
     await fake.dispose()
     await rm(dir, { recursive: true, force: true })

@@ -131,13 +131,13 @@ test('commit:文件 / 镜像 / 版本 / 审计四处一致,返回 diff', async (
     assert.equal(rows[0].sessionId, 's1')
     assert.equal(rows[0].nextContent, '我说话简短,不奉承。')
     assert.ok(env.auditRows.some((r) => r.kind === 'soul-update'), '审计有记录')
-    assert.equal(env.soul.dailyUsed(), 1, '日预算按历史现算')
+    assert.equal(env.soul.dailyUsed(), 0, '0.7.0 起计数口径是"今日提议",版本行不计')
   } finally {
     await env.cleanup()
   }
 })
 
-test('四道检查:密钥 / 注入特征 / 超长 / 自改关闭 各自拒绝,且不写历史', async () => {
+test('内容三关:密钥 / 注入特征 / 超长 各自拒绝;空内容按通道区分', async () => {
   const env = await makeSoul({ config: { soulMaxChars: 50 } })
   try {
     await env.soul.refresh('boot')
@@ -162,29 +162,16 @@ test('四道检查:密钥 / 注入特征 / 超长 / 自改关闭 各自拒绝,�
   } finally {
     await env.cleanup()
   }
-
-  const off = await makeSoul({ config: { soulSelfEditEnabled: false } })
-  try {
-    const denied = await off.soul.checks('我谨慎。', { channel: 'agent' })
-    assert.equal(denied.ok, false)
-    assert.match(denied.error, /自改已被关闭/)
-    const userOk = await off.soul.checks('我谨慎。', { channel: 'user' })
-    assert.equal(userOk.ok, true, '设置页通道不受自改开关限制')
-  } finally {
-    await off.cleanup()
-  }
+  // 治理面(总开关 / 允许提议 / 日预算)已随"agent 只提议不落笔"搬到 soul_propose 通道,
+  // 见 test/soul-wiring.test.mjs;这里不再断言 agent 通道的开关拒绝。
 })
 
-test('总开关:A 方案——soulEnabled=false 时 agent 既看不到(不注入)也不能改;用户通道不受限', async () => {
+test('总开关:soulEnabled=false 时不注入;用户通道不受限(agent 直写通道已在 0.7.0 撤销)', async () => {
   const off = await makeSoul({ config: { soulEnabled: false } })
   try {
     await writeFile(off.path, '我谨慎。', 'utf8')
     await off.soul.refresh('boot')
     assert.equal(await off.soul.renderText(), '', '不注入')
-
-    const denied = await off.soul.checks('我谨慎,先验证再下结论。', { channel: 'agent' })
-    assert.equal(denied.ok, false, '自改一并停用')
-    assert.match(denied.error, /SOUL 层已关闭/)
 
     const byUser = await off.soul.checks('我谨慎,先验证再下结论。', { channel: 'user' })
     assert.equal(byUser.ok, true, '设置页仍可改')
@@ -198,21 +185,16 @@ test('总开关:A 方案——soulEnabled=false 时 agent 既看不到(不注入
   }
 })
 
-test('日预算:agent 用满后被拒;被拒不写历史;user 通道不受限', async () => {
-  const env = await makeSoul({ config: { soulEditDailyBudget: 2 } })
+test('用户通道不受日预算限制(额度属于"提议",落笔不占)', async () => {
+  const env = await makeSoul({ config: { soulEditDailyBudget: 1 } })
   try {
     await env.soul.refresh('boot')
-    assert.equal((await env.soul.commit({ content: '第一版', reason: 'r1', author: 'agent' })).ok, true)
-    assert.equal((await env.soul.commit({ content: '第二版', reason: 'r2', author: 'agent' })).ok, true)
-    const third = await env.soul.commit({ content: '第三版', reason: 'r3', author: 'agent' })
-    assert.equal(third.ok, false)
-    assert.match(third.error, /已达上限/)
-    assert.equal(historyRows(env.store).length, 2, '被拒不进历史(故不计数)')
-    assert.equal(env.soul.current(), '第二版', '被拒后镜像不变')
-    assert.equal((await readFile(env.path, 'utf8')).trim(), '第二版', '被拒后文件不变')
-
-    const byUser = await env.soul.commit({ content: '用户改写', reason: '手工', author: 'user' })
-    assert.equal(byUser.ok, true, 'user 通道不受日预算限制')
+    for (const version of ['第一版', '第二版', '第三版']) {
+      const result = await env.soul.commit({ content: version, reason: '手工', author: 'user' })
+      assert.equal(result.ok, true, `${version} 应能落盘`)
+    }
+    assert.equal(historyRows(env.store).length, 3)
+    assert.equal(env.soul.current(), '第三版')
   } finally {
     await env.cleanup()
   }
@@ -381,16 +363,16 @@ test('符号链接:读写两侧统一跟随(支持 dotfiles),不把用户的链�
   }
 })
 
-test('竞争回归:并发提交不得突破日预算(提交串行化)', async () => {
-  const env = await makeSoul({ config: { soulEditDailyBudget: 2 } })
+test('竞争回归:并发提交全部串行落盘(镜像 / 版本 / 文件三处一致)', async () => {
+  const env = await makeSoul()
   try {
     await env.soul.refresh('boot')
     const results = await Promise.all(
-      [1, 2, 3, 4, 5, 6].map((i) => env.soul.commit({ content: `第 ${i} 版`, reason: `r${i}`, author: 'agent' })),
+      [1, 2, 3, 4, 5, 6].map((i) => env.soul.commit({ content: `第 ${i} 版`, reason: `r${i}`, author: 'user' })),
     )
-    assert.equal(results.filter((r) => r.ok === true).length, 2, '只放行 2 次')
-    assert.equal(env.soul.dailyUsed(), 2, '计数与配额一致')
-    assert.equal(historyRows(env.store).length, 2)
+    assert.equal(results.filter((r) => r.ok === true).length, 6, '并发提交不得互相踩掉')
+    assert.equal(historyRows(env.store).length, 6)
+    assert.equal(env.soul.current(), (await readFile(env.path, 'utf8')).trim(), '镜像与文件一致')
   } finally {
     await env.cleanup()
   }

@@ -160,15 +160,18 @@ superseded_by: null
                                          //   配置了但文件不存在 → 按空画像处理并留一次 profile-file-missing 审计);
                                          // 唯一录入口;设置页渲染路径与轮询间隔(§4.1 v1.9 收口)
 
-  // ── SOUL 自我设定(§4.4;人格层,agent 可自改)──
-  soulEnabled: boolean                   // 常用:默认 true,SOUL 层总开关(注入 + 自改)
-  soulSelfEditEnabled: boolean           // 常用:默认 true;关掉后 soul_update 拒绝写入(设置页仍可改)
+  // ── SOUL 自我设定(§4.4;人格层,agent 只能提议、不能直接落笔)──
+  soulEnabled: boolean                   // 常用:默认 true,SOUL 层总开关(注入 + 提议通道);
+                                         //   关掉=整层停用,soul_propose 不注册
+  soulSelfEditEnabled: boolean           // 常用:默认 true;允许 agent 提议改写 SOUL(采纳仍在记忆页);
+                                         //   关掉后 soul_propose 拒绝(设置页仍可改)
   soulFile: string                       // 高级:默认 ''(= $DSH_HOME/SOUL.md,真相源);支持 ~/… 展开;
                                          //   **光写 "~" 非法**(指家目录,读必失败):启动时拒绝该取值、
                                          //   回退默认并留 stderr + 审计 soul-path-rejected(§4.4)
   soulMaxChars: number                   // 高级:默认 2000,写入与注入上限
                                          // (写入超限拒绝;注入超长截断并留"(已截断)"标记;刷新时记 soul-oversize 审计)
-  soulEditDailyBudget: number            // 高级:默认 5,每天成功自改次数上限(被拒不计数)
+  soulEditDailyBudget: number            // 高级:默认 5,每天 SOUL **提议**次数上限(采纳不占额度;
+                                         //   被拒不计数;按 UTC 日界数当日 entity='soul' 记录)
   soulHistoryMaxEntries: number          // 高级:默认 50,版本快照保留条数;
                                          // 实际下界 10,且当日条目不裁(当日行是日预算依据)
   storageOpenTimeoutMs: number           // 高级:默认 5000;storageDomain.open 超时即按「降级纯内存态」处理

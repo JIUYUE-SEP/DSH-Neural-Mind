@@ -178,3 +178,5 @@ UI（最小改动，全部只读）：
 - 2026-11-10：**S12b 接线**——2 项配置（`usageLog`/`usageRetentionDays`，账本 68→70）；`injectionlog` 旁路 sink；`inject` 附质量元数据；`extract`/`tools` 计数；`/neural-mind/api` 新增 `usage`、`pool`，`stats`/`overview` 带 usage 块；boot 装配与 dispose 补 flush。
 - 2026-11-10：**S12c 客户端与验收**——总览卡「最近注入」优先读落盘明细（失败退回进程内）、新增只读「使用量」卡（今日计数 + 质量均值 + 保留策略）、注入行显示「相关 / 可信 / 低可信」；`lib/client.js` 重建（311,964 B）；全套测试 **379/376/0/3**。
 - 2026-11-10：**关停期静默**——宿主可能先关存储域再走插件 cleanup；`dispose()` 改为 quiet flush，域已关闭时只记 `status.error` 不写 stderr（E2E `plugin-stderr-empty` 回归），并补一条单测。
+
+- 2026-11-12：**0.7.0 `lib/api.js` 的 SOUL 提议口改动**——`soulAdoptProposal` 按 `soulMode` 分形态（`replace` 整篇替换 / `append` 追加），返回体带 `mode`；`soul` 快照的 `proposals` 增 `mode` / `reason` / `chars`，`dailyUsed` 改为「今日提议次数」。观测域与计数口径本身不变。

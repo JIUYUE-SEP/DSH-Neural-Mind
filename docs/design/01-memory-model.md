@@ -61,6 +61,11 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
                           // active;只有 model-auto 的 staged 被 confirm 时才会转正。
   entity?: string           // 关联主体(项目/模块/人物/资料名;'user' 是用户本人的
                             // 规范字面值,提炼 prompt 负责归一);参与排序(§5.4)
+  soulMode?: 'append' | 'replace'
+                            // SOUL 提议形态(0.7.0 §4.4):'replace' = agent 提的整篇新文本,
+                            // 采纳时整篇替换;缺省 = 'append' = 提炼器提的一句(采纳时追加)。
+                            // 只对 entity='soul' 的暂存条有意义;可选字段,不升存储格式版本
+  soulReason?: string       // SOUL 提议的理由(agent 通道必填;进提议列表与审计)
   filePaths?: string[]      // 文件锚(§4.2 注入前核验);代码/配置的值类事实必须带(§3.2 铁律;
                             // 提炼 prompt 只写了代码/配置域,办公产物锚规则尚未写进 prompt)
   anchorRoot?: string       // filePaths 锚的物理根 = 提炼时的 **git 根**(worktree 已归并为主仓根);
@@ -143,3 +148,4 @@ Staging 暂存区              —— 显式通道落点(§3.3),低信任起步,
 
 - 2026-11-09：从 DESIGN.md §1 原样拆出（内容未改语义）
 - 2026-11-10：独立域清单补 `neural_mind_usage`（0.6.7 §14 使用观测；`days`/`recent` 两表，不升主域版本）
+- 2026-11-12：`memoryRecord` 新增可选 `soulMode` / `soulReason`（0.7.0 §4.4 提议通道；只对 `entity='soul'` 有意义，**不升 domain 版本**——同 `confirmedByUser` 先例）

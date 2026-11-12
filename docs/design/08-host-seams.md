@@ -55,3 +55,5 @@ superseded_by: null
 
 - 2026-11-09：从 DESIGN.md §8 现行映射拆出；跨版本校准史见 docs/legacy/host-compat-history.md
 - 2026-11-10：0.6.7 §14 接线——boot 创建使用观测（独立域失败退化为进程内），旁路接 injectionLog / extractor / tools / `/neural-mind/api` 的 `usage`、`pool` 动作；不改任何宿主接缝
+
+- 2026-11-12：**0.7.0 工具改名接线口径**——`lib/index.js` 的注释与接线说明由 `soul_update` 改为 `soul_propose`；宿主接缝（volatile / `loader/volatile-update` / 会话来源）无变化，`check:seams` 12 项仍全绿。

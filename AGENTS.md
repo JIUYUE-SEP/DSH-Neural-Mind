@@ -31,7 +31,7 @@ node tools/check-design.mjs --history --strict   # 设计同提交纪律（基�
 | `lib/hotbuffer.js` / `lib/outbox.js` / `lib/extract.js` | 写路径：L0、投递、LLM 提炼 |
 | `lib/store.js` / `lib/schema.js` | storageDomain 装配 + 域 spec / 记录 schema（含旧域迁移） |
 | `lib/search.js` / `lib/rank.js` | BM25 / 向量 / RRF 检索、排序、衰减与证据 |
-| `lib/tools.js` / `lib/ops.js` | 工具（remember / recall / forget / soul_update）与操作实现 |
+| `lib/tools.js` / `lib/ops.js` | 工具（remember / recall / forget / soul_propose）与操作实现 |
 | `lib/api.js` | 记忆页 `/neural-mind/api`（同源校验） |
 | `lib/usage.js` | 使用观测（§14）：计数 / 明细落盘 / 保留裁剪 / `pool` 只读统计 |
 | `lib/rules.js` | 项目规则（§15，草稿）：AGENTS.md 托管块解析 / 合并 / 校验纯函数；未接线 |

@@ -643,3 +643,34 @@ test('SOUL:「全部历史」打开覆盖层并列出全部版本(卡片只留�
   }
 })
 
+
+test('SOUL:整篇提议「采纳」先开 diff 覆盖层,确认后才落笔(0.7.0)', async () => {
+  const proposal = {
+    id: 'm_full1', content: '# Vector\n\n新人格。', mode: 'replace', reason: '语气太像通用助手',
+    chars: 15, createdAt: '2026-10-20T00:00:00.000Z',
+  }
+  const panel = await mountPanel('soul-card', 'SoulCard', {
+    payloads: {
+      soul: soulFixture({ proposals: [proposal] }),
+      soulAdoptProposal: { ok: true, id: 'soul_v6', chars: 15 },
+    },
+  })
+  try {
+    const tree = panel.render()
+    const texts = collectText(tree)
+    assert.ok(texts.includes('soulProposalReplace'), '渲染整篇徽章')
+    assert.ok(texts.includes('语气太像通用助手'), '渲染理由(不是整篇正文)')
+    buttonByText(tree, 'soulAdopt').props.onClick()
+    const opened = panel.render()
+    assert.equal(panel.calls.some((c) => c.action === 'soulAdoptProposal'), false, '未确认前不得落笔')
+    assert.ok(collectText(opened).includes('soulProposalDiffTitle'), '打开提议对比覆盖层')
+    const confirms = findByText(opened, 'soulProposalAdoptHere')
+    confirms[confirms.length - 1].props.onClick()
+    await panel.harness.settle(4)
+    const call = panel.calls.find((c) => c.action === 'soulAdoptProposal')
+    assert.ok(call !== undefined, '覆盖层确认后才调 soulAdoptProposal')
+    assert.equal(call.body.id, 'm_full1')
+  } finally {
+    panel.restore()
+  }
+})

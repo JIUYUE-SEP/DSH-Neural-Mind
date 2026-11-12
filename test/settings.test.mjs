@@ -748,3 +748,50 @@ test('/neural-mind/api:SOUL 提议 采纳追加进 SOUL / 忽略归档 / 已处�
     await rm(dir, { recursive: true, force: true })
   }
 })
+
+test('/neural-mind/api:整篇提议(replace)采纳 = 整篇替换,不是追加(0.7.0,§4.4)', async () => {
+  const { mkdtemp, rm, readFile: readSoul } = await import('node:fs/promises')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const dir = await mkdtemp(join(tmpdir(), 'soul-replace-'))
+  const soulFile = join(dir, 'SOUL.md')
+  await writeFile(soulFile, '# Vector\n\n旧人格,整段会被替换掉。\n')
+
+  const fake = createFakeCtx({})
+  let route = null
+  fake.ctx.get = (name) => {
+    if (name === 'storageDomain') return fake.fakeStorageDomain
+    if (name === 'webServer') return { register: (def) => { route = def; return () => {} } }
+    return undefined
+  }
+  apply(fake.ctx, Config['~standard'].validate({ extractEnabled: false, soulFile }).value)
+  try {
+    assert.ok(await waitFor(() => route !== null), '路由已注册')
+    const now = new Date().toISOString()
+    await fake.tables.memories.put('m_full1', {
+      id: 'm_full1', content: '# Vector\n\n新人格:整篇替换。', kind: 'lesson', source: 'assistant',
+      entity: 'soul', stagedBy: 'model', soulMode: 'replace', soulReason: '语气太像通用助手',
+      importance: 6, confidence: 0.7, temporal: 'pattern', eventTime: now,
+      workspaceId: '(unknown)', sessionId: 's-x', evidence: [], status: 'staged', createdAt: now,
+    })
+    const call = async (payload) => {
+      const { req, res } = fakeReqRes(payload)
+      await route.handler(req, res)
+      return { status: res.status, body: JSON.parse(res.body) }
+    }
+
+    const preview = await call({ action: 'soul' })
+    assert.equal(preview.body.proposals[0].mode, 'replace', '预览带形态')
+    assert.equal(preview.body.proposals[0].reason, '语气太像通用助手')
+
+    const adopted = await call({ action: 'soulAdoptProposal', id: 'm_full1' })
+    assert.equal(adopted.body.ok, true, JSON.stringify(adopted.body))
+    assert.equal(adopted.body.mode, 'replace')
+    const text = (await readSoul(soulFile, 'utf8')).trim()
+    assert.equal(text, '# Vector\n\n新人格:整篇替换。', '整篇替换:旧内容不残留')
+    assert.equal(fake.tables.memories.get('m_full1').status, 'archived', '采纳后归档')
+  } finally {
+    await fake.dispose()
+    await rm(dir, { recursive: true, force: true })
+  }
+})
