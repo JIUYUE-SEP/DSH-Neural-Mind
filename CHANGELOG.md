@@ -2,10 +2,10 @@
 
 格式：版本 — 日期 / 主题；未发布版本置顶并标注「未发布」。只记录版本级事实（改了什么、为什么），当前数字与验证状态以 [STATUS.md](STATUS.md) 为准；详细实现见对应提交。
 
-## 0.6.8 — 未发布（2026-11-12，SOUL 提议通道修正）
+## 0.6.8 — 2026-11-12
 
 > **主题**：0.6.7 使用中发现的两处 SOUL 提议问题——手滑忽略后恢复会卡在中间态；流程 / 偏好类内容被误判为人格提议。本版修正这两处，并把设计侧 §15（项目规则）与 R33 落到草稿 / 原语；**不改记忆检索、注入与存储语义**。
-> 发布物：候选包 `neural-mind-0.6.8-candidate.tgz`（61 文件，含 MIT LICENSE，356,538 B；SHA256 见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）；**不发 npm**，发版走 tag + GitHub Release。
+> 发布物：tag [`v0.6.8`](https://github.com/JIUYUE-SEP/DSH-Neural-Mind/releases/tag/v0.6.8) + GitHub Release（**不发 npm**）；Release asset = 候选包 `neural-mind-0.6.8-candidate.tgz`（61 文件，含 MIT LICENSE，356,538 B，SHA256 `50865C9A…82C7`；见 [bench-results/artifacts/SHA256SUMS](bench-results/artifacts/SHA256SUMS)）。
 > **验证状态**：2026-11-12 从 0.6.8 最终 HEAD 重跑 `verify:release` **PASS**（EXIT=0）——npm test **394/391/0/3**、`check:host` 51/51、`check:shapes` 10/10、`check:conform` 39/0、`check:design` P0+P1（16 提交 / 0 漂移）、E2E 24/24（源码 + tarball 各一次）、升级 smoke 0.5.0→0.6.8 PASS、默认冒烟 26/26、N1 PASS、`release-matrix` PASS（61 文件 tarball）。原始日志：[bench-results/verify-release-0.6.8.log](bench-results/verify-release-0.6.8.log)（已脱敏）。
 
 - **修复：SOUL 提议「手滑」恢复路径**：`restore` 对 `entity='soul'` 的记录回到 `staged`（待采纳），不再落到 `active` 中间态——此前恢复到 `active` 后既不在 SOUL 提议列表（要求 staged），也不能按普通记忆确认。审计写明「恢复为 SOUL 提议」，新增回归测试。

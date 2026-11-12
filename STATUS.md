@@ -1,7 +1,7 @@
 # neural-mind 当前状态
 
 > **本文是当前状态的唯一事实来源**（覆写式：每次发布 / 验证 / 里程碑后重写）。
-> 最后更新：2026-11-12（0.6.8 候选验证 PASS，待 tag / Release 授权）
+> 最后更新：2026-11-12（0.6.8 已发布：tag + GitHub Release + asset 校验）
 > 现行文档：[README](README.md) · [DESIGN](DESIGN.md) · [NEXT_STEPS](NEXT_STEPS.md) · [CHANGELOG](CHANGELOG.md)
 > 历史过程见 [docs/legacy/](docs/legacy/README.md)；历史验证记录见 [docs/legacy/VERIFICATION-2026-11.md](docs/legacy/VERIFICATION-2026-11.md)。
 
@@ -11,9 +11,9 @@
 |---|---|
 | 仓库 | `JIUYUE-SEP/DSH-Neural-Mind`（public，MIT License；2026-11-10 由 `neural-mind` 改名，旧名自动重定向） |
 | 工作树版本 | **0.6.8**（SOUL 提议通道修正） |
-| 最新已发布 | **0.6.7**（2026-11-10，Release [v0.6.7](https://github.com/JIUYUE-SEP/DSH-Neural-Mind/releases/tag/v0.6.7)） |
+| 最新已发布 | **0.6.8**（2026-11-12，Release [v0.6.8](https://github.com/JIUYUE-SEP/DSH-Neural-Mind/releases/tag/v0.6.8)） |
 | 下一版 | **0.7.0**（记忆质量，S13–S16；S12 观测已随 0.6.7 交付） |
-| 0.6.8 状态 | **候选已验证 PASS**：`neural-mind-0.6.8-candidate.tgz`（61 文件，356,538 B）；`verify:release` EXIT=0；tag / Release 待用户确认 |
+| 0.6.8 状态 | **已发布**：tag `v0.6.8`（提交 `543abf2`）+ GitHub Release 已按用户明确授权创建（**不发 npm**）；asset = `neural-mind-0.6.8-candidate.tgz`（61 文件，356,538 B），下载校验 SHA256 `50865C9A…82C7` 一致 |
 | 0.6.7 状态 | **已发布**：tag `v0.6.7`（提交 `3fd6055`）+ GitHub Release 已按用户明确授权创建（**不发 npm**）；asset = `neural-mind-0.6.7-candidate.tgz`（60 文件，353,521 B），下载校验 SHA256 `DA3F45B8…D93120` 一致 |
 | 0.6.6 状态 | **已发布**：tag `v0.6.6` + GitHub Release 已按用户明确授权创建（**不发 npm**）；Release asset = 候选 tarball（59 文件，339,282 B，SHA256 见 `bench-results/artifacts/SHA256SUMS`） |
 
@@ -75,7 +75,7 @@ node tools/check-design.mjs --history # 只查"代码改了、对应设计文档
 
 | 文件 | 用途 | 大小 |
 |---|---|---:|
-| `neural-mind-0.6.8-candidate.tgz` | 0.6.8 候选（61 文件，含 MIT LICENSE；待发布为 v0.6.8 asset） | 356,538 B |
+| `neural-mind-0.6.8-candidate.tgz` | 0.6.8 已发布候选（61 文件，含 MIT LICENSE；即 v0.6.8 Release asset） | 356,538 B |
 | `neural-mind-0.6.7-candidate.tgz` | 0.6.7 已发布候选（60 文件，含 MIT LICENSE；即 v0.6.7 Release asset） | 353,521 B |
 | `neural-mind-0.6.6-candidate.tgz` | 0.6.6 已发布候选（59 文件，含 MIT LICENSE；即 v0.6.6 Release asset） | 339,282 B |
 | `dsh-plugin-memory-0.5.0-pre-f0ec867.tgz` | 升级 / 回滚基线（0.5.0，**文件名保留改名前的旧名**，是真实历史产物） | 160,967 B |
